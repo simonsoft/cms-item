@@ -32,6 +32,15 @@
     	<system>hudson</system>
     	<url>http://hudson.pdsvision.net:8080/</url>
 	</ciManagement>
+
+	<repositories>
+		<repository>
+			<id>pdsvisionReleases</id>
+			<name>PDSVision Releases</name>
+			<url>http://hudson.pdsvision.net/repository/</url>
+			<layout>default</layout>
+		</repository>
+	</repositories>
 	
 	<dependencies>
 	</dependencies>
