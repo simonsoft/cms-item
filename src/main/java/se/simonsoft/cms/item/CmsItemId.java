@@ -1,5 +1,10 @@
 package se.simonsoft.cms.item;
 
+/**
+ * Used instead of String to identify CMS items (a.k.a. objects/entries/files or folders).
+ * Typically immutable as the different getters provides identifiers in different contexts.
+ * Facilitates mocking when unit testing methods that deal with CMS paths and URLs.
+ */
 public interface CmsItemId {
 	
 	/**
