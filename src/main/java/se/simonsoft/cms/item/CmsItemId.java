@@ -11,7 +11,6 @@ public interface CmsItemId {
 	 * Resource URL, no query string. Not even revision number.
 	 * If revision ({@link #getPegRev()}) is specified this is the URL at that revision (i.e. "peg").
 	 * @return resource URL, encoded, encoding based on UTF-8 bytes for non-ascii
-	 * TODO encoded instead
 	 * TODO how about http/https?
 	 */
 	String getUrl();
@@ -24,15 +23,12 @@ public interface CmsItemId {
 	
 	/**
 	 * Local id without hostname, unique within the context of a connection to a server.
-	 * @return logical id
-	 * TODO with or without revision?
+	 * @return logical id, including parameters like peg rev when specified
 	 */
 	String getLogicalId();
-	//String getLogicalIdRev();
-	
+
 	/**
 	 * @return logical id as from {@link #getLogicalId()} but with fully qualified server name
-	 * TODO with or without revision?
 	 */
 	String getLogicalIdFull();
 
