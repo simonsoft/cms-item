@@ -1,7 +1,16 @@
 package se.simonsoft.cms.item;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 public class CmsItemPath {
 
+	private static final String URL_ENCODING_CHARSET = "UTF-8";
+
+
+	private static final String VALID_SEGMENT = "[a-zA-Z0-9_\\-\\.~(),]"; // TODO add more?
+	
+	
 	private String path;
 
 	public CmsItemPath(String path) {
@@ -9,11 +18,18 @@ public class CmsItemPath {
 	}
 	
 	public String getPath() {
-		return null;
+		return path;
 	}
 	
+	/**
+	 * @return path segments encoded using url escape, slashes preserved, non-ascii characters encoded using {@value #URL_ENCODING_CHARSET}
+	 */
 	public String getPathUrlEncoded() {
-		return null;
+		try {
+			return URLEncoder.encode(path, URL_ENCODING_CHARSET);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException("predefined encoding not supported", e);
+		}
 	}
 	
 	public String getPathTrimmed() {
@@ -35,9 +51,7 @@ public class CmsItemPath {
 	}
 	
 	public String getName() {
-		// rightmost component
-		// BrowseEntry.getLastPathComponent ?
-		return null;
+		return getName(-1);
 	}
 	
 	/** 
@@ -50,11 +64,17 @@ public class CmsItemPath {
 		// SvnLogicalId.getRelPathComponent
 		String result = null;
 		
-		String comp[] = path.split("/");
+		String comp[] = getPathTrimmed().split("/");
+		
+		if (segmentPosition == 0) {
+			throw new IllegalArgumentException("Path segment position must be >0 or <0");
+		}
 		
 		int index;
 		if (segmentPosition == Integer.MAX_VALUE) {
 			index = comp.length-1;
+		} else if (segmentPosition < 0) {
+			index = comp.length + segmentPosition;
 		} else {
 			index = segmentPosition - 1; // new argument definition
 		}
@@ -99,17 +119,17 @@ public class CmsItemPath {
 			return null;
 		} 
 		
-		return new CmsItemPath(noslashPath.substring(0, lastIdx));		
+		return new CmsItemPath('/' + noslashPath.substring(0, lastIdx));		
 	}
 	
 	public CmsItemPath append(String pathSegment) {
-		// SvnLogicalId.appendPath
-		return null;
+		// TODO validate segment
+		return new CmsItemPath(path + '/' + pathSegment);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		throw new UnsupportedOperationException("not implemented");
+		return obj instanceof CmsItemPath && path.equals(((CmsItemPath) obj).getPath());
 	}
 
 	@Override
@@ -119,8 +139,8 @@ public class CmsItemPath {
 
 	@Override
 	public String toString() {
-		// normalize
-		return null;
+		// TODO normalize?
+		return path;
 	}
 	
 }

@@ -7,8 +7,37 @@ import org.junit.Test;
 public class CmsItemPathTest {
 
 	@Test
-	public void testConstructorValidation() {
-		
+	public void testConstructorValidChars() {
+		new CmsItemPath("/azAZ09_-.,()"); //add more
+	}
+	
+	@Test
+	public void testConstructorNoLeadingSlash() {
+		try {
+			new CmsItemPath("f.txt");
+			fail("TODO define behavior");
+		} catch (IllegalArgumentException e) {
+			fail("TODO define behavior");
+		}
+	}
+	
+	@Test
+	public void testConstructorFilesystemRelative() {
+		try {
+			new CmsItemPath("../f.txt");
+			fail("support for relative file system path not implemented");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+	}
+	
+	@Test
+	public void testConstructorAsterisk() {
+		// TODO declare exception in constructor
+		try {
+			new CmsItemPath("/a*"); fail("* should be invalid in path");
+		} catch (IllegalArgumentException e) {}
+		// add more
 	}
 	
 	@Test
@@ -16,15 +45,13 @@ public class CmsItemPathTest {
 		//what is the constructor for this? ("/folder/a%20b%C3%A4.xml");
 		//assertEquals("Name should be decoded", "/folder/a bä.xml", p.getName());
 	}
-	
-	@Test
-	public void testHashCode() {
-		fail("Not yet implemented");
-	}
 
 	@Test
 	public void testGetPath() {
-		fail("Not yet implemented");
+		assertEquals("/a/f.txt", new CmsItemPath("/a/f.txt").getPath());
+		// should we normalize?
+		assertEquals("/a/b c", new CmsItemPath("/a/b c").getPath());
+		assertEquals("/a/b c/", new CmsItemPath("/a/b c/").getPath());
 	}
 
 	@Test
@@ -35,17 +62,31 @@ public class CmsItemPathTest {
 
 	@Test
 	public void testGetPathTrimmed() {
-		fail("Not yet implemented");
+		assertEquals("a/b c", new CmsItemPath("/a/b c/").getPathTrimmed());
 	}
 
 	@Test
 	public void testGetPathTrimmedBooleanBoolean() {
-		fail("Not yet implemented");
+		// if we normalize we don't need this method
 	}
 
 	@Test
+	public void testEquals() {
+		assertTrue(new CmsItemPath("/x").equals(new CmsItemPath("/x")));
+		assertTrue(new CmsItemPath("/a/b c/").equals(new CmsItemPath("/a/b c/")));
+		// TODO compare normalized?
+		assertTrue(new CmsItemPath("/a/b c").equals(new CmsItemPath("/a/b c/")));
+	}
+	
+	@Test
+	public void testToString() {
+		assertEquals("/a/b c/", "" + new CmsItemPath("/a/b c/"));
+	}
+	
+	@Test
 	public void testGetName() {
-		fail("Not yet implemented");
+		assertEquals("a b.xml", new CmsItemPath("/a b.xml"));
+		assertEquals("e f", new CmsItemPath("/a b/c d/e f/"));
 	}
 
 	@Test
@@ -63,12 +104,12 @@ public class CmsItemPathTest {
 
 	@Test
 	public void testGetNameBase() {
-		fail("Not yet implemented");
+		assertEquals("y", new CmsItemPath("/x/y.ditamap").getNameBase());
 	}
 
 	@Test
 	public void testGetExtension() {
-		fail("Not yet implemented");
+		assertEquals("ditamap", new CmsItemPath("/x/y/z.ditamap").getExtension());
 	}
 	
 	@Test
@@ -87,22 +128,12 @@ public class CmsItemPathTest {
 
 	@Test
 	public void testGetParent() {
-		fail("Not yet implemented");
+		assertEquals(new CmsItemPath("/a/"), new CmsItemPath("/a/b c/d/").getParent().getParent());
 	}
 
 	@Test
 	public void testAppend() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testEqualsObject() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testToString() {
-		fail("Not yet implemented");
+		assertEquals(new CmsItemPath("/a/b/c d.xml"), new CmsItemPath("/a/").append("b").append("c d.xml"));
 	}
 
 	// from BrowseEntry
