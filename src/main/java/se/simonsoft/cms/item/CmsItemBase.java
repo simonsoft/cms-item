@@ -18,4 +18,9 @@ public abstract class CmsItemBase implements CmsItem {
 		throw new UnsupportedOperationException("getStatus not implemented");
 	}
 
+	@Override
+	public String getChecksumMd5() {
+		throw new UnsupportedOperationException("getChecksumMd5 not implemented");
+	}
+
 }

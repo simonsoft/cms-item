@@ -1,7 +1,7 @@
 package se.simonsoft.cms.item;
 
 /**
- * Models a file entry in the CMS.
+ * Models a specific revision of a file entry in the CMS.
  * 
  * The interfaces in this package are provided as a means of handling CMS contents
  * that is independent of retrieval method. Data could originate from repository access,
@@ -15,5 +15,10 @@ public interface CmsItem {
 	 * @return Item status value, arbitrary value (enum defined per customer), null if not set
 	 */
 	String getStatus();	
+	
+	/**
+	 * @return MD5 of the contents
+	 */
+	String getChecksumMd5();
 	
 }
