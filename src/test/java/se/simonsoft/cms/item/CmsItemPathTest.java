@@ -2,6 +2,7 @@ package se.simonsoft.cms.item;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class CmsItemPathTest {
@@ -10,14 +11,27 @@ public class CmsItemPathTest {
 	public void testConstructorValidChars() {
 		new CmsItemPath("/azAZ09_-.,()"); //add more
 	}
+
+	@Test
+	public void testConstructorRootOrEmpty() {
+		try {
+			new CmsItemPath("/");
+			fail("Single slash without path segment should not be allowed");
+		} catch (IllegalArgumentException e) {
+		}
+		try {
+			new CmsItemPath("");
+			fail("Empty path or root should be undefined");
+		} catch (IllegalArgumentException e) {
+		}
+	}
 	
 	@Test
 	public void testConstructorNoLeadingSlash() {
 		try {
 			new CmsItemPath("f.txt");
-			fail("TODO define behavior");
+			fail("Should require leading slash");
 		} catch (IllegalArgumentException e) {
-			fail("TODO define behavior");
 		}
 	}
 	
@@ -33,7 +47,6 @@ public class CmsItemPathTest {
 	
 	@Test
 	public void testConstructorAsterisk() {
-		// TODO declare exception in constructor
 		try {
 			new CmsItemPath("/a*"); fail("* should be invalid in path");
 		} catch (IllegalArgumentException e) {}
@@ -49,9 +62,8 @@ public class CmsItemPathTest {
 	@Test
 	public void testGetPath() {
 		assertEquals("/a/f.txt", new CmsItemPath("/a/f.txt").getPath());
-		// should we normalize?
 		assertEquals("/a/b c", new CmsItemPath("/a/b c").getPath());
-		assertEquals("/a/b c/", new CmsItemPath("/a/b c/").getPath());
+		assertEquals("should be normalized", "/a/b c", new CmsItemPath("/a/b c/").getPath());
 	}
 
 	@Test
@@ -80,13 +92,13 @@ public class CmsItemPathTest {
 	
 	@Test
 	public void testToString() {
-		assertEquals("/a/b c/", "" + new CmsItemPath("/a/b c/"));
+		assertEquals("/a/b c", "" + new CmsItemPath("/a/b c/"));
 	}
 	
 	@Test
 	public void testGetName() {
-		assertEquals("a b.xml", new CmsItemPath("/a b.xml"));
-		assertEquals("e f", new CmsItemPath("/a b/c d/e f/"));
+		assertEquals("a b.xml", new CmsItemPath("/a b.xml").getName());
+		assertEquals("e f", new CmsItemPath("/a b/c d/e f/").getName());
 	}
 
 	@Test
@@ -128,7 +140,9 @@ public class CmsItemPathTest {
 
 	@Test
 	public void testGetParent() {
-		assertEquals(new CmsItemPath("/a/"), new CmsItemPath("/a/b c/d/").getParent().getParent());
+		assertEquals(new CmsItemPath("/a"), new CmsItemPath("/a/b c/d").getParent().getParent());
+		assertEquals(new CmsItemPath("/a"), new CmsItemPath("/a/b c/d/").getParent().getParent());
+		assertEquals(new CmsItemPath("/a/b c"), new CmsItemPath("/a/b c/d/f.txt").getParent().getParent());
 	}
 
 	@Test
@@ -136,15 +150,34 @@ public class CmsItemPathTest {
 		assertEquals(new CmsItemPath("/a/b/c d.xml"), new CmsItemPath("/a/").append("b").append("c d.xml"));
 	}
 
+	@Test
+	public void testAppendWithSlash() {
+		try {
+			new CmsItemPath("/a").append("b/");
+			fail("Slashes should not be allowed in the append segment");
+		} catch (IllegalArgumentException e) {
+		}
+	}
+	
+	@Test
+	public void testAppendInvalid() {
+		try {
+			new CmsItemPath("/a").append("b*");
+			fail("Append segment should be validated for allowed chars");
+		} catch (IllegalArgumentException e) {
+		}
+	}
+	
 	// from BrowseEntry
 	@Test
 	public void testPathComponents() {
 		CmsItemPath path = new CmsItemPath("/folder name/subfolder/file with space.xml");
 		assertEquals("file with space.xml", path.getName(-1));
-		assertEquals("/folder name/subfolder", path.getParent().toString()); // TBD trailing slash?
+		assertEquals("/folder name/subfolder", path.getParent().toString());
 	}
 	
 	@Test
+	@Ignore("root is still undefined")
 	public void testPathComponentsRoot() {
 		CmsItemPath path = new CmsItemPath("/");
 		assertNull(path.getName(-1));
@@ -152,6 +185,7 @@ public class CmsItemPathTest {
 	}
 	
 	@Test
+	@Ignore("root is still undefined")
 	public void testPathComponentsEmpty() {
 		CmsItemPath path = new CmsItemPath(""); // validation error?
 		assertNull(path.getName(-1));
@@ -162,6 +196,7 @@ public class CmsItemPathTest {
 	public void testPathComponentsRootFile() {
 		CmsItemPath path = new CmsItemPath("/file with space.xml");
 		assertEquals("file with space.xml", path.getName(-1));
+		assertEquals("file with space.xml", path.getName(1));
 		assertNull(path.getParent());
 	}
 	
@@ -169,6 +204,7 @@ public class CmsItemPathTest {
 	public void testPathComponentsRootDir() {
 		CmsItemPath path = new CmsItemPath("/folder name/");
 		assertEquals("folder name", path.getName(-1));
+		assertEquals("folder name", path.getName(1));
 		assertNull(path.getParent());
 	}
 	

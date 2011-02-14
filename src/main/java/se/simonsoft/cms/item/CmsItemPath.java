@@ -2,18 +2,34 @@ package se.simonsoft.cms.item;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.regex.Pattern;
 
+/**
+ * Represents a path as a stack of path segments separated by slash,
+ * prohibiting filesystem specific syntax such as "../".
+ * 
+ * Leading slash is required for consistency, as it precedes every path segment.
+ * Trailing slashes are always trimmed, meaning that "/folder/" equals "/folder".
+ */
 public class CmsItemPath {
 
-	private static final String URL_ENCODING_CHARSET = "UTF-8";
+	public static final String URL_ENCODING_CHARSET = "UTF-8";
 
-
-	private static final String VALID_SEGMENT = "[a-zA-Z0-9_\\-\\.~(),]"; // TODO add more?
-	
+	// TODO unicode support
+	private static final String VALID_SEGMENT = "[a-zA-Z0-9_\\-\\.~(), ]+"; // TODO add all allowed chars
+	private static final Pattern VALID_SEGMENT_PATTERN = Pattern.compile('^' + VALID_SEGMENT + '$');
+	private static final String VALID_PATH = "(/" + VALID_SEGMENT + ")+";
+	private static final Pattern VALID_PATH_PATTERN = Pattern.compile('^' + VALID_PATH + '$');
 	
 	private String path;
 
 	public CmsItemPath(String path) {
+		if (path.endsWith("/")) {
+			path = path.substring(0, path.length() - 1);
+		}
+		if (!VALID_PATH_PATTERN.matcher(path).matches()) {
+			throw new IllegalArgumentException("Invalid path: " + path);
+		}
 		this.path = path;
 	}
 	
@@ -36,8 +52,7 @@ public class CmsItemPath {
 		return getPathTrimmed(true, true);
 	}
 
-	// TODO always trim trailing slash?
-	public String getPathTrimmed(boolean trimStart, boolean trimEnd) {
+	protected String getPathTrimmed(boolean trimStart, boolean trimEnd) {
 		int start = 0;
 		int end = path.length();
 
@@ -123,7 +138,9 @@ public class CmsItemPath {
 	}
 	
 	public CmsItemPath append(String pathSegment) {
-		// TODO validate segment
+		if (!VALID_SEGMENT_PATTERN.matcher(pathSegment).matches()) {
+			throw new IllegalArgumentException("Invalid path segment: " + pathSegment);
+		}
 		return new CmsItemPath(path + '/' + pathSegment);
 	}
 
