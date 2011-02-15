@@ -55,7 +55,7 @@ public class CmsItemPathTest {
 	}
 	
 	@Test
-	public void testConstructorFilesystemRelative() {
+	public void testConstructorFilesystemRelativeStart() {
 		try {
 			new CmsItemPath("../f.txt");
 			fail("support for relative file system path not implemented");
@@ -65,9 +65,30 @@ public class CmsItemPathTest {
 	}
 	
 	@Test
+	@Ignore("not yet validating relative stuff")
+	public void testConstructorFilesystemRelative() {
+		try {
+			new CmsItemPath("/a/../f.txt");
+			fail("support for relative file system path not implemented");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+	}
+	
+	@Test
 	public void testConstructorAsterisk() {
 		try {
-			new CmsItemPath("/a*"); fail("* should be invalid in path");
+			new CmsItemPath("/a*"); 
+			fail("* should be invalid in path");
+		} catch (IllegalArgumentException e) {}
+		// add more
+	}
+	
+	@Test
+	public void testConstructorBackslash() {
+		try {
+			new CmsItemPath("/a\\b.ext"); 
+			fail("backslash should be invalid in path");
 		} catch (IllegalArgumentException e) {}
 		// add more
 	}
@@ -85,15 +106,19 @@ public class CmsItemPathTest {
 		assertEquals("should be normalized", "/a/b c", new CmsItemPath("/a/b c/").getPath());
 	}
 
+	
 	@Test
+	@Ignore("Decided to not expose UrlEncoding in this API")
 	public void testGetPathUrlEncoded() {
-		assertEquals("whitespace should be encoded using %20", "/a/b%20c", new CmsItemPath("/a/b c").getPathUrlEncoded());
+		//assertEquals("whitespace should be encoded using %20", "/a/b%20c", new CmsItemPath("/a/b c").getPathUrlEncoded());
 	}
 	
 	@Test
+	@Ignore("Decided to not expose UrlEncoding in this API")
 	public void testGetPathUrlEncodedLogicalIdRule() {	
+		@SuppressWarnings("unused")
 		CmsItemPath p = new CmsItemPath("/folder name/Fälla träd 100% (admon).xml");
-		assertEquals("/folder%20name/F%C3%A4lla%20tr%C3%A4d%20100%25%20(admon).xml", p.getPathUrlEncoded());
+		//assertEquals("/folder%20name/F%C3%A4lla%20tr%C3%A4d%20100%25%20(admon).xml", p.getPathUrlEncoded());
 		assertEquals("/double%20%20spaces", new CmsItemPath("/double  spaces"));
 	}
 

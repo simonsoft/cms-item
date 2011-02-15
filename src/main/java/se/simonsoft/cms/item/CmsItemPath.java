@@ -5,7 +5,7 @@ import java.net.URLEncoder;
 import java.util.regex.Pattern;
 
 /**
- * Represents a path as a stack of path segments separated by slash,
+ * Represents a path (not-encoded) as a stack of path segments separated by slash,
  * prohibiting filesystem specific syntax such as "../".
  * <p>
  * Leading slash is required for consistency, as it precedes every path segment.
@@ -27,7 +27,8 @@ public class CmsItemPath {
 
 	public static final String URL_ENCODING_CHARSET = "UTF-8";
 
-	private static final String VALID_SEGMENT = "[^/*]*[^/*\\s]+"; // TODO add more strictly prohibited chars
+	private static final String INVALID_CHARS = "/*\\\\"; // TODO add more strictly prohibited chars
+	private static final String VALID_SEGMENT = "[^" + INVALID_CHARS + "]*[^" + INVALID_CHARS + "\\s]+"; 
 	private static final Pattern VALID_SEGMENT_PATTERN = Pattern.compile('^' + VALID_SEGMENT + '$');
 	private static final String VALID_PATH = "(/" + VALID_SEGMENT + ")+";
 	private static final Pattern VALID_PATH_PATTERN = Pattern.compile('^' + VALID_PATH + '$');
@@ -52,10 +53,11 @@ public class CmsItemPath {
 		return path;
 	}
 	
-	/**
+	/** Decided to not expose any encoded path from this class. SVNURL is normative with regards to encoding and we should not implement our own encoding.
 	 * @return path segments encoded using url escape, slashes preserved, non-ascii characters encoded using {@value #URL_ENCODING_CHARSET}
 	 */
-	public String getPathUrlEncoded() {
+	@SuppressWarnings("unused")
+	private String getPathUrlEncoded() {
 		StringBuffer r = new StringBuffer();
 		String[] s = getPathSegments();
 		for (int i = 0; i < s.length; i++) {
@@ -103,8 +105,9 @@ public class CmsItemPath {
 	/** 
 	 * Provides a component of the relative path.
 	 * Request Integer.MAX_VALUE to get that last one (deprecated behavior).
-	 * @param segmentPosition from 0? TODO maybe we should have >0 to count from left and <0 from right?
+	 * @param segmentPosition, >0 to count from left and <0 from right.
 	 * @return
+	 * @throws IllegalArgumentException if segmentPosition is 0.
 	 */
 	public String getName(int segmentPosition) {
 		// SvnLogicalId.getRelPathComponent
