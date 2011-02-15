@@ -27,6 +27,25 @@ public class CmsItemPathTest {
 	}
 	
 	@Test
+	public void testConstructorEndWithWhitespace() {
+		try {
+			new CmsItemPath("/x ");
+			fail("Should not allow paths ending with whitespace");
+		} catch (IllegalArgumentException e) {
+		}
+		try {
+			new CmsItemPath("/a /b");
+			fail("Should not allow path segment ending with whitespace");
+		} catch (IllegalArgumentException e) {
+		}
+		try {
+			new CmsItemPath("/x\t");
+			fail("Should not allow paths ending with tab");
+		} catch (IllegalArgumentException e) {
+		}
+	}
+	
+	@Test
 	public void testConstructorNoLeadingSlash() {
 		try {
 			new CmsItemPath("f.txt");
@@ -68,6 +87,11 @@ public class CmsItemPathTest {
 
 	@Test
 	public void testGetPathUrlEncoded() {
+		assertEquals("whitespace should be encoded using %20", "/a/b%20c", new CmsItemPath("/a/b c").getPathUrlEncoded());
+	}
+	
+	@Test
+	public void testGetPathUrlEncodedLogicalIdRule() {	
 		CmsItemPath p = new CmsItemPath("/folder name/Fälla träd 100% (admon).xml");
 		assertEquals("/folder%20name/F%C3%A4lla%20tr%C3%A4d%20100%25%20(admon).xml", p.getPathUrlEncoded());
 		assertEquals("/double%20%20spaces", new CmsItemPath("/double  spaces"));
@@ -79,15 +103,9 @@ public class CmsItemPathTest {
 	}
 
 	@Test
-	public void testGetPathTrimmedBooleanBoolean() {
-		// if we normalize we don't need this method
-	}
-
-	@Test
 	public void testEquals() {
 		assertTrue(new CmsItemPath("/x").equals(new CmsItemPath("/x")));
 		assertTrue(new CmsItemPath("/a/b c/").equals(new CmsItemPath("/a/b c/")));
-		// TODO compare normalized?
 		assertTrue(new CmsItemPath("/a/b c").equals(new CmsItemPath("/a/b c/")));
 	}
 	
@@ -105,8 +123,8 @@ public class CmsItemPathTest {
 	@Test
 	public void testGetNameSegmentPosition() {
 		CmsItemPath p = new CmsItemPath("/folder/file.xml");
-		//assertEquals("folder", p.getName(0)); // "index"
-		//assertEquals("file.xml", p.getName(1)); // "index"
+		//assertEquals("folder", p.getName(0)); // old "index"
+		//assertEquals("file.xml", p.getName(1)); // old "index"
 		assertEquals("folder", p.getName(1));
 		assertEquals("file.xml", p.getName(2));
 		assertEquals("file.xml", p.getName(Integer.MAX_VALUE)); // deprecated behavior
@@ -165,6 +183,15 @@ public class CmsItemPathTest {
 		try {
 			new CmsItemPath("/a").append("b*");
 			fail("Append segment should be validated for allowed chars");
+		} catch (IllegalArgumentException e) {
+		}
+	}
+	
+	@Test
+	public void testAppendTrailingWhitespace() {
+		try {
+			new CmsItemPath("/a").append("b ");
+			fail("Append segment should be allowed to end with whitespace");
 		} catch (IllegalArgumentException e) {
 		}
 	}

@@ -7,22 +7,37 @@ import java.util.regex.Pattern;
 /**
  * Represents a path as a stack of path segments separated by slash,
  * prohibiting filesystem specific syntax such as "../".
- * 
+ * <p>
  * Leading slash is required for consistency, as it precedes every path segment.
+ * All calling code need to be aware if leading slash is included or not, so it is better
+ * to require leading slash than trailing slash, which might be considered insignificant.
  * Trailing slashes are always trimmed, meaning that "/folder/" equals "/folder".
+ * <p>
+ * Minimal validation is done in constructor and {@link #append(String)}.
+ * It is up to the calling code to implement strict validation.
+ * Path segments may not end with whitespace because that might not be visible in output.
+ * They may however start with whitespace because that poses no immediate practical problems.
+ * <p>
+ * Many of the methods in this class are undefined for the empty path, or root.
+ * One problem with a root concept would be that it is a special case with regards to trailing slash.
+ * Thus, empty string or slash only is not allowed in the constructor,
+ * and {@link #getParent()} returns null if the path has only one segment.
  */
 public class CmsItemPath {
 
 	public static final String URL_ENCODING_CHARSET = "UTF-8";
 
-	// TODO unicode support
-	private static final String VALID_SEGMENT = "[\\p{L}\\p{Digit}_\\-\\.~(),% ]+"; // TODO add all allowed chars
+	private static final String VALID_SEGMENT = "[^/*]*[^/*\\s]+"; // TODO add more strictly prohibited chars
 	private static final Pattern VALID_SEGMENT_PATTERN = Pattern.compile('^' + VALID_SEGMENT + '$');
 	private static final String VALID_PATH = "(/" + VALID_SEGMENT + ")+";
 	private static final Pattern VALID_PATH_PATTERN = Pattern.compile('^' + VALID_PATH + '$');
 	
 	private String path;
 
+	/**
+	 * @param path with leading slash, trailing slash will be trimmed
+	 * @throws IllegalArgumentException for invalid path such as containing double slashes
+	 */
 	public CmsItemPath(String path) {
 		if (path.endsWith("/")) {
 			path = path.substring(0, path.length() - 1);
@@ -145,6 +160,9 @@ public class CmsItemPath {
 		return n.substring(d+1);
 	}
 	
+	/**
+	 * @return parent path or null if the path has only one segment (root is undefined)
+	 */
 	public CmsItemPath getParent() {
 		// BrowseEntry.getPathParent
 		String noslashPath = getPathTrimmed();
@@ -157,6 +175,10 @@ public class CmsItemPath {
 		return new CmsItemPath('/' + noslashPath.substring(0, lastIdx));		
 	}
 	
+	/**
+	 * @param path segment
+	 * @throws IllegalArgumentException if invalid segment, such as containing slash
+	 */	
 	public CmsItemPath append(String pathSegment) {
 		if (!VALID_SEGMENT_PATTERN.matcher(pathSegment).matches()) {
 			throw new IllegalArgumentException("Invalid path segment: " + pathSegment);
