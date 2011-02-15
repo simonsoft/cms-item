@@ -9,7 +9,7 @@ public class CmsItemPathTest {
 
 	@Test
 	public void testConstructorValidChars() {
-		new CmsItemPath("/azAZ09_-.,()"); //add more
+		new CmsItemPath("/azAZ09_-.,()%"); //add more
 	}
 
 	@Test
@@ -70,6 +70,7 @@ public class CmsItemPathTest {
 	public void testGetPathUrlEncoded() {
 		CmsItemPath p = new CmsItemPath("/folder name/Fälla träd 100% (admon).xml");
 		assertEquals("/folder%20name/F%C3%A4lla%20tr%C3%A4d%20100%25%20(admon).xml", p.getPathUrlEncoded());
+		assertEquals("/double%20%20spaces", new CmsItemPath("/double  spaces"));
 	}
 
 	@Test

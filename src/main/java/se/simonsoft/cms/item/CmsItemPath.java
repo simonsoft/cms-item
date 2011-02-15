@@ -16,7 +16,7 @@ public class CmsItemPath {
 	public static final String URL_ENCODING_CHARSET = "UTF-8";
 
 	// TODO unicode support
-	private static final String VALID_SEGMENT = "[a-zA-Z0-9_\\-\\.~(), ]+"; // TODO add all allowed chars
+	private static final String VALID_SEGMENT = "[\\p{L}\\p{Digit}_\\-\\.~(),% ]+"; // TODO add all allowed chars
 	private static final Pattern VALID_SEGMENT_PATTERN = Pattern.compile('^' + VALID_SEGMENT + '$');
 	private static final String VALID_PATH = "(/" + VALID_SEGMENT + ")+";
 	private static final Pattern VALID_PATH_PATTERN = Pattern.compile('^' + VALID_PATH + '$');
@@ -41,10 +41,26 @@ public class CmsItemPath {
 	 * @return path segments encoded using url escape, slashes preserved, non-ascii characters encoded using {@value #URL_ENCODING_CHARSET}
 	 */
 	public String getPathUrlEncoded() {
+		StringBuffer r = new StringBuffer();
+		String[] s = getPathSegments();
+		for (int i = 0; i < s.length; i++) {
+			r.append('/');
+			String[] w = s[i].split("\\s");
+			for (int j = 0; j < w.length; j++) {
+				if (j > 0) {
+					r.append("%20");
+				}
+				r.append(urlEncode(w[j]));
+			}
+		}
+		return r.toString();
+	}
+	
+	private String urlEncode(String s) {
 		try {
-			return URLEncoder.encode(path, URL_ENCODING_CHARSET);
+			return URLEncoder.encode(s, URL_ENCODING_CHARSET);
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("predefined encoding not supported", e);
+			throw new RuntimeException("predefined encoding not supported: " + URL_ENCODING_CHARSET, e);
 		}
 	}
 	
@@ -79,7 +95,7 @@ public class CmsItemPath {
 		// SvnLogicalId.getRelPathComponent
 		String result = null;
 		
-		String comp[] = getPathTrimmed().split("/");
+		String comp[] = getPathSegments();
 		
 		if (segmentPosition == 0) {
 			throw new IllegalArgumentException("Path segment position must be >0 or <0");
@@ -103,6 +119,10 @@ public class CmsItemPath {
 		return result;
 	}
 	
+	private String[] getPathSegments() {
+		return getPathTrimmed().split("/");
+	}
+
 	public String getNameBase() {
 		String n = getName();
 		String ext = getExtension();
