@@ -33,14 +33,9 @@ public interface CmsItemId {
 	String getLogicalIdFull();
 
 	/**
-	 * @return path in repository, decoded, including leading slash
-	 */
-	String getRelPath();
-
-	/**
 	 * @return path in repository
 	 */
-	CmsItemPath getPath();
+	CmsItemPath getRelPath();
 	
 	/**
 	 * @return repository root URL without trailing slash, encoded
