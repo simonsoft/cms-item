@@ -17,8 +17,8 @@ public interface CmsItem {
 	String getStatus();	
 	
 	/**
-	 * @return MD5 of the contents
+	 * @return contents checksum
 	 */
-	String getChecksumMd5();
+	Checksum getChecksum();
 	
 }
