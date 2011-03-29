@@ -238,11 +238,22 @@ public class CmsItemPathTest {
 	}
 	
 	@Test
-	@Ignore("root is still undefined")
 	public void testPathComponentsEmpty() {
-		CmsItemPath path = new CmsItemPath(""); // validation error?
+		CmsItemPath path;
+		try {
+			path = new CmsItemPath("");
+		} catch (Exception e) {
+			// original behavior, might need to be changed
+		}
+		path = new CmsItemPath("/f").getParent();
+		if (path == null) {
+			// expected if root/empty path is not defined
+			return;
+		}
 		assertNull(path.getName(-1));
 		assertNull(path.getParent());
+		assertNull(path.getName()); // better to return null than empty string?
+		// should we have an isEmpty getter? or a public static final CmsItemPath EMPTY?
 	}
 	
 	@Test
@@ -259,6 +270,14 @@ public class CmsItemPathTest {
 		assertEquals("folder name", path.getName(-1));
 		assertEquals("folder name", path.getName(1));
 		assertNull(path.getParent());
+	}
+	
+	@Test
+	public void testAppendPath() {
+		assertEquals(new CmsItemPath("/f/g/h"), 
+				new CmsItemPath("/f").append(new CmsItemPath("/g/h")));		
+		assertEquals(new CmsItemPath("/f/g/h"), 
+				new CmsItemPath("/f/").append(new CmsItemPath("/g/h/")));
 	}
 	
 }

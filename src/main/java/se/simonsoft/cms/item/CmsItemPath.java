@@ -189,6 +189,13 @@ public class CmsItemPath {
 		return new CmsItemPath(path + '/' + pathSegment);
 	}
 
+	/**
+	 * @param path another path
+	 */	
+	public CmsItemPath append(CmsItemPath path) {
+		return new CmsItemPath(this.path + path.getPath());
+	}	
+	
 	@Override
 	public boolean equals(Object obj) {
 		return obj instanceof CmsItemPath && path.equals(((CmsItemPath) obj).getPath());
