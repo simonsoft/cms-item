@@ -2,6 +2,9 @@ package se.simonsoft.cms.item;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -273,11 +276,29 @@ public class CmsItemPathTest {
 	}
 	
 	@Test
-	public void testAppendPath() {
-		assertEquals(new CmsItemPath("/f/g/h"), 
-				new CmsItemPath("/f").append(new CmsItemPath("/g/h")));		
-		assertEquals(new CmsItemPath("/f/g/h"), 
-				new CmsItemPath("/f/").append(new CmsItemPath("/g/h/")));
+	public void testPathSegmentsList() {
+		CmsItemPath path = new CmsItemPath("/folder name/subfolder/file with space.xml");
+		
+		List<String> pathList = path.getPathSegments();
+		assertEquals(3, pathList.size());
+		assertEquals("folder name", pathList.get(0));
+		assertEquals("subfolder", pathList.get(1));
+		assertEquals("file with space.xml", pathList.get(2));
 	}
 	
+	@Test
+	public void testAppendPathList() {
+		
+		List<String> listSegments = new CmsItemPath("/g/h/").getPathSegments();
+		List<String> listManual = new ArrayList<String>();
+		listManual.add("g");
+		listManual.add("h");
+		
+		assertEquals(new CmsItemPath("/f/g/h"), 
+				new CmsItemPath("/f").append(listSegments));		
+		assertEquals(new CmsItemPath("/f/g/h"), 
+				new CmsItemPath("/f/").append(listManual));
+	}
+	
+
 }

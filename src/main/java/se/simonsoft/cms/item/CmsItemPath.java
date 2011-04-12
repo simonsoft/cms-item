@@ -2,6 +2,8 @@ package se.simonsoft.cms.item;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -59,7 +61,7 @@ public class CmsItemPath {
 	@SuppressWarnings("unused")
 	private String getPathUrlEncoded() {
 		StringBuffer r = new StringBuffer();
-		String[] s = getPathSegments();
+		String[] s = getPathSegmentsArray();
 		for (int i = 0; i < s.length; i++) {
 			r.append('/');
 			String[] w = s[i].split("\\s");
@@ -98,6 +100,9 @@ public class CmsItemPath {
 		return path.substring(start, end);
 	}
 	
+	/** Provides the last component of the path, i.e. the file name or the folder name.
+	 * @return the name
+	 */
 	public String getName() {
 		return getName(-1);
 	}
@@ -113,7 +118,7 @@ public class CmsItemPath {
 		// SvnLogicalId.getRelPathComponent
 		String result = null;
 		
-		String comp[] = getPathSegments();
+		String comp[] = getPathSegmentsArray();
 		
 		if (segmentPosition == 0) {
 			throw new IllegalArgumentException("Path segment position must be >0 or <0");
@@ -137,8 +142,14 @@ public class CmsItemPath {
 		return result;
 	}
 	
-	private String[] getPathSegments() {
+	private String[] getPathSegmentsArray() {
 		return getPathTrimmed().split("/");
+	}
+	
+	public List<String> getPathSegments() {
+		
+		List<String> pathList = Arrays.asList(this.getPathSegmentsArray());
+		return pathList;
 	}
 
 	public String getNameBase() {
@@ -192,8 +203,13 @@ public class CmsItemPath {
 	/**
 	 * @param path another path
 	 */	
-	public CmsItemPath append(CmsItemPath path) {
-		return new CmsItemPath(this.path + path.getPath());
+	public CmsItemPath append(List<String> list) {
+		
+		CmsItemPath result = new CmsItemPath(this.path);
+		for (String segment: list) {
+			result = result.append(segment);
+		}
+		return result;
 	}	
 	
 	@Override
