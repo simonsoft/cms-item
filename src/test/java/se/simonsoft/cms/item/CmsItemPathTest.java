@@ -300,5 +300,51 @@ public class CmsItemPathTest {
 				new CmsItemPath("/f/").append(listManual));
 	}
 	
+	@Test
+	public void testSubPath() {
+		CmsItemPath path = new CmsItemPath("/folder name/subfolder/file with space.xml");
+		
+		assertEquals(new CmsItemPath("/test/folder name/subfolder"), new CmsItemPath("/test").append(path.subPath(0, 2)));
+		assertEquals(new CmsItemPath("/test/subfolder"), new CmsItemPath("/test").append(path.subPath(1, 2)));
+		assertEquals(new CmsItemPath("/test/subfolder/file with space.xml"), new CmsItemPath("/test").append(path.subPath(1, 3)));
+		assertEquals(new CmsItemPath("/test/subfolder/file with space.xml"), new CmsItemPath("/test").append(path.subPath(1)));
+	}
+	
+	@Test
+	public void testIsAncestorOf() {
+		
+		CmsItemPath path = new CmsItemPath("/folder name/subfolder/file with space.xml");
+		CmsItemPath siblingPath = new CmsItemPath("/folder name/subfolder/sibling.xml");
+		CmsItemPath parentPath = new CmsItemPath("/folder name/subfolder");
+		CmsItemPath grandParentPath = new CmsItemPath("/folder name");
+		CmsItemPath nonParentPath = new CmsItemPath("/folder name/subfolder whatever");
+		CmsItemPath deeperPath = new CmsItemPath("/folder name/subfolder/deeper/deep.xml");
+		
+		assertTrue("Direct parent", parentPath.isAncestorOf(path));
+		assertTrue("Grandparent is also considered ancestor", grandParentPath.isAncestorOf(path));
+		assertTrue("Grandparent is ancestor of parent", grandParentPath.isAncestorOf(parentPath));
+		assertFalse("Sibling", siblingPath.isAncestorOf(path));
+		assertFalse("Not a parent", nonParentPath.isAncestorOf(path));
+		assertFalse("Deep nonparent", deeperPath.isAncestorOf(path));
+		assertFalse("Deep nonparent reversed", path.isAncestorOf(deeperPath));
+		assertFalse("A path is not an ancestor of itself", path.isAncestorOf(path));
+		
+	}
+	
+	@Test
+	public void testIsParentOf() {
+		
+		CmsItemPath path = new CmsItemPath("/folder name/subfolder/file with space.xml");
+		CmsItemPath parentPath = new CmsItemPath("/folder name/subfolder");
+		CmsItemPath grandParentPath = new CmsItemPath("/folder name");
+		CmsItemPath nonParentPath = new CmsItemPath("/folder name/subfolder whatever");
+		
+		assertTrue("Direct parent", parentPath.isParentOf(path));
+		assertFalse("Grandparent is not a parent", grandParentPath.isParentOf(path));
+		assertTrue("Grandparent is parent of parent", grandParentPath.isParentOf(parentPath));
+		assertFalse("Not a parent", nonParentPath.isParentOf(path));
+		assertFalse("A path is not a parent of itself", path.isParentOf(path));
+		
+	}
 
 }

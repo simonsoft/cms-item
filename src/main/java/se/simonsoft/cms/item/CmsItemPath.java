@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Represents a path (not-encoded) as a stack of path segments separated by slash,
- * prohibiting filesystem specific syntax such as "../".
+ * Represents a path (not-encoded) from a repository root as a stack of path segments 
+ * separated by slash, prohibiting filesystem specific syntax such as "../".
  * <p>
  * Leading slash is required for consistency, as it precedes every path segment.
  * All calling code need to be aware if leading slash is included or not, so it is better
@@ -24,6 +24,8 @@ import java.util.regex.Pattern;
  * One problem with a root concept would be that it is a special case with regards to trailing slash.
  * Thus, empty string or slash only is not allowed in the constructor,
  * and {@link #getParent()} returns null if the path has only one segment.
+ * On a higher level, root path can be represented with null. This is to Subversion's
+ * special handling of repository root, i.e. most operations are not allowed.  
  */
 public class CmsItemPath {
 
@@ -142,16 +144,25 @@ public class CmsItemPath {
 		return result;
 	}
 	
+	/** Provides the whole path as an array of path segments.
+	 * @return
+	 */
 	private String[] getPathSegmentsArray() {
 		return getPathTrimmed().split("/");
 	}
 	
+	/** Provides the whole path as a list of path segments.
+	 * @return
+	 */
 	public List<String> getPathSegments() {
 		
 		List<String> pathList = Arrays.asList(this.getPathSegmentsArray());
 		return pathList;
 	}
 
+	/** The name without extension. See {@link #getExtension()} for definition of extension.
+	 * @return
+	 */
 	public String getNameBase() {
 		String n = getName();
 		String ext = getExtension();
@@ -165,6 +176,12 @@ public class CmsItemPath {
 		return n.substring(0, endIdx);
 	}
 	
+	/** The extension of the name. 
+	 * <p>
+	 * The extension is the part after the last dot, 
+	 * unless the last dot is the first character, e.g. hidden files.
+	 * @return extension or empty string.
+	 */
 	public String getExtension() {
 		String n = getName();
 		int d = n.lastIndexOf('.');
@@ -189,7 +206,7 @@ public class CmsItemPath {
 		return new CmsItemPath('/' + noslashPath.substring(0, lastIdx));		
 	}
 	
-	/**
+	/** Appends a single path segment to the path.
 	 * @param path segment
 	 * @throws IllegalArgumentException if invalid segment, such as containing slash
 	 */	
@@ -200,8 +217,8 @@ public class CmsItemPath {
 		return new CmsItemPath(path + '/' + pathSegment);
 	}
 
-	/**
-	 * @param path another path
+	/** Append path segments to the end of the CmsItemPath.
+	 * @param list of path segments to append
 	 */	
 	public CmsItemPath append(List<String> list) {
 		
@@ -211,6 +228,64 @@ public class CmsItemPath {
 		}
 		return result;
 	}	
+	
+	/** Returns a portion of this path as a list. See List.subList(...)
+	 * @param fromIndex - low endpoint (inclusive) of the subList
+	 * @param toIndex - high endpoint (exclusive) of the subList 
+	 * @return
+	 */
+	public List<String> subPath(int fromIndex, int toIndex) {
+		
+		return this.getPathSegments().subList(fromIndex, toIndex);
+	}
+	/** Returns a portion of this path as a list, from fromIndex to the end of the path.
+	 * @param fromIndex - low endpoint (inclusive) of the subList
+	 */ 
+	public List<String> subPath(int fromIndex) {
+		
+		List<String> pathList = this.getPathSegments(); 
+		return this.getPathSegments().subList(fromIndex, pathList.size());
+	}
+	
+	/** Determines if this path is an ancestor of child.
+	 * @param child
+	 * @return
+	 */
+	public boolean isAncestorOf(CmsItemPath child) {
+		
+		return isAncestorOf(child, false);
+	}
+	
+	/** Determines if this path is a direct parent of child.
+	 * @param child
+	 * @return
+	 */
+	public boolean isParentOf(CmsItemPath child) {
+		
+		return isAncestorOf(child, true);
+	}
+	
+	/** Determines if this path is an ancestor/parent of child.
+	 * @param child
+	 * @param parentOnly requires that this path is a direct parent.
+	 * @return
+	 */
+	private boolean isAncestorOf(CmsItemPath child, boolean parentOnly) {
+		
+		List<String> thisList = this.getPathSegments();
+		List<String> childList = child.getPathSegments();
+		
+		if (thisList.size() >= childList.size()) {
+			return false;
+		}
+		
+		if (parentOnly && thisList.size()+1 != childList.size()) {
+			// Strict requirement on direct parent
+			return false;
+		}
+		
+		return thisList.equals(childList.subList(0, thisList.size()));
+	}
 	
 	@Override
 	public boolean equals(Object obj) {
