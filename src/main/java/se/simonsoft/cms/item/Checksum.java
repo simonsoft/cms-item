@@ -31,7 +31,7 @@ public interface Checksum {
 	public String getMd5() throws UnsupportedOperationException;
 	
 	/**
-	 * @return {@link #getHex(Algorithm)} {@link Algorithm#MD5}
+	 * @return {@link #getHex(Algorithm)} {@link Algorithm#SHA1}
 	 */	
 	public String getSha1() throws UnsupportedOperationException;
 	
