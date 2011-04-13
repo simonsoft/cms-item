@@ -67,16 +67,6 @@ public class ChecksumRead extends ChecksumBase implements Checksum {
 		return toHex(getDigest(algorithm).digest());
 	}
 
-	@Override
-	public String getMd5() {
-		return getHex(Algorithm.MD5);
-	}
-
-	@Override
-	public String getSha1() {
-		return getHex(Algorithm.SHA1);
-	}
-
 	/**
 	 * Adds content to the current checksum values.
 	 * @param source content
