@@ -15,6 +15,22 @@ import se.simonsoft.cms.item.Checksum.Algorithm;
 public class ChecksumBaseTest {
 
 	@Test
+	public void testNamedGetters() {
+		ChecksumBase c = new ChecksumBase() {
+			@Override
+			public boolean has(Algorithm algorithm) {
+				return true;
+			}
+			@Override
+			public String getHex(Algorithm algorithm) {
+				return "get" + algorithm.toString().toLowerCase();
+			}
+		};
+		assertEquals("getmd5", c.getMd5());
+		assertEquals("getsha1", c.getSha1());
+	}
+	
+	@Test
 	public void testEqualsBoth() throws IOException {
 		InputStream source = new ByteArrayInputStream("testing\n".getBytes());
 		Checksum c1 = new ChecksumRead().add(source);
