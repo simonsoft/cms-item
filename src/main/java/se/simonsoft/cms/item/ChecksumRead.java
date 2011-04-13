@@ -31,6 +31,9 @@ public class ChecksumRead extends ChecksumBase implements Checksum {
 	private Map<Algorithm, MessageDigest> d;
 	private byte[] buffer = new byte[1024];
 	
+	private boolean done = false;
+	private Map<Algorithm, byte[]> f;
+	
 	/**
 	 * Enables default algorithms, currently all.
 	 * The list might grow in the future, if performance is critical use {@link #ChecksumRead(Algorithm...)}.
@@ -48,7 +51,8 @@ public class ChecksumRead extends ChecksumBase implements Checksum {
 				throw new RuntimeException("Failed to initialize checksum algorithm " + a, e);
 			}
 		}
-	}	
+		f = new TreeMap<Algorithm, byte[]>();
+	}
 	
 	@Override
 	public boolean has(Algorithm algorithm) {
@@ -61,10 +65,22 @@ public class ChecksumRead extends ChecksumBase implements Checksum {
 		}
 		return d.get(algorithm);
 	}
+
+	/**
+	 * Guards access to {@link MessageDigest#digest()} because it resets value.
+	 * @throws UnsupportedOperationException
+	 */
+	protected byte[] getDigestFinal(Algorithm algorithm) throws UnsupportedOperationException {
+		done = true;
+		if (!f.containsKey(algorithm)) {
+			f.put(algorithm, getDigest(algorithm).digest());
+		}
+		return f.get(algorithm);
+	}
 	
 	@Override
 	public String getHex(Algorithm algorithm) {
-		return toHex(getDigest(algorithm).digest());
+		return toHex(getDigestFinal(algorithm));
 	}
 
 	/**
@@ -74,6 +90,9 @@ public class ChecksumRead extends ChecksumBase implements Checksum {
 	 * @throws IOException if source reading failed
 	 */
 	public ChecksumRead add(InputStream source) throws IOException {
+		if (done) {
+			throw new IllegalStateException("No more content allowed because checksum has been read");
+		}
 		int numRead;
 		do {
 			numRead = source.read(buffer);

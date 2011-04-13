@@ -8,7 +8,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import se.simonsoft.cms.item.Checksum.Algorithm;
@@ -16,7 +15,6 @@ import se.simonsoft.cms.item.Checksum.Algorithm;
 public class ChecksumBaseTest {
 
 	@Test
-	@Ignore // in development
 	public void testEqualsBoth() throws IOException {
 		InputStream source = new ByteArrayInputStream("testing\n".getBytes());
 		Checksum c1 = new ChecksumRead().add(source);
@@ -27,5 +25,19 @@ public class ChecksumBaseTest {
 		when(c2.getHex(Algorithm.SHA1)).thenReturn(c1.getSha1());
 		assertTrue("Should be equal because both checksums exist and match", c1.equals(c2));
 	}
-
+	
+	@Test
+	public void testEqualsNone() throws IOException {
+		Checksum c1 = new ChecksumRead(new Algorithm[]{});
+		Checksum c2 = new ChecksumRead(new Algorithm[]{});
+		assertFalse("At least one checksum is required for equals", c1.equals(c2));
+	}
+	
+	@Test
+	public void testToString() {
+		Checksum c1 = new ChecksumRead();
+		assertTrue("got: " + c1, c1.toString().contains("MD5=d41d8cd98f00b204e9800998ecf8427e"));
+		assertTrue("got: " + c1, c1.toString().contains("SHA1=da39a3ee5e6b4b0d3255bfef95601890afd80709"));
+	}
+	
 }

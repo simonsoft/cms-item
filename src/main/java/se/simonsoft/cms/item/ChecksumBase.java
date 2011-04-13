@@ -1,7 +1,5 @@
 package se.simonsoft.cms.item;
 
-import se.simonsoft.cms.item.Checksum.Algorithm;
-
 /**
  * Shared implementation of equals, hashCode and toString.
  */
@@ -32,20 +30,38 @@ public abstract class ChecksumBase implements Checksum {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		// TODO
-		return super.equals(obj);
+		if (obj instanceof Checksum) {
+			String t = concat(this);
+			if (t.length() > 0) return t.equals(concat((Checksum) obj));
+		}
+		return false;
+	}
+	
+	private String concat(Checksum c) {
+		StringBuffer s = new StringBuffer();
+		for (Algorithm a : Algorithm.values()) {
+			if (c.has(a)) s.append(c.getHex(a));
+		}
+		return s.toString();
 	}
 
 	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
-		return super.hashCode();
+		return concat(this).hashCode();
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return super.toString();
-	}	
+		StringBuffer s = new StringBuffer();
+		for (Algorithm a : Algorithm.values()) {
+			s.append(',').append(a).append('=');
+			if (this.has(a)) {
+				s.append(this.getHex(a));
+			} else {
+				s.append("null");
+			}
+		}
+		return s.substring(1);
+	}
 
 }

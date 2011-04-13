@@ -30,9 +30,23 @@ public class ChecksumReadTest {
 	@Test
 	public void testInputStream() throws IOException {
 		InputStream source = new ByteArrayInputStream("testing\n".getBytes());
-		Checksum c = new ChecksumRead().add(source);
+		ChecksumRead c = new ChecksumRead().add(source);
 		assertEquals("eb1a3227cdc3fedbaec2fe38bf6c044a", c.getMd5());
+		try {
+			c.add(source);
+			fail("Should not allow content to be added after checksum getter has been called");
+		} catch (IllegalStateException e) {
+			// expected
+		}
 		assertEquals("9801739daae44ec5293d4e1f53d3f4d2d426d91c", c.getSha1());
+		// java MessageDigest resets checksum at digest() so this assert is indeed needed:
+		assertEquals("same value", "eb1a3227cdc3fedbaec2fe38bf6c044a", c.getMd5());
+		assertEquals("same value", "9801739daae44ec5293d4e1f53d3f4d2d426d91c", c.getSha1());
+		// If we were to support subsequent add this would be the test:
+		//InputStream source2 = new ByteArrayInputStream("test2\n".getBytes());
+		//c.add(source2);
+		//assertEquals("new value", "4f3c4e23c1f576a6c77b14619538c810", c.getMd5());
+		//assertEquals("new value", "f29d1cbe996c78292a32e0a9c79982cb57f6591d", c.getSha1());
 	}
 	
 	@Test
