@@ -3,7 +3,7 @@ package se.simonsoft.cms.item;
 /**
  * Shared implementation of equals, hashCode and toString.
  */
-public class ChecksumBase {
+public abstract class ChecksumBase implements Checksum {
 
 	public ChecksumBase() {
 		super();
