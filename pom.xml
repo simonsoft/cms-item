@@ -2,7 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	
-	<groupId>se.simonsoft</groupId>
 	<artifactId>cms-item</artifactId>
 	<version>1.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
@@ -12,20 +11,20 @@
 	
 	<parent>
 		<groupId>se.simonsoft</groupId>
-		<artifactId>parent</artifactId>
-		<version>1.4</version>
+		<artifactId>simonsoft-maven-parent</artifactId>
+		<version>2.0-SNAPSHOT</version>
 	</parent>
 	
 	<scm>
 		<developerConnection>
-			scm:svn:https://pds-svn-gbg.pdsvision.net/svn/modules/${artifactId}/trunk
+			scm:svn:https://pds-svn-gbg.pdsvision.net/svn/modules/${project.artifactId}/trunk
 		</developerConnection>
 		<tag>HEAD</tag>
 	</scm>
 
 	<issueManagement>
 		<system>Trac</system>
-		<url>https://pds-svn-gbg.pdsvision.net/trac/${artifactId}</url>
+		<url>https://pds-svn-gbg.pdsvision.net/trac/modules/${prject.artifactId}</url>
 	</issueManagement>
 	
 	<ciManagement>
