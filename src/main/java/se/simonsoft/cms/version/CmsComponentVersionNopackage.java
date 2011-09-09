@@ -26,8 +26,8 @@ public final class CmsComponentVersionNopackage implements CmsComponentVersion {
 	}
 
 	@Override
-	public String getTag() {
-		return DEFAULT_TAG;
+	public String getBuildTag() {
+		return DEFAULT_NAME;
 	}
 	
 }

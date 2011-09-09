@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
  * Version information factory.
  * Identifies simonsoft components and returns version info given component ID.
  * 
- * Note that the default Manifest file lookup won't find a webapp's own manifest.
- * For that see
+ * Note that the default Manifest file lookup won't find a webapp's own manifest. For that see
  * http://stackoverflow.com/questions/615493/how-do-i-read-the-manifest-file-for-a-webapp-running-in-apache-tomcat
+ * and use constructor {@link CmsComponentVersionManifest#CmsComponentVersionManifest(Manifest)}.
  */
 public abstract class CmsComponents {
 
@@ -39,13 +39,13 @@ public abstract class CmsComponents {
 	 * 
 	 * See class comment regarding webapp support.
 	 * 
-	 * @param componentId The component name, a.k.a. maven artifactId
+	 * @param simonsoftComponentId The component name, a.k.a. maven artifactId
 	 * @return info if found, null if not
 	 */
-	public static CmsComponentVersion getVersion(String componentId) {
+	public static CmsComponentVersion getVersion(String simonsoftComponentId) {
 		Map<String,CmsComponentVersion> v = getAll();
-		if (v != null && v.containsKey(componentId)) {
-			return v.get(componentId);
+		if (v != null && v.containsKey(simonsoftComponentId)) {
+			return v.get(simonsoftComponentId);
 		}
 		return null;
 	}

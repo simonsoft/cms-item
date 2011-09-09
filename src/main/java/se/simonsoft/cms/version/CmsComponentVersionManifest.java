@@ -34,7 +34,7 @@ public class CmsComponentVersionManifest implements CmsComponentVersion {
 		this.buildName = getString(manifestAttributes, ATTRIBUTE_BUILD_NAME, null);
 		this.buildNumber = getInt(manifestAttributes, ATTRIBUTE_BUILD_NUMBER);
 		this.sourceRevision = getInt(manifestAttributes, ATTRIBUTE_BUILD_REVISION);
-		this.tag = getString(manifestAttributes, ATTRIBUTE_BUILD_TAG, DEFAULT_TAG);
+		this.tag = getString(manifestAttributes, ATTRIBUTE_BUILD_TAG, DEFAULT_NAME);
 	}
 
 	private String getString(Attributes manifestAttributes, String key, String dft) {
@@ -61,7 +61,7 @@ public class CmsComponentVersionManifest implements CmsComponentVersion {
 	@Override
 	public boolean isKnown() {
 		return buildName != null && buildNumber != null && sourceRevision != null
-				&& tag != DEFAULT_TAG; // instance, not equals
+				&& tag != DEFAULT_NAME; // instance, not equals
 	}
 	
 	@Override
@@ -80,13 +80,13 @@ public class CmsComponentVersionManifest implements CmsComponentVersion {
 	}
 
 	@Override
-	public String getTag() {
+	public String getBuildTag() {
 		return tag;
 	}
 
 	@Override
 	public String toString() {
-		return getTag() + "@" + getSourceRevision();
+		return getBuildName() + " rev " + getSourceRevision() + " build " + getBuildNumber();
 	}
 
 }
