@@ -80,7 +80,6 @@ public abstract class CmsComponents {
 		//no caching until we've sorted out the classloader issue//if (all == null) {
 			all = readAll(CmsComponents.class.getClassLoader());
 			if (all == null) {
-				logger.warn("Version info was requested but no package info is available");
 				return null;
 			}
 		//}

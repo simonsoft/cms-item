@@ -15,6 +15,16 @@ public interface CmsComponentVersion {
 	boolean isKnown();
 	
 	/**
+	 * @return the 'Implementation-Version', i.e. version from POM
+	 */
+	String getVersion();
+	
+	/**
+	 * @return true if version (or lack thereof) indicates we're not running a release build
+	 */
+	boolean isSnapshot();
+	
+	/**
 	 * @return name of the build project, useful to identify branches,
 	 *  '{@value #DEFAULT_NAME}' if not an official build
 	 */
@@ -38,9 +48,9 @@ public interface CmsComponentVersion {
 	String getBuildTag();
 	
 	/**
-	 * @return display label with name, revision and build number,
-	 * excluding any internal info like URLs and build server identification
+	 * Constructs different version label for snapshots and releases.
+	 * @return best effort version identification label, with build info only if needed
 	 */
-	String toString();
+	String getLabel();
 	
 }

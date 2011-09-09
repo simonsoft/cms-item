@@ -9,6 +9,16 @@ public final class CmsComponentVersionNopackage implements CmsComponentVersion {
 	public boolean isKnown() {
 		return false;
 	}
+	
+	@Override
+	public String getVersion() {
+		return DEFAULT_NAME;
+	}
+
+	@Override
+	public boolean isSnapshot() {
+		return true;
+	}
 
 	@Override
 	public String getBuildName() {
@@ -27,7 +37,17 @@ public final class CmsComponentVersionNopackage implements CmsComponentVersion {
 
 	@Override
 	public String getBuildTag() {
-		return DEFAULT_NAME;
+		return null;
+	}
+
+	@Override
+	public String getLabel() {
+		return getVersion();
+	}
+
+	@Override
+	public String toString() {
+		return "nopackage-" + getLabel();
 	}
 	
 }

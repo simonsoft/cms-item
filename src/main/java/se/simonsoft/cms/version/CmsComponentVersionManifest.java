@@ -16,11 +16,15 @@ public class CmsComponentVersionManifest implements CmsComponentVersion {
 
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	
+	public static final String ATTRIBUTE_VERSION = "Implementation-Version";
 	public static final String ATTRIBUTE_BUILD_NAME = "Simonsoft-Build-Name";
 	public static final String ATTRIBUTE_BUILD_NUMBER = "Simonsoft-Build-Number";
 	public static final String ATTRIBUTE_BUILD_REVISION = "Simonsoft-Build-Revision";
 	public static final String ATTRIBUTE_BUILD_TAG = "Simonsoft-Build-Tag";
 	
+	public static final String VERSION_SNAPSHOT_SUFFIX = "-SNAPSHOT";
+	
+	private String version;
 	private String buildName;
 	private Integer buildNumber;
 	private Integer sourceRevision;
@@ -31,33 +35,29 @@ public class CmsComponentVersionManifest implements CmsComponentVersion {
 	}
 	
 	public CmsComponentVersionManifest(Attributes manifestAttributes) {
+		this.version = getString(manifestAttributes, ATTRIBUTE_VERSION, DEFAULT_NAME);
 		this.buildName = getString(manifestAttributes, ATTRIBUTE_BUILD_NAME, null);
 		this.buildNumber = getInt(manifestAttributes, ATTRIBUTE_BUILD_NUMBER);
 		this.sourceRevision = getInt(manifestAttributes, ATTRIBUTE_BUILD_REVISION);
-		this.tag = getString(manifestAttributes, ATTRIBUTE_BUILD_TAG, DEFAULT_NAME);
+		this.tag = getString(manifestAttributes, ATTRIBUTE_BUILD_TAG, null);
 	}
 
-	private String getString(Attributes manifestAttributes, String key, String dft) {
-		String v = manifestAttributes.getValue(key);
-		if (v == null || v.length() == 0) {
-			return dft;
-		}
-		return v;
+	@Override
+	public String getVersion() {
+		return DEFAULT_NAME;
 	}
+
+	@Override
+	public boolean isSnapshot() {
+		if (version == null || DEFAULT_NAME.equals(version)) {
+			return true;
+		}
+		if (version.endsWith(VERSION_SNAPSHOT_SUFFIX)) {
+			return true;
+		}
+		return false;
+	}	
 	
-	private Integer getInt(Attributes manifestAttributes, String key) {
-		String v = getString(manifestAttributes, key, null);
-		if (v == null) {
-			return null;
-		}
-		try {
-			return Integer.parseInt(v);
-		} catch (NumberFormatException e) {
-			logger.error("Failed integer parse of manifest attribute value '{}'", v, e);
-			return null;
-		}
-	}
-
 	@Override
 	public boolean isKnown() {
 		return buildName != null && buildNumber != null && sourceRevision != null
@@ -83,10 +83,39 @@ public class CmsComponentVersionManifest implements CmsComponentVersion {
 	public String getBuildTag() {
 		return tag;
 	}
+	
+	@Override
+	public String getLabel() {
+		if (isSnapshot()) {
+			return getVersion() + " " + getBuildName() + "@" + getSourceRevision() + "#" + getBuildNumber();
+		}
+		return getVersion();
+	}	
 
 	@Override
 	public String toString() {
-		return getBuildName() + " rev " + getSourceRevision() + " build " + getBuildNumber();
+		return getBuildName() + " " + getLabel();
 	}
+	
+	private String getString(Attributes manifestAttributes, String key, String dft) {
+		String v = manifestAttributes.getValue(key);
+		if (v == null || v.length() == 0) {
+			return dft;
+		}
+		return v;
+	}
+	
+	private Integer getInt(Attributes manifestAttributes, String key) {
+		String v = getString(manifestAttributes, key, null);
+		if (v == null) {
+			return null;
+		}
+		try {
+			return Integer.parseInt(v);
+		} catch (NumberFormatException e) {
+			logger.error("Failed integer parse of manifest attribute value '{}'", v, e);
+			return null;
+		}
+	}	
 
 }
