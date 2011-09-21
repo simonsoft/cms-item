@@ -2,7 +2,12 @@ package se.simonsoft.cms.item;
 
 /**
  * Used instead of String to identify CMS items (a.k.a. objects/entries/files or folders).
+ * 
+ * The interface methods should return the <em>persistent</em> form of id,
+ * typically location and revision -- never parameters for transformation etc.
+ * 
  * Typically immutable as the different getters provides identifiers in different contexts.
+ * 
  * Facilitates mocking when unit testing methods that deal with CMS paths and URLs.
  */
 public interface CmsItemId {
@@ -23,12 +28,14 @@ public interface CmsItemId {
 	
 	/**
 	 * Local id without hostname, unique within the context of a connection to a server.
-	 * @return logical id, including parameters like peg rev when specified
+	 * TODO Still unknown if fragment identifiers should be considered persistent.
+	 * @return logical id, including persistent parameters, i.e. peg rev, but not including actions etc.
 	 */
 	String getLogicalId();
 
 	/**
 	 * @return logical id as from {@link #getLogicalId()} but with fully qualified server name
+	 * @deprecated Will probably be removed because this interface represents the persistent form of id.
 	 */
 	String getLogicalIdFull();
 
