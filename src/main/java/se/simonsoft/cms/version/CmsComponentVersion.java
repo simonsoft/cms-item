@@ -7,7 +7,7 @@ package se.simonsoft.cms.version;
  */
 public interface CmsComponentVersion {
 
-	public static final String DEFAULT_NAME = "dev";
+	public static final String UNKNOWN_VERSION = "dev";
 	
 	/**
 	 * @return true if the component version is known
@@ -25,8 +25,7 @@ public interface CmsComponentVersion {
 	boolean isSnapshot();
 	
 	/**
-	 * @return name of the build project, useful to identify branches,
-	 *  '{@value #DEFAULT_NAME}' if not an official build
+	 * @return name of the build project, useful to identify branches
 	 */
 	String getBuildName();
 	

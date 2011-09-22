@@ -12,7 +12,7 @@ public final class CmsComponentVersionNopackage implements CmsComponentVersion {
 	
 	@Override
 	public String getVersion() {
-		return DEFAULT_NAME;
+		return UNKNOWN_VERSION;
 	}
 
 	@Override
@@ -22,7 +22,7 @@ public final class CmsComponentVersionNopackage implements CmsComponentVersion {
 
 	@Override
 	public String getBuildName() {
-		return null;
+		return "";
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public final class CmsComponentVersionNopackage implements CmsComponentVersion {
 
 	@Override
 	public String getBuildTag() {
-		return null;
+		return "";
 	}
 
 	@Override

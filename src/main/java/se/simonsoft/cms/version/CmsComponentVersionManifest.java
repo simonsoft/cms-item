@@ -35,21 +35,21 @@ public class CmsComponentVersionManifest implements CmsComponentVersion {
 	}
 	
 	public CmsComponentVersionManifest(Attributes manifestAttributes) {
-		this.version = getString(manifestAttributes, ATTRIBUTE_VERSION, DEFAULT_NAME);
-		this.buildName = getString(manifestAttributes, ATTRIBUTE_BUILD_NAME, null);
+		this.version = getString(manifestAttributes, ATTRIBUTE_VERSION, UNKNOWN_VERSION);
+		this.buildName = getString(manifestAttributes, ATTRIBUTE_BUILD_NAME, "");
 		this.buildNumber = getInt(manifestAttributes, ATTRIBUTE_BUILD_NUMBER);
 		this.sourceRevision = getInt(manifestAttributes, ATTRIBUTE_BUILD_REVISION);
-		this.tag = getString(manifestAttributes, ATTRIBUTE_BUILD_TAG, null);
+		this.tag = getString(manifestAttributes, ATTRIBUTE_BUILD_TAG, "");
 	}
 
 	@Override
 	public String getVersion() {
-		return DEFAULT_NAME;
+		return version;
 	}
 
 	@Override
 	public boolean isSnapshot() {
-		if (version == null || DEFAULT_NAME.equals(version)) {
+		if (version == null || UNKNOWN_VERSION.equals(version)) {
 			return true;
 		}
 		if (version.endsWith(VERSION_SNAPSHOT_SUFFIX)) {
@@ -60,8 +60,10 @@ public class CmsComponentVersionManifest implements CmsComponentVersion {
 	
 	@Override
 	public boolean isKnown() {
-		return buildName != null && buildNumber != null && sourceRevision != null
-				&& tag != DEFAULT_NAME; // instance, not equals
+		return version != UNKNOWN_VERSION
+				&& buildName != null && buildName.length() > 0 
+				&& buildNumber != null && sourceRevision != null
+				&& tag != null && tag.length() > 0;
 	}
 	
 	@Override
@@ -86,8 +88,14 @@ public class CmsComponentVersionManifest implements CmsComponentVersion {
 	
 	@Override
 	public String getLabel() {
+		if (!isKnown()) {
+			if (getVersion() == UNKNOWN_VERSION) {
+				return "unknown";
+			}
+			return getVersion() + " unofficial build";
+		}
 		if (isSnapshot()) {
-			return getVersion() + " " + getBuildName() + "@" + getSourceRevision() + "#" + getBuildNumber();
+			return getVersion() + " " + getBuildName() + " revision " + getSourceRevision() + " build " + getBuildNumber();
 		}
 		return getVersion();
 	}	
