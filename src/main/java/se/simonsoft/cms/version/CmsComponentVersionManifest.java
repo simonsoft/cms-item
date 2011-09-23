@@ -102,7 +102,7 @@ public class CmsComponentVersionManifest implements CmsComponentVersion {
 
 	@Override
 	public String toString() {
-		return getBuildName() + " " + getLabel();
+		return getLabel();
 	}
 	
 	private String getString(Attributes manifestAttributes, String key, String dft) {
