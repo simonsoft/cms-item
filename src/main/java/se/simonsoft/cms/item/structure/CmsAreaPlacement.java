@@ -1,5 +1,7 @@
 package se.simonsoft.cms.item.structure;
 
+import se.simonsoft.cms.item.CmsItemPath;
+
 /**
  * Represent the configured name and location of known "areas",
  * i.e. parts of the repository with one type of content under it.
@@ -15,35 +17,61 @@ public class CmsAreaPlacement {
 	 */
 	public static final CmsAreaPlacement LANG_IN_PROJ = new CmsAreaPlacement("/*/lang");
 	
+	private String value;
+	private int index;
+	private String name;
+	
 	public CmsAreaPlacement(String configValue) throws IllegalArgumentException {
-		
+		this.value = configValue;
+		read(value);
+	}
+
+	private void read(String v) {
+		String[] s = v.split("/");
+		if (s.length < 2) {
+			throw new IllegalArgumentException("Invalid configuration value '" + v + "'");
+		}
+		if (s.length == 2) {
+			this.index = 1;
+			this.name = s[1];
+			return;
+		}
+		if (s.length > 3) {
+			throw new IllegalArgumentException("Invalid configuration value '" + v + "'. Depth can be no more than 2.");
+		}
+		if (s[1].equals("*")) {
+			this.index = 2;
+			this.name = s[2];
+			return;
+		} else {
+			throw new IllegalArgumentException("Invalid configuration value '" + v + "'. Must mark level.");
+		}
 	}
 	
 	/**
 	 * @return The folder name of the area
 	 */
 	public String getAreaName() {
-		throw new UnsupportedOperationException();
+		return this.name;
 	}
 	
 	/**
-	 * TODO what start index is consistent with CmsItemPath, 0 or 1?
-	 * @return
+	 * Returns the path element index where the area should exist.
+	 * Indexes same as in {@link CmsItemPath#getName(int)}
+	 * @return 1 for first path segment, 2 for second, ...
 	 */
 	public int getAreaPathSegmentIndex() {
-		throw new UnsupportedOperationException();
+		return this.index;
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Method not implemented");
+		return this.value;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Method not implemented");
+		return this.toString().equals("" + obj);
 	}
 	
 }
