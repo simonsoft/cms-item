@@ -40,14 +40,19 @@ public abstract class CmsComponents {
 	 * See class comment regarding webapp support.
 	 * 
 	 * @param simonsoftComponentId The component name, a.k.a. maven artifactId
-	 * @return info if found, null if not
+	 * @return info if found, {@link CmsComponentVersionNopackage} if component id has no info
 	 */
 	public static CmsComponentVersion getVersion(String simonsoftComponentId) {
 		Map<String,CmsComponentVersion> v = getAll();
 		if (v != null && v.containsKey(simonsoftComponentId)) {
 			return v.get(simonsoftComponentId);
 		}
-		return null;
+		return new CmsComponentVersionNopackage();
+	}
+	
+	public static boolean hasComponent(String simonsoftComponentId) {
+		Map<String,CmsComponentVersion> v = getAll();
+		return v != null && v.containsKey(simonsoftComponentId);
 	}
 	
 	public static void logAllVersions() {
@@ -95,6 +100,11 @@ public abstract class CmsComponents {
 			throw new RuntimeException("Read error when attempting to load package information", e);
 		}
 
+		if (resources == null) {
+			logger.warn("Resource loader {} returned null when looking for manifest files", manifestLoader);
+			return null;
+		}
+		
 		int total = 0;
 		while (resources.hasMoreElements()) {
 			total++;
