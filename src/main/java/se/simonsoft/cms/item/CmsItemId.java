@@ -34,8 +34,9 @@ public interface CmsItemId {
 	String getLogicalId();
 
 	/**
-	 * @return logical id as from {@link #getLogicalId()} but with fully qualified server name
-	 * @deprecated Will probably be removed because this interface represents the persistent form of id.
+	 * Hybrid between persistent id and URL-like id with hostname.
+	 * @return logical id as from {@link #getLogicalId()} but with fully qualified server name,
+	 *  stripping any other non-persistent info like transforms
 	 */
 	String getLogicalIdFull();
 
