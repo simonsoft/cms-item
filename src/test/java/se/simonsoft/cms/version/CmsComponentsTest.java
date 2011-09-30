@@ -12,6 +12,7 @@ public class CmsComponentsTest {
 		CmsComponentVersion v = CmsComponents.getVersion("cms-item");
 		// minimize the risk of causing init errors in calling components
 		assertNotNull("Should never return null version info", v);
+		// If this test fails there might be a meta-inf folder in classpath, uncommon but not impossible
 		assertEquals(CmsComponentVersionNopackage.class, v.getClass());
 		assertFalse(CmsComponents.hasComponent("cms-item"));
 	}

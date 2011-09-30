@@ -15,8 +15,9 @@ public interface CmsItemId {
 	/**
 	 * Resource URL, no query string. Not even revision number.
 	 * If revision ({@link #getPegRev()}) is specified this is the URL at that revision (i.e. "peg").
+	 * If protocol is not known, always assumes "http" as CMS servers should be capable of redirecting.
+	 * If there are implementations that may return "https" it should be clearly stated (and maybe reconsidered).
 	 * @return resource URL, encoded, encoding based on UTF-8 bytes for non-ascii
-	 * TODO how about http/https?
 	 */
 	String getUrl();
 	
