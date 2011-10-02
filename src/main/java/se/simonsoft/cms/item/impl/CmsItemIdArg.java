@@ -139,7 +139,11 @@ public class CmsItemIdArg implements CmsItemId {
 		return "";
 	}
 
-	private String getLogicalIdPath() {
+	/**
+	 * Used for example when separating object and revision fields in a form.
+	 * @return Location part of the id, no peg rev.
+	 */
+	public String getLogicalIdPath() {
 		return PROTO + parent + repo + "^" + relpath;
 	}
 	
