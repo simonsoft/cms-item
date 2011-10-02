@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
+import se.simonsoft.cms.item.CmsRepository;
 
 /**
  * Concrete class for use in the common case when a logical id
@@ -119,12 +120,16 @@ public class CmsItemIdArg implements CmsItemId {
 	 * Used for validation in services that support only operations in
 	 * a current repository connection session.
 	 */
-	@Override
 	public String getRepositoryUrl() {
 		if (!isFullyQualified()) {
 			throw new IllegalStateException("Hostname unknown for " + getLogicalId());
 		}
 		return HTTP + host + parent + repo;
+	}
+	
+	@Override
+	public CmsRepository getRepository() {
+		return new CmsRepository(getRepositoryUrl());
 	}
 
 	private String getQuery() {

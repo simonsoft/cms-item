@@ -26,6 +26,7 @@ public class CmsItemIdArgTest {
 		assertTrue(p.isPegged());
 		assertTrue(p.isPeggedOriginally());
 		assertEquals("/vvab/xml/Docs/Sa s.xml", p.getRelPath().toString());
+		assertEquals("http://demo.simonsoftcms.se/svn/demo1", p.getRepository().toString());
 	}
 	
 	@Test

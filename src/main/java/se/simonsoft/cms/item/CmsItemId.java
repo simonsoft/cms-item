@@ -47,7 +47,13 @@ public interface CmsItemId {
 	CmsItemPath getRelPath();
 	
 	/**
+	 * @return repository root, toString is URL without trailing slash, encoded
+	 */
+	CmsRepository getRepository();
+	
+	/**
 	 * @return repository root URL without trailing slash, encoded
+	 * @deprecated Use {@link #getRepository()}.getUrl()
 	 */
 	String getRepositoryUrl();
 	
