@@ -63,7 +63,7 @@ public class CmsItemIdArg implements CmsItemId {
 	}
 	
 	/**
-	 * Using and is-name rather than has-name to conform with javabean spec.
+	 * Using an is-name rather than has-name to conform with javabean spec.
 	 * @return true if id has peg rev
 	 */
 	public boolean isPegged() {

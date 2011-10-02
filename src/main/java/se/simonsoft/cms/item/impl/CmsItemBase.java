@@ -1,4 +1,8 @@
-package se.simonsoft.cms.item;
+package se.simonsoft.cms.item.impl;
+
+import se.simonsoft.cms.item.Checksum;
+import se.simonsoft.cms.item.CmsItem;
+import se.simonsoft.cms.item.CmsItemId;
 
 /**
  * Optional base class for {@link CmsItem}, throwing {@link UnsupportedOperationException} in all methods.
