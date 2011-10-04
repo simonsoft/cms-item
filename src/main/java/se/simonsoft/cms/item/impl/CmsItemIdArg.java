@@ -22,6 +22,12 @@ import se.simonsoft.cms.item.CmsRepository;
  */
 public class CmsItemIdArg implements CmsItemId {
 
+	// TODO before adding more validation here make sure it can be shared
+	// between SvnLogicalId and other implementations.
+	// This class could have some basic validation in the constructor
+	// but since it is used to process input incrementally
+	// it needs an explicit validate() method for semantic validation.
+	
 	public static final String PROTO = "x-svn://";
 	public static final String HTTP = "http://";
 	public static final String PEG = "?p=";
