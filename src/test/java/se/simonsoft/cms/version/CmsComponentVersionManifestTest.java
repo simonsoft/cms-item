@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Map.Entry;
 import java.util.jar.Manifest;
 
 import org.junit.Test;
@@ -48,9 +47,9 @@ public class CmsComponentVersionManifestTest {
 		String mf = mf_jar + mf_jar_snapshot + mf_hudson + mf_custom;
 		ByteArrayInputStream in = new ByteArrayInputStream(mf.getBytes());
 		Manifest m = new Manifest(in);
-		for (Entry<Object, Object> a : m.getMainAttributes().entrySet()) {
-			System.out.println(a.getKey() + ": " + a.getValue());
-		}
+		//for (Entry<Object, Object> a : m.getMainAttributes().entrySet()) {
+		//	System.out.println(a.getKey() + ": " + a.getValue());
+		//}
 		CmsComponentVersion v = new CmsComponentVersionManifest(m);
 		assertTrue(v.isKnown());
 		assertTrue(v.isSnapshot());
