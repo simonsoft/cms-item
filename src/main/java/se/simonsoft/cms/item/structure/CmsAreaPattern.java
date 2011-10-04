@@ -71,17 +71,14 @@ public class CmsAreaPattern {
 			}
 			master = getPathOutside(master);
 		}
-		List<String> p = master.getPathSegments();
-		List<String> n = new LinkedList<String>();
+		List<String> p = new LinkedList<String>(master.getPathSegments());
 		int insertionPoint = getAreaPathSegmentIndex() - 1;
 		if (isAreaRelative()) { 
 			insertionPoint = p.size() + getAreaPathSegmentIndex();
 		}
-		n.addAll(p.subList(0, insertionPoint));
-		n.add(getAreaName());
-		n.add(destinationLabel);
-		n.addAll(p.subList(insertionPoint, p.size()));
-		return concat(n);
+		p.add(insertionPoint, destinationLabel);
+		p.add(insertionPoint, getAreaName());
+		return concat(p);
 	}
 	
 	/**

@@ -2,7 +2,9 @@ package se.simonsoft.cms.item;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -38,6 +40,7 @@ public class CmsItemPath {
 	private static final Pattern VALID_PATH_PATTERN = Pattern.compile('^' + VALID_PATH + '$');
 	
 	private String path;
+	private List<String> pathList;
 
 	/**
 	 * @param path with leading slash, trailing slash will be trimmed
@@ -152,11 +155,48 @@ public class CmsItemPath {
 	}
 	
 	/** Provides the whole path as a list of path segments.
-	 * @return
+	 * @return immutable list of path segments
 	 */
 	public List<String> getPathSegments() {
-		
-		List<String> pathList = Arrays.asList(this.getPathSegmentsArray());
+		if (pathList == null) {
+			pathList = new ArrayList<String>(Arrays.asList(this.getPathSegmentsArray())) {
+				private static final long serialVersionUID = 1L;
+				private static final String MSG = "Immutable path segments list from CmsItemPath";
+				@Override public String set(int index, String element) {
+					throw new UnsupportedOperationException(MSG);
+				}
+				@Override public boolean add(String element) {
+					throw new UnsupportedOperationException(MSG);
+				}
+				@Override public void add(int index, String element) {
+					throw new UnsupportedOperationException(MSG);
+				}
+				@Override public boolean addAll(Collection<? extends String> c) {
+					throw new UnsupportedOperationException(MSG);
+				}
+				@Override public boolean addAll(int index, Collection<? extends String> c) {
+					throw new UnsupportedOperationException(MSG);
+				}
+				@Override public String remove(int index) {
+					throw new UnsupportedOperationException(MSG);
+				}
+				@Override public boolean remove(Object o) {
+					throw new UnsupportedOperationException(MSG);
+				}
+				@Override public boolean removeAll(Collection<?> c) {
+					throw new UnsupportedOperationException(MSG);
+				}
+				@Override protected void removeRange(int fromIndex, int toIndex) {
+					throw new UnsupportedOperationException(MSG);
+				}
+				@Override public void clear() {
+					throw new UnsupportedOperationException(MSG);
+				}
+				@Override public boolean retainAll(Collection<?> c) {
+					throw new UnsupportedOperationException(MSG);
+				}
+			};
+		}
 		return pathList;
 	}
 

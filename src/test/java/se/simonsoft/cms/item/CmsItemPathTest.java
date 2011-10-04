@@ -3,6 +3,7 @@ package se.simonsoft.cms.item;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Ignore;
@@ -346,5 +347,48 @@ public class CmsItemPathTest {
 		assertFalse("A path is not a parent of itself", path.isParentOf(path));
 		
 	}
+	
+	@Test
+	public void testPathSegmentsListOptimization() {
+		CmsItemPath path = new CmsItemPath("/folder name/subfolder");
+		assertSame("Should reuse instance", path.getPathSegments(), path.getPathSegments());
+		try {
+			path.getPathSegments().add("c");
+			fail("should be immutable");
+		} catch (UnsupportedOperationException e) {};
+		try {
+			path.getPathSegments().addAll(Arrays.asList("d"));
+			fail("should be immutable");
+		} catch (UnsupportedOperationException e) {};
+		try {
+			path.getPathSegments().add(1, "e");
+			fail("should be immutable");
+		} catch (UnsupportedOperationException e) {};
+		try {
+			path.getPathSegments().remove(1);
+			fail("should be immutable");
+		} catch (UnsupportedOperationException e) {};
+		try {
+			path.getPathSegments().remove("subfolder");
+			fail("should be immutable");
+		} catch (UnsupportedOperationException e) {};
+		try {
+			path.getPathSegments().removeAll(Arrays.asList("subfolder"));
+			fail("should be immutable");
+		} catch (UnsupportedOperationException e) {};
+		try {
+			path.getPathSegments().clear();
+			fail("should be immutable");
+		} catch (UnsupportedOperationException e) {};
+		try {
+			path.getPathSegments().set(1, "g");
+			fail("should be immutable");
+		} catch (UnsupportedOperationException e) {};
+		try {
+			path.getPathSegments().retainAll(Arrays.asList("subfolder"));
+			fail("should be immutable");
+		} catch (UnsupportedOperationException e) {};
+	}
+
 
 }
