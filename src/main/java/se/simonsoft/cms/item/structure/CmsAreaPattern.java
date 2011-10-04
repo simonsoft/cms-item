@@ -1,5 +1,6 @@
 package se.simonsoft.cms.item.structure;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import se.simonsoft.cms.item.CmsItemPath;
@@ -46,8 +47,13 @@ public class CmsAreaPattern {
 	 */
 	public boolean isPathInside(CmsItemPath path) {
 		int ai = getAreaPathSegmentIndex();
-		return ai + 1 < path.getPathSegments().size() // must have one additional segment after area
+		if (isAreaRelative()) {
+			return -ai + 1 < path.getPathSegments().size()
+				&& path.getName(ai - 2).equals(getAreaName());
+		} else {
+			return ai + 1 < path.getPathSegments().size() // must have one additional segment after area
 				&& path.getName(ai).equals(getAreaName());
+		}
 	}
 	
 	public boolean isPathOutside(CmsItemPath path) {
@@ -65,16 +71,17 @@ public class CmsAreaPattern {
 			}
 			master = getPathOutside(master);
 		}
-		StringBuffer b = new StringBuffer();
-		int n = getAreaPathSegmentIndex();
-		int i = 0;
-		for (String s : master.getPathSegments()) {
-			if (++i == n) {
-				b.append('/').append(getAreaName()).append('/').append(destinationLabel);
-			}
-			b.append('/').append(s);
+		List<String> p = master.getPathSegments();
+		List<String> n = new LinkedList<String>();
+		int insertionPoint = getAreaPathSegmentIndex() - 1;
+		if (isAreaRelative()) { 
+			insertionPoint = p.size() + getAreaPathSegmentIndex();
 		}
-		return new CmsItemPath(b.toString());
+		n.addAll(p.subList(0, insertionPoint));
+		n.add(getAreaName());
+		n.add(destinationLabel);
+		n.addAll(p.subList(insertionPoint, p.size()));
+		return concat(n);
 	}
 	
 	/**
@@ -88,20 +95,31 @@ public class CmsAreaPattern {
 		if (!isPathInside(pathInsideArea)) {
 			throw new IllegalArgumentException("Path is a not inside area " + toString() + ":" + pathInsideArea);
 		}
-		return pathInsideArea.getName(getAreaPathSegmentIndex() + 1);
+		int labelPoint = getAreaPathSegmentIndex() + 1;
+		if (isAreaRelative()) {
+			labelPoint = labelPoint - 2;
+		}
+		return pathInsideArea.getName(labelPoint);
 	}
 	
 	/**
 	 * @return master path
 	 */
 	public CmsItemPath getPathOutside(CmsItemPath pathInsideArea) {
-		List<String> p = pathInsideArea.getPathSegments();
+		List<String> p = new LinkedList<String>(pathInsideArea.getPathSegments());
+		int deletionPoint = getAreaPathSegmentIndex() - 1;
+		if (isAreaRelative()) {
+			deletionPoint = p.size() + getAreaPathSegmentIndex() - 2;
+		}
+		p.remove(deletionPoint + 1); // remove label
+		p.remove(deletionPoint);
+		return concat(p);
+	}
+	
+	protected CmsItemPath concat(List<String> subPaths) {
 		StringBuffer b = new StringBuffer();
-		int a = getAreaPathSegmentIndex();
-		for (int i = 1; i <= p.size(); i++) {
-			if (i < a || i > a + 1) {
-				b.append('/').append(p.get(i - 1));
-			}
+		for (String s : subPaths) {
+			b.append('/').append(s);
 		}
 		return new CmsItemPath(b.toString());
 	}
@@ -123,7 +141,7 @@ public class CmsAreaPattern {
 	}
 	
 	boolean isAreaRelative() {
-		return false;
+		return getAreaPathSegmentIndex() < 0;
 	}
 
 	/**
@@ -133,7 +151,12 @@ public class CmsAreaPattern {
 	protected void read(String v) {
 		String[] s = v.split("/");
 		if (s.length < 2) {
-			throw new IllegalArgumentException("Invalid configuration value '" + v + "'");
+			if (v.startsWith("/")) {
+				throw new IllegalArgumentException("Invalid configuration value '" + v + "'");
+			}
+			this.index = -1;
+			this.name = s[0];
+			return;
 		}
 		if (s.length == 2) {
 			this.index = 1;

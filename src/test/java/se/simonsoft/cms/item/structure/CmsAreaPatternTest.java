@@ -140,18 +140,25 @@ public class CmsAreaPatternTest {
 	}
 	
 	@Test
-	@Ignore
 	public void testGraphicsTranslation() {
 		CmsTranslationsPattern relative = new CmsTranslationsPattern("lang");
 		assertTrue(relative.isAreaRelative());
-		assertEquals("/ab/graphics/001/lang/sv_SE/123.tif", "" +
-				relative.getPathInside(new CmsItemPath("/ab/graphics/001/123.tif"), "sv_SE"));
+		assertEquals(-1, relative.getAreaPathSegmentIndex());
+		CmsItemPath master = new CmsItemPath("/ab/graphics/001/123.tif");
+		assertTrue(relative.isPathOutside(master));
+		CmsItemPath t = relative.getPathInside(master, "sv_SE");
+		assertEquals("/ab/graphics/001/lang/sv_SE/123.tif", "" + t);
+		assertTrue(relative.isPathInside(t));
+		assertTrue("relative from root would be ok", relative.isPathInside(new CmsItemPath("/lang/de/x.gif")));
+		assertFalse("relative without label not ok", relative.isPathInside(new CmsItemPath("/lang/x.gif")));		
+		assertEquals("sv_SE", relative.getPathLabel(t));
+		assertEquals("/ab/graphics/001/123.tif", "" + relative.getPathOutside(t));
 	}
 	
 	@Test
 	@Ignore // just an idea
-	// with translations from releases we increase the risk of running into windows path length limitation
 	public void testShortenPath() {
+		// with translations from releases we increase the risk of running into windows path length limitation
 		new CmsAreaPattern("/*/lang/-/"); // means eliminate next path element after label
 	}
 	
