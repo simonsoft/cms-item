@@ -9,7 +9,7 @@ import se.simonsoft.cms.item.CmsItemPath;
  * Understands the CMS configuration strings used to define sections of the
  * repository such as translations and releases, provides path transformations.
  * <p>
- * Sample config strings: <code>{@value #LANG_IN_ROOT}</code>, <code>{@value #LANG_IN_PROJ}</code>.  
+ * Sample config strings: <code>/lang</code>, <code>/*</code><code>/lang</code>, <code>lang</code>.  
  * <p>
  * This is a low level class designed to understands a specific CMS config syntax.
  * It is highly recommended for calling code to add an abstraction layer that
@@ -23,15 +23,6 @@ import se.simonsoft.cms.item.CmsItemPath;
  * revision numbers taken into account when transforming paths.
  */
 public class CmsAreaPattern {
-
-	/**
-	 * Sample translation path setting {@value #LANG_IN_ROOT}.
-	 */
-	public static final CmsAreaPattern LANG_IN_ROOT = new CmsAreaPattern("/lang");
-	/**
-	 * Sample translation path setting {@value #LANG_IN_PROJ}.
-	 */
-	public static final CmsAreaPattern LANG_IN_PROJ = new CmsAreaPattern("/*/lang");
 	
 	private String value;
 	private int index;
