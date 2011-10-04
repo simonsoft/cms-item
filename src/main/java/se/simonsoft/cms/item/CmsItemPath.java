@@ -1,7 +1,5 @@
 package se.simonsoft.cms.item;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -40,7 +38,7 @@ public class CmsItemPath {
 	private static final Pattern VALID_PATH_PATTERN = Pattern.compile('^' + VALID_PATH + '$');
 	
 	private String path;
-	private List<String> pathList;
+	private List<String> pathList = null;
 
 	/**
 	 * @param path with leading slash, trailing slash will be trimmed
@@ -58,34 +56,6 @@ public class CmsItemPath {
 	
 	public String getPath() {
 		return path;
-	}
-	
-	/** Decided to not expose any encoded path from this class. SVNURL is normative with regards to encoding and we should not implement our own encoding.
-	 * @return path segments encoded using url escape, slashes preserved, non-ascii characters encoded using {@value #URL_ENCODING_CHARSET}
-	 */
-	@SuppressWarnings("unused")
-	private String getPathUrlEncoded() {
-		StringBuffer r = new StringBuffer();
-		String[] s = getPathSegmentsArray();
-		for (int i = 0; i < s.length; i++) {
-			r.append('/');
-			String[] w = s[i].split("\\s");
-			for (int j = 0; j < w.length; j++) {
-				if (j > 0) {
-					r.append("%20");
-				}
-				r.append(urlEncode(w[j]));
-			}
-		}
-		return r.toString();
-	}
-	
-	private String urlEncode(String s) {
-		try {
-			return URLEncoder.encode(s, URL_ENCODING_CHARSET);
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("predefined encoding not supported: " + URL_ENCODING_CHARSET, e);
-		}
 	}
 	
 	public String getPathTrimmed() {
