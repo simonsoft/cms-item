@@ -2,6 +2,7 @@ package se.simonsoft.cms.item.structure;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import se.simonsoft.cms.item.CmsItemPath;
@@ -86,14 +87,72 @@ public class CmsAreaPatternTest {
 		assertFalse(new CmsTranslationsPattern("/lang").isPathInside(p));
 		assertFalse(new CmsTranslationsPattern("/*/langs").isPathInside(p));
 		assertFalse(new CmsTranslationsPattern("/*/lan").isPathInside(p));
-		assertEquals("sv-SE", new CmsTranslationsPattern("/*/lang").getPathLabel(p));
+		CmsTranslationsPattern config = new CmsTranslationsPattern("/*/lang");
+		assertEquals("sv-SE", config.getPathLabel(p));
+		assertEquals("/vvab/xml/documents/900108.xml", "" + config.getPathOutside(p));
+		assertEquals("Translation of translation",
+				"/vvab/lang/en/xml/documents/900108.xml", "" + config.getPathInside(p, "en"));
 		try {
 			new CmsTranslationsPattern("/lang").getPathLabel(p);
 			fail("getPathLabel should throw exception if translation path is not according to config");
 		} catch (IllegalArgumentException e) {
 			// expected
 		}
-		// TODO support translation from translation
-	}	
+	}
+	
+	@Test(expected=IllegalArgumentException.class) 
+	public void testTranslateToSame() {
+		new CmsTranslationsPattern("/lang").getPathInside(
+				new CmsItemPath("/lang/de_DE/ab/xml/c.xml"), "de_DE");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testLabelNull() {
+		new CmsAreaPattern("/x").getPathInside(new CmsItemPath("y"), null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testLabelSlash() {
+		new CmsAreaPattern("/x").getPathInside(new CmsItemPath("y"), "A/B");
+	}
 
+	@Test
+	public void testRelease() {
+		CmsItemPath m = new CmsItemPath("/vvab/xml/documents/900108.xml");
+		CmsReleasesPattern top = new CmsReleasesPattern("/r");
+		CmsReleasesPattern sub = new CmsReleasesPattern("/*/_release");
+		assertTrue(top.isPathOutside(m));
+		assertTrue(sub.isPathOutside(m));
+		CmsItemPath rtop = top.getPathInside(m, "_B");
+		assertEquals("/r/_B/vvab/xml/documents/900108.xml", "" + rtop);
+		assertTrue(top.isPathInside(rtop));
+		assertFalse(sub.isPathInside(rtop));
+		assertEquals("_B", top.getPathLabel(rtop));
+		assertEquals(m, top.getPathOutside(rtop));
+		CmsItemPath rsub = sub.getPathInside(m, "1.2");
+		assertEquals("/vvab/_release/1.2/xml/documents/900108.xml", "" + rsub);
+		assertFalse(top.isPathInside(rsub));
+		assertTrue(sub.isPathInside(rsub));
+		assertEquals("1.2", sub.getPathLabel(rsub));
+		assertEquals(m, sub.getPathOutside(rsub));
+		// now translate the release
+		
+	}
+	
+	@Test
+	@Ignore
+	public void testGraphicsTranslation() {
+		CmsTranslationsPattern relative = new CmsTranslationsPattern("lang");
+		assertTrue(relative.isAreaRelative());
+		assertEquals("/ab/graphics/001/lang/sv_SE/123.tif", "" +
+				relative.getPathInside(new CmsItemPath("/ab/graphics/001/123.tif"), "sv_SE"));
+	}
+	
+	@Test
+	@Ignore // just an idea
+	// with translations from releases we increase the risk of running into windows path length limitation
+	public void testShortenPath() {
+		new CmsAreaPattern("/*/lang/-/"); // means eliminate next path element after label
+	}
+	
 }

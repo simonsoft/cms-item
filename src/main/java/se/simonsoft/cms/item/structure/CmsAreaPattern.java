@@ -1,5 +1,7 @@
 package se.simonsoft.cms.item.structure;
 
+import java.util.List;
+
 import se.simonsoft.cms.item.CmsItemPath;
 
 /**
@@ -48,11 +50,21 @@ public class CmsAreaPattern {
 				&& path.getName(ai).equals(getAreaName());
 	}
 	
+	public boolean isPathOutside(CmsItemPath path) {
+		return !isPathInside(path);
+	}
+	
 	/**
 	 * Transforms a master path to corresponding slave given a label.
 	 * Slave could be a translation and label would then be a language code.
 	 */
 	public CmsItemPath getPathInside(CmsItemPath master, String destinationLabel) {
+		if (isPathInside(master)) {
+			if (getPathLabel(master).equals(destinationLabel)) {
+				throw new IllegalArgumentException("Path already has label '" + destinationLabel + "': " + master);
+			}
+			master = getPathOutside(master);
+		}
 		StringBuffer b = new StringBuffer();
 		int n = getAreaPathSegmentIndex();
 		int i = 0;
@@ -69,8 +81,8 @@ public class CmsAreaPattern {
 	 * Extracts the label from a path inside the area,
 	 * label could be a language code or a release name.
 	 * @param pathInsideArea
-	 * @return language code according to path
-	 * @throws IllegalArgumentException if the path not {@link #isTranslation(CmsItemPath)}
+	 * @return label according to path
+	 * @throws IllegalArgumentException if the path is not inside area
 	 */
 	public String getPathLabel(CmsItemPath pathInsideArea) {
 		if (!isPathInside(pathInsideArea)) {
@@ -79,8 +91,19 @@ public class CmsAreaPattern {
 		return pathInsideArea.getName(getAreaPathSegmentIndex() + 1);
 	}
 	
+	/**
+	 * @return master path
+	 */
 	public CmsItemPath getPathOutside(CmsItemPath pathInsideArea) {
-		throw new UnsupportedOperationException("not implemented");
+		List<String> p = pathInsideArea.getPathSegments();
+		StringBuffer b = new StringBuffer();
+		int a = getAreaPathSegmentIndex();
+		for (int i = 1; i <= p.size(); i++) {
+			if (i < a || i > a + 1) {
+				b.append('/').append(p.get(i - 1));
+			}
+		}
+		return new CmsItemPath(b.toString());
 	}
 	
 	/**
@@ -97,6 +120,10 @@ public class CmsAreaPattern {
 	 */
 	int getAreaPathSegmentIndex() {
 		return this.index;
+	}
+	
+	boolean isAreaRelative() {
+		return false;
 	}
 
 	/**
