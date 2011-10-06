@@ -1,4 +1,4 @@
-package se.simonsoft.cms.item;
+package se.simonsoft.cms.item.impl;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -10,7 +10,10 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
+import se.simonsoft.cms.item.Checksum;
 import se.simonsoft.cms.item.Checksum.Algorithm;
+import se.simonsoft.cms.item.impl.ChecksumBase;
+import se.simonsoft.cms.item.impl.ChecksumRead;
 
 public class ChecksumBaseTest {
 

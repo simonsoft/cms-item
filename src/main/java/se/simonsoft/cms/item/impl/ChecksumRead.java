@@ -1,4 +1,4 @@
-package se.simonsoft.cms.item;
+package se.simonsoft.cms.item.impl;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,6 +9,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Map;
 import java.util.TreeMap;
+
+import se.simonsoft.cms.item.Checksum;
 
 /**
  * Reads source once and calculates all enabled checksums.

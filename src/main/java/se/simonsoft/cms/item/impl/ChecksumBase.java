@@ -1,4 +1,6 @@
-package se.simonsoft.cms.item;
+package se.simonsoft.cms.item.impl;
+
+import se.simonsoft.cms.item.Checksum;
 
 /**
  * Shared implementation of equals, hashCode and toString.
