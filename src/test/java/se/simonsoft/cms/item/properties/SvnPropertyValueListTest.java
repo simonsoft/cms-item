@@ -16,26 +16,7 @@ import se.simonsoft.cms.item.properties.SvnPropertyValue;
 import se.simonsoft.cms.item.properties.SvnPropertyValueList;
 import se.simonsoft.cms.item.properties.ValueParseException;
 
-public class SvnPropertyValueListTest {
-
-	@Test
-	public void testNewlineSeparated() {
-		String svnPropertyValue = "x-svn:///svn/r1/i1\nx-svn:///svn/r1/i2";
-		// TODO
-	}
-
-	@Test
-	public void testSingleValue() {
-		String svnPropertyValue = "x-svn:///svn/r1/i1";
-		// TODO
-	}
-	
-	@Test
-	public void testEmptyJsonList() {
-		// Would be preferrable to delete this property instead, but I guess we should support it
-		String svnPropertyValue = "[]";
-		// TODO
-	}	
+public class SvnPropertyValueListTest {	
 	
 	@Test
 	public void testParseNotJson() {
