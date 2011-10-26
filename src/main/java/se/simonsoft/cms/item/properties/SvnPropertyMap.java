@@ -1,0 +1,163 @@
+package se.simonsoft.cms.item.properties;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Represents the property list of a version controlled item.
+ * Parses String property values to different Java types depending the
+ * format rules for Simonsoft CMS.
+ * Provides public getters and setters for the available property types.
+ */
+public class SvnPropertyMap {
+
+	private static final Logger logger = LoggerFactory.getLogger(SvnPropertyMap.class);
+	
+	private HashMap<String, SvnPropertyValue<?>> map;
+	
+	public SvnPropertyMap() {
+		this.map = new HashMap<String, SvnPropertyValue<?>>();
+	}
+	
+	/**
+	 * Identifies property values for which json list parsing should be attempted.
+	 */
+	private static final Pattern QUALIFY_LIST = Pattern.compile("\\[.*\\]$");
+	
+	// This is the ideal gettor for svnAbstraction.
+	public SvnPropertyValue<?> getProperty(String key) {
+		
+		return map.get(key);
+	}
+	
+
+	public String getString(String key) {
+		
+		SvnPropertyValue<?> value = getProperty(key);
+		if (value == null) {
+			return null;
+		}
+		if (value instanceof SvnPropertyValueString) {
+			return ((SvnPropertyValueString) value).getValue();
+		}
+		return null;
+	}
+
+
+	public List<String> getList(String key) throws ClassCastException {
+		
+		SvnPropertyValue<?> value = getProperty(key);
+		if (value == null) {
+			return null;
+		}
+		if (value instanceof SvnPropertyValueList) {
+			return ((SvnPropertyValueList) value).getValue();
+		}
+		return null;
+	}	
+	
+	
+	public void putProperty(String key, String data) {
+		
+		SvnPropertyValue<String> value;
+		SvnPropertyValue<?> oldValue = map.get(key);
+		if (oldValue != null) {
+			if (oldValue instanceof SvnPropertyValueString) {
+				value = ((SvnPropertyValueString) oldValue).setString(data);
+			} else {
+				value = new SvnPropertyValueString(data);
+				logger.debug("Overwriting property {} of type {} with type {}", 
+						new Object[] {oldValue.getClass(), value.getClass()});
+			}
+		} else {
+			value = new SvnPropertyValueString(data);
+		}
+		// Always doing put since it might be a new object.	
+		map.put(key, value);
+	}
+	
+	public void putProperty(String key, List<?> data) {
+		
+		SvnPropertyValue<?> value;
+		SvnPropertyValue<?> oldValue = map.get(key);
+		if (oldValue != null) {
+			if (oldValue instanceof SvnPropertyValueList) {
+				value = ((SvnPropertyValueList) oldValue).setList(data);
+			} else {
+				value = new SvnPropertyValueList(data);
+				logger.debug("Overwriting property {} of type {} with type {}", 
+						new Object[] {oldValue.getClass(), value.getClass()});
+			}
+		} else {
+			value = new SvnPropertyValueList(data);
+		}
+		// Always doing put since it might be a new object.	
+		map.put(key, value);
+		
+	}
+	
+	/*
+	public void putProperty(String key, SvnPropertyValue<?> value) {
+		
+		SvnPropertyValue<?> oldValue = map.get(key);
+		if (oldValue != null) {
+			if (!oldValue.getClass().equals(value.getClass())) {
+				logger.debug("Overwriting property of type {} with type {}", oldValue.getClass(), value.getClass());
+			}
+			// TODO: This guy will crash if switching property type...
+			if (value instanceof SvnPropertyValueString) {
+				((SvnPropertyValueString) oldValue).setValue((SvnPropertyValueString)value);
+			} else {
+				// TODO Might be handled differently than String because of mutability changes
+				// for example do the comparison with current value here instead of there is no setValue
+				throw new SvnFatalException("Currently only plaintext properties are supported");
+			}
+		} else {
+			map.put(key, value);
+		}
+	}
+	*/
+	
+	public boolean containsProperty(String key) {
+		
+		return map.containsKey(key);
+	}
+	
+	public Set<String> getKeySet() {
+		
+		return map.keySet();
+	}
+	
+	/**
+	 * Parse property value and store in memory depending on value type.
+	 * Not meant to be used directly for anything but property reading from backend, 
+	 * use {@link #putProperty(String, List)} and {@link #putProperty(String, String)} instead.
+	 * @param key The property name
+	 * @param value The string value from Subversion
+	 */
+	public void store(String key, String value) {
+		if (value == null) {
+			throw new IllegalArgumentException("Property value can not be null");
+		}
+		SvnPropertyValue<?> parsed = null;
+		if (QUALIFY_LIST.matcher(value).matches()) {
+			try {
+				parsed = new SvnPropertyValueList(value);
+			} catch (ValueParseException e) {
+				logger.warn("Property '{}' value '{}' looks like a list but is not valid JSON", key, value);
+			}
+		}
+		// fall back to String
+		if (parsed == null) {
+			parsed = new SvnPropertyValueString(value, false);
+		}
+		map.put(key, parsed);
+	}	
+	
+}
+
