@@ -2,6 +2,11 @@ package se.simonsoft.cms.item.properties;
 
 /**
  * Holder of property value.
+ * 
+ * Instances should be immutable (safe to pass around), but there's
+ * a method {@link #isModified()} to tell if there are local changes
+ * or if the value is the current one from the repository.
+ * 
  * @param <T> The java abstraction of the stored value
  */
 public interface SvnPropertyValue<T> {

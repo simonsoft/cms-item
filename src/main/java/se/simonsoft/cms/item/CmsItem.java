@@ -1,5 +1,7 @@
 package se.simonsoft.cms.item;
 
+import se.simonsoft.cms.item.properties.CmsItemProperties;
+
 /**
  * Models a specific revision of a file entry in the CMS.
  * 
@@ -20,5 +22,10 @@ public interface CmsItem {
 	 * @return contents checksum
 	 */
 	Checksum getChecksum();
+	
+	/**
+	 * @return all versioned properties on this item
+	 */
+	CmsItemProperties getProperties();
 	
 }

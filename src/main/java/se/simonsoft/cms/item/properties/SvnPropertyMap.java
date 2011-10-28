@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * format rules for Simonsoft CMS.
  * Provides public getters and setters for the available property types.
  */
-public class SvnPropertyMap {
+public class SvnPropertyMap implements CmsItemProperties {
 
 	private static final Logger logger = LoggerFactory.getLogger(SvnPropertyMap.class);
 	
@@ -36,6 +36,10 @@ public class SvnPropertyMap {
 	}
 	
 
+	/* (non-Javadoc)
+	 * @see se.simonsoft.cms.item.properties.CmsPropertyMap#getString(java.lang.String)
+	 */
+	@Override
 	public String getString(String key) {
 		
 		SvnPropertyValue<?> value = getProperty(key);
@@ -49,6 +53,10 @@ public class SvnPropertyMap {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see se.simonsoft.cms.item.properties.CmsPropertyMap#getList(java.lang.String)
+	 */
+	@Override
 	public List<String> getList(String key) throws ClassCastException {
 		
 		SvnPropertyValue<?> value = getProperty(key);
@@ -123,11 +131,19 @@ public class SvnPropertyMap {
 	}
 	*/
 	
+	/* (non-Javadoc)
+	 * @see se.simonsoft.cms.item.properties.CmsPropertyMap#containsProperty(java.lang.String)
+	 */
+	@Override
 	public boolean containsProperty(String key) {
 		
 		return map.containsKey(key);
 	}
 	
+	/* (non-Javadoc)
+	 * @see se.simonsoft.cms.item.properties.CmsPropertyMap#getKeySet()
+	 */
+	@Override
 	public Set<String> getKeySet() {
 		
 		return map.keySet();

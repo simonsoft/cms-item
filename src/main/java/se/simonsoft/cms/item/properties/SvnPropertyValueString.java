@@ -3,7 +3,9 @@ package se.simonsoft.cms.item.properties;
 import java.util.Arrays;
 import java.util.List;
 
-
+/**
+ * String value wrapper with support for splitting on newline.
+ */
 public class SvnPropertyValueString implements SvnPropertyValue<String> {
 	
 	private String value;
