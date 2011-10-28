@@ -12,6 +12,6 @@ public interface CmsItemLookup {
 	 * Loads item based on id.
 	 * Returned instance may be "online", i.e. load data as requested.
 	 */
-	CmsItem getItem(CmsItemId id);
+	CmsItem getItem(CmsItemId id) throws CmsConnectionException, CmsItemNotFoundException;
 	
 }
