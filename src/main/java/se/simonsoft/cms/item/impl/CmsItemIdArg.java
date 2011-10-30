@@ -190,4 +190,9 @@ public class CmsItemIdArg implements CmsItemId {
 		return new CmsItemPath(decoded);
 	}
 
+	@Override
+	public String toString() {
+		return getLogicalIdFull();
+	}
+
 }
