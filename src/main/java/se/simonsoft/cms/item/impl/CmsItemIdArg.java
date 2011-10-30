@@ -192,7 +192,11 @@ public class CmsItemIdArg implements CmsItemId {
 
 	@Override
 	public String toString() {
-		return getLogicalIdFull();
+		if (isFullyQualified()) {
+			return getLogicalIdFull();
+		} else {
+			return getLogicalId();
+		}
 	}
 
 }
