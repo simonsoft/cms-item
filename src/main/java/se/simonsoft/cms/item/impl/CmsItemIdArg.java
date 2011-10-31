@@ -198,5 +198,32 @@ public class CmsItemIdArg implements CmsItemId {
 			return getLogicalId();
 		}
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof CmsItemId)) {
+			return false;
+		}
+		CmsItemId o = (CmsItemId) obj;
+		if (isFullyQualified()) {
+			try {
+				return getLogicalIdFull().equals(o.getLogicalIdFull());
+			} catch (Exception e) {
+				return false;
+			}
+		} else {
+			if (!getLogicalId().equals(o.getLogicalId())) {
+				return false;
+			}
+			try {
+				if (o.getLogicalIdFull() != null && !getLogicalId().equals(o.getLogicalIdFull())) {
+					return false;
+				}
+			} catch (Exception e) {
+				// ignore
+			}
+			return true;
+		}
+	}
 
 }

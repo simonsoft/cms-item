@@ -1,9 +1,12 @@
 package se.simonsoft.cms.item.impl;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.Ignore;
 import org.junit.Test;
+
+import se.simonsoft.cms.item.CmsItemId;
 
 public class CmsItemIdArgTest {
 	
@@ -98,6 +101,29 @@ public class CmsItemIdArgTest {
 			assertEquals("Unexpected hostname in x-svn://x.y.z/svn/demo1^/vvab/graphics/0001.tif?p=1234567, expected xx.y.z",
 					e.getMessage());
 		}
+	}
+	
+	@Test
+	public void testEquals() {
+		CmsItemIdArg i1 = new CmsItemIdArg("x-svn:///svn/d1^/vv/r/A/xml/8.xml");
+		assertTrue(i1.equals(new CmsItemIdArg("x-svn:///svn/d1^/vv/r/A/xml/8.xml")));
+		i1.setHostname("x.y");
+		// not sure about this
+		assertFalse("Hostname difference", i1.equals(new CmsItemIdArg("x-svn:///svn/d1^/vv/r/A/xml/8.xml")));
+		assertFalse("Hostname difference other way", new CmsItemIdArg("x-svn:///svn/d1^/vv/r/A/xml/8.xml").equals(i1));
+	}
+	
+	@Test
+	public void testEqualsOtherImpl() {
+		CmsItemIdArg i1 = new CmsItemIdArg("x-svn:///svn/d1^/vv/r/A/xml/8.xml");
+		// other CmsItemIds
+		CmsItemId i3 = mock(CmsItemId.class);
+		when(i3.getLogicalId()).thenReturn("x-svn:///svn/d1^/vv/r/A/xml/8.xml");
+		assertTrue("Same logicalId, no host info", i1.equals(i3));
+		when(i3.getLogicalIdFull()).thenReturn("x-svn://host.xy/svn/d1^/vv/r/A/xml/8.xml");
+		assertFalse("Can't know if the id is the same when only one has hostname", i1.equals(i3));
+		i1.setHostname("host.xy");
+		assertTrue("Same logicalIdFull", i1.equals(i3));
 	}
 
 }
