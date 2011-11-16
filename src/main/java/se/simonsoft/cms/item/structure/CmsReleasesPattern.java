@@ -24,8 +24,7 @@ public class CmsReleasesPattern extends CmsAreaPattern {
 	 */
 	@Override
 	public CmsItemPath getPathInside(CmsItemPath master, String destinationLabel) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Method not implemented");
+		return super.getPathInside(master, destinationLabel);
 	}
 
 }
