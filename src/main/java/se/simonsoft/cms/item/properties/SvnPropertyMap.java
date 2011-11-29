@@ -37,7 +37,7 @@ public class SvnPropertyMap implements CmsItemProperties {
 	
 
 	/* (non-Javadoc)
-	 * @see se.simonsoft.cms.item.properties.CmsPropertyMap#getString(java.lang.String)
+	 * @see se.simonsoft.cms.item.properties.CmsItemProperties#getString(java.lang.String)
 	 */
 	@Override
 	public String getString(String key) {
@@ -54,7 +54,7 @@ public class SvnPropertyMap implements CmsItemProperties {
 
 
 	/* (non-Javadoc)
-	 * @see se.simonsoft.cms.item.properties.CmsPropertyMap#getList(java.lang.String)
+	 * @see se.simonsoft.cms.item.properties.CmsItemProperties#getList(java.lang.String)
 	 */
 	@Override
 	public List<String> getList(String key) throws ClassCastException {
@@ -132,7 +132,7 @@ public class SvnPropertyMap implements CmsItemProperties {
 	*/
 	
 	/* (non-Javadoc)
-	 * @see se.simonsoft.cms.item.properties.CmsPropertyMap#containsProperty(java.lang.String)
+	 * @see se.simonsoft.cms.item.properties.CmsItemProperties#containsProperty(java.lang.String)
 	 */
 	@Override
 	public boolean containsProperty(String key) {
@@ -141,7 +141,7 @@ public class SvnPropertyMap implements CmsItemProperties {
 	}
 	
 	/* (non-Javadoc)
-	 * @see se.simonsoft.cms.item.properties.CmsPropertyMap#getKeySet()
+	 * @see se.simonsoft.cms.item.properties.CmsItemProperties#getKeySet()
 	 */
 	@Override
 	public Set<String> getKeySet() {

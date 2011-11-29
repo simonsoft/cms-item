@@ -17,6 +17,12 @@ public interface CmsItemProperties {
 	
 	String getString(String key);
 
+	/**
+	 * @param key Property name
+	 * @return Property value parsed to list of values, null if property is not set,
+	 *  TODO properly define behavior if value is not a list, return null, ClassCastException or ValueParseException?
+	 * @throws ClassCastException legacy?
+	 */
 	List<String> getList(String key) throws ClassCastException;
 
 }
