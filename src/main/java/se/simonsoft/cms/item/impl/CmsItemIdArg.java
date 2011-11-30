@@ -28,10 +28,9 @@ public class CmsItemIdArg implements CmsItemId {
 	// but since it is used to process input incrementally
 	// it needs an explicit validate() method for semantic validation.
 	
-	public static final String PROTO = "x-svn://";
-	public static final String HTTP = "http://";
+	public static final String HTTP_PREFIX = "http://";
 	public static final String PEG = "?p=";
-	public static final Pattern NICE = Pattern.compile(PROTO + "([^/]*)(.*/)([^^]*)\\^([^?]+)(?:\\?p=(\\d+))?");
+	public static final Pattern NICE = Pattern.compile(PROTO_PREFIX + "([^/]*)(.*/)([^^]*)\\^([^?]+)(?:\\?p=(\\d+))?");
 	private String host = "";
 	private String parent;
 	private String repo;
@@ -130,7 +129,7 @@ public class CmsItemIdArg implements CmsItemId {
 		if (!isFullyQualified()) {
 			throw new IllegalStateException("Hostname unknown for " + getLogicalId());
 		}
-		return HTTP + host + parent + repo;
+		return HTTP_PREFIX + host + parent + repo;
 	}
 	
 	@Override
@@ -150,7 +149,7 @@ public class CmsItemIdArg implements CmsItemId {
 	 * @return Location part of the id, no peg rev.
 	 */
 	public String getLogicalIdPath() {
-		return PROTO + parent + repo + "^" + relpath;
+		return PROTO_PREFIX + parent + repo + "^" + relpath;
 	}
 	
 	@Override
@@ -176,7 +175,7 @@ public class CmsItemIdArg implements CmsItemId {
 		if (!isFullyQualified()) {
 			throw new IllegalStateException("Hostname unknown for " + getLogicalId());
 		}
-		return PROTO + host + parent + repo + "^" + relpath + getQuery();
+		return PROTO_PREFIX + host + parent + repo + "^" + relpath + getQuery();
 	}
 
 	@Override

@@ -12,6 +12,9 @@ package se.simonsoft.cms.item;
  */
 public interface CmsItemId {
 	
+	public static final String PROTO = "x-svn";
+	public static final String PROTO_PREFIX = PROTO + "://";
+	
 	/**
 	 * Resource URL, no query string. Not even revision number.
 	 * If revision ({@link #getPegRev()}) is specified this is the URL at that revision (i.e. "peg").
