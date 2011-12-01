@@ -12,7 +12,13 @@ package se.simonsoft.cms.item;
  */
 public interface CmsItemId {
 	
+	/**
+	 * Implementation detail.
+	 */
 	public static final String PROTO = "x-svn";
+	/**
+	 * Implementation detail.
+	 */
 	public static final String PROTO_PREFIX = PROTO + "://";
 	
 	/**

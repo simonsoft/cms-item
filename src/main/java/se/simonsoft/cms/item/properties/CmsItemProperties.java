@@ -11,10 +11,22 @@ import java.util.Set;
  */
 public interface CmsItemProperties {
 
+	/**
+	 * @param key Property name
+	 * @return true if the property is set on the item
+	 */
 	boolean containsProperty(String key);
 
+	/**
+	 * @return Names of all properties that are set on the item
+	 */
 	Set<String> getKeySet();
 	
+	/**
+	 * @param key Property name
+	 * @return The value of the property or null if not set,
+	 *  TODO parse error or null if binary?
+	 */
 	String getString(String key);
 
 	/**
