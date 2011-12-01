@@ -105,6 +105,16 @@ public class CmsItemIdArgTest {
 	}
 	
 	@Test
+	public void testGetUrl() {
+		assertEquals("http://host.n/svn/d1/vv/xml/8.xml", 
+				new CmsItemIdArg("x-svn://host.n/svn/d1^/vv/xml/8.xml").getUrl());
+		assertEquals("http://host.n/svn/d1/vv/xml",
+				new CmsItemIdArg("x-svn://host.n/svn/d1^/vv/xml").getUrl());
+		assertEquals("http://host.n/svn/d1/vv/xml", 
+				new CmsItemIdArg("x-svn://host.n/svn/d1^/vv/xml/").getUrl());	
+	}
+	
+	@Test
 	public void testEquals() {
 		CmsItemIdArg i1 = new CmsItemIdArg("x-svn:///svn/d1^/vv/r/A/xml/8.xml");
 		assertTrue(i1.equals(new CmsItemIdArg("x-svn:///svn/d1^/vv/r/A/xml/8.xml")));
@@ -130,9 +140,11 @@ public class CmsItemIdArgTest {
 	@Test
 	public void testWithRelPath() {
 		CmsItemId i1 = new CmsItemIdArg("x-svn://x.y/svn/r1^/vv/xml/8.xml?p=7");
-		CmsItemId parent = i1.withRelPath(new CmsItemPath("/vv"));
+		CmsItemId parent = i1.withRelPath(new CmsItemPath("/vv")); // actually parent's parent
 		assertEquals("x-svn:///svn/r1^/vv?p=7", parent.getLogicalId());
 		assertEquals("x-svn://x.y/svn/r1^/vv?p=7", parent.getLogicalIdFull());
+		assertEquals("For consistency, URLs can not have traling slash", 
+				"http://x.y/svn/r1/vv", parent.getUrl());
 	}
 	
 	@Test
@@ -140,6 +152,8 @@ public class CmsItemIdArgTest {
 		CmsItemId i1 = new CmsItemIdArg("x-svn://x.y/parent/repo^/a/b.xml");
 		CmsItemId repo = i1.withRelPath(null);
 		assertEquals("x-svn:///parent/repo^/", repo.getLogicalId());
+		assertEquals("For consistency, URLs can not have traling slash",
+				"http://x.y/parent/repo", repo.getUrl());
 		CmsItemId i2 = new CmsItemIdArg("x-svn://x.y/p/r^/a?p=9");
 		CmsItemId repoRootRev = i2.withRelPath(null);
 		assertEquals("x-svn:///p/r^/?p=9", repoRootRev.getLogicalId());

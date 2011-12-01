@@ -30,7 +30,7 @@ public class CmsItemIdArg implements CmsItemId {
 	
 	public static final String HTTP_PREFIX = "http://";
 	public static final String PEG = "?p=";
-	public static final Pattern NICE = Pattern.compile(PROTO_PREFIX + "([^/]*)(.*/)([^^]*)\\^([^?]+)(?:\\?p=(\\d+))?");
+	public static final Pattern NICE = Pattern.compile(PROTO_PREFIX + "([^/]*)(.*/)([^^]*)\\^(/|[^?]+[^/])/?(?:\\?p=(\\d+))?");
 	
 	/**
 	 * Root path is not represented in CmsItemPath so we need to define
@@ -121,6 +121,8 @@ public class CmsItemIdArg implements CmsItemId {
 	
 	/**
 	 * @param pegRev when given as an optional parameter alongside the id
+	 * @deprecated Could probably be removed now that {@link #withPegRev(Long)} exists,
+	 *  but when getting form input make sure that existing peg rev is not overwritten
 	 */
 	public void setPegRev(long pegRev) {
 		if (isPegged()) {
@@ -156,7 +158,10 @@ public class CmsItemIdArg implements CmsItemId {
 	
 	@Override
 	public String getUrl() {
-		return getRepositoryUrl() + relpath;
+		if (REPO_ROOT_PATH.equals(relpath)) {
+			return getRepository().getUrl();
+		}
+		return getRepository().getUrl() + relpath;
 	}
 
 	@Override

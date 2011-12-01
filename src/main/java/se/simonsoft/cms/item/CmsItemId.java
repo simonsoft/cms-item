@@ -27,7 +27,8 @@ public interface CmsItemId {
 	 * If protocol is not known, always assumes "http" as CMS servers should be capable of redirecting.
 	 * If there are implementations that may return "https" it should be clearly stated (and maybe reconsidered),
 	 * as http is always used internally on servers.
-	 * @return resource URL, encoded, encoding based on UTF-8 bytes for non-ascii
+	 * @return resource URL, encoded, encoding based on UTF-8 bytes for non-ascii,
+	 *  always without trailing slash so when known to be a folder slash should be appended to avoid redirect
 	 */
 	String getUrl();
 	
