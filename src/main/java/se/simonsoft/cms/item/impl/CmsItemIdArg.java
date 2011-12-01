@@ -31,6 +31,15 @@ public class CmsItemIdArg implements CmsItemId {
 	public static final String HTTP_PREFIX = "http://";
 	public static final String PEG = "?p=";
 	public static final Pattern NICE = Pattern.compile(PROTO_PREFIX + "([^/]*)(.*/)([^^]*)\\^([^?]+)(?:\\?p=(\\d+))?");
+	
+	/**
+	 * Root path is not represented in CmsItemPath so we need to define
+	 * what corresponds to relpath null.
+	 * Single slash is consistent with how SvnLogicalId represents repo root id,
+	 * though it is inconsistent with other paths as it ends with slash.
+	 */
+	public static final String REPO_ROOT_PATH = "/";
+	
 	private String host = "";
 	private String parent;
 	private String repo;
@@ -138,8 +147,12 @@ public class CmsItemIdArg implements CmsItemId {
 	}
 
 	private String getQuery() {
-		if (isPegged()) {
-			return PEG + pegRev;
+		return getQuery(this.pegRev);
+	}
+		
+	private String getQuery(Long anyPegRev) {
+		if (anyPegRev != null) {
+			return PEG + anyPegRev;
 		}
 		return "";
 	}
@@ -186,6 +199,9 @@ public class CmsItemIdArg implements CmsItemId {
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException("Failed to decode with charset UTF-8");
 		}
+		if (REPO_ROOT_PATH.equals(relpath)) {
+			return null;
+		}
 		return new CmsItemPath(decoded);
 	}
 
@@ -223,6 +239,24 @@ public class CmsItemIdArg implements CmsItemId {
 			}
 			return true;
 		}
+	}
+
+	private String toString(CmsItemPath anyRelPath, Long anyPegRev) {
+		return PROTO_PREFIX
+				+ (isFullyQualified() ? host : "")
+				+ parent + repo + "^" 
+				+ (anyRelPath == null ? REPO_ROOT_PATH : anyRelPath) 
+				+ getQuery(anyPegRev);
+	}
+	
+	@Override
+	public CmsItemId withRelPath(CmsItemPath newRelPath) {
+		return new CmsItemIdArg(toString(newRelPath, this.pegRev));
+	}
+
+	@Override
+	public CmsItemId withPegRev(Long newPegRev) {
+		return new CmsItemIdArg(toString(new CmsItemPath(this.relpath), newPegRev));
 	}
 
 }

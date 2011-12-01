@@ -9,6 +9,11 @@ import se.simonsoft.cms.item.CmsItemPath;
  */
 public class CmsReleasesPattern extends CmsAreaPattern {
 
+	/**
+	 * Release pattern to use if not configured in the current repository.
+	 */
+	public static final String DEFAULT_RELEASES_PATTERN = "/*/release";
+	
 	public CmsReleasesPattern(String configValue)
 			throws IllegalArgumentException {
 		super(configValue);

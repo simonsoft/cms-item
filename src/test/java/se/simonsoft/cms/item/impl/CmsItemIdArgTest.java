@@ -7,6 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import se.simonsoft.cms.item.CmsItemId;
+import se.simonsoft.cms.item.CmsItemPath;
 
 public class CmsItemIdArgTest {
 	
@@ -124,6 +125,35 @@ public class CmsItemIdArgTest {
 		assertFalse("Can't know if the id is the same when only one has hostname", i1.equals(i3));
 		i1.setHostname("host.xy");
 		assertTrue("Same logicalIdFull", i1.equals(i3));
+	}
+	
+	@Test
+	public void testWithRelPath() {
+		CmsItemId i1 = new CmsItemIdArg("x-svn://x.y/svn/r1^/vv/xml/8.xml?p=7");
+		CmsItemId parent = i1.withRelPath(new CmsItemPath("/new/path.xml"));
+		assertEquals("x-svn:///svn/r1^/new/path.xml?p=7", parent.getLogicalId());
+		assertEquals("x-svn://x.y/svn/r1^/new/path.xml?p=7", parent.getLogicalIdFull());
+	}
+	
+	@Test
+	public void testWithRelPathToRepoRoot() {
+		CmsItemId i1 = new CmsItemIdArg("x-svn://x.y/parent/repo^/a/b.xml");
+		CmsItemId repo = i1.withRelPath(null);
+		assertEquals("x-svn:///parent/repo^/", repo.getLogicalId());
+		CmsItemId i2 = new CmsItemIdArg("x-svn://x.y/p/r^/a?p=9");
+		CmsItemId repoRootRev = i2.withRelPath(null);
+		assertEquals("x-svn:///p/r^/?p=9", repoRootRev.getLogicalId());
+		// We have not path to represent root
+		//CmsItemId repoAlso = i1.withRelPath(new CmsItemPath("/"));
+		//assertEquals("x-svn://x.y/parent/repo^/", repoAlso.getLogicalIdFull());
+		assertEquals("CmsItemPath can not represent root", null, repo.getRelPath());
+	}
+	
+	@Test
+	public void testWithPegRev() {
+		CmsItemId i1 = new CmsItemIdArg("x-svn://x.y/svn/r^/a/b.xml");
+		assertEquals("x-svn://x.y/svn/r^/a/b.xml?p=9", i1.withPegRev(9L).getLogicalIdFull());
+		assertEquals(i1, i1.withPegRev(1234L).withPegRev(null));
 	}
 
 }
