@@ -14,6 +14,20 @@ public class CmsAreaPatternTest {
 		assertEquals("m", new CmsAreaPattern("/*/m").getAreaName());
 		assertEquals("Area51", new CmsAreaPattern("/Area51").getAreaName());
 	}
+	
+	@Test
+	public void testGetArea() {
+		assertEquals(new CmsItemPath("/A1"), 
+				new CmsAreaPattern("/A1").getArea(new CmsItemPath("/whatever")));
+		assertEquals(new CmsItemPath("/my docs/re"), 
+				new CmsAreaPattern("/*/re").getArea(new CmsItemPath("/my docs/x.xml")));
+	}
+	
+	@Test
+	public void getAreaItemPathOffset() {
+		assertEquals(1, new CmsAreaPattern("/*/m").getAreaItemPathOffset());
+		assertEquals(0, new CmsAreaPattern("/Area51").getAreaItemPathOffset());
+	}
 
 	@Test
 	public void testGetAreaPathSegmentIndex() {

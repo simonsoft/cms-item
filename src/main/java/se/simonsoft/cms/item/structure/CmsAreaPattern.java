@@ -34,6 +34,25 @@ public class CmsAreaPattern {
 	}
 	
 	/**
+	 * @param master A path outside area
+	 * @return The relative path to the area folder where the master would be placed 
+	 */
+	public CmsItemPath getArea(CmsItemPath master) {
+		List<String> a = new LinkedList<String>(master.getPathSegments()).subList(0, getAreaPathSegmentIndex() - 1);
+		a.add(getAreaName());
+		return concat(a);
+	}
+	
+	/**
+	 * Allows a layer of abstraction that could be used to reduce folder depth inside area.
+	 * @return The path element to start at when inserting item in area,
+	 *  0 for appending the full original path after {@link #getArea(CmsItemPath)} and label.
+	 */
+	public int getAreaItemPathOffset() {
+		return getAreaPathSegmentIndex() - 1;
+	}
+	
+	/**
 	 * @return True if the path is inside the area and has a label.
 	 */
 	public boolean isPathInside(CmsItemPath path) {
