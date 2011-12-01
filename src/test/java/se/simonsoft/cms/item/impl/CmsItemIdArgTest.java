@@ -130,9 +130,9 @@ public class CmsItemIdArgTest {
 	@Test
 	public void testWithRelPath() {
 		CmsItemId i1 = new CmsItemIdArg("x-svn://x.y/svn/r1^/vv/xml/8.xml?p=7");
-		CmsItemId parent = i1.withRelPath(new CmsItemPath("/new/path.xml"));
-		assertEquals("x-svn:///svn/r1^/new/path.xml?p=7", parent.getLogicalId());
-		assertEquals("x-svn://x.y/svn/r1^/new/path.xml?p=7", parent.getLogicalIdFull());
+		CmsItemId parent = i1.withRelPath(new CmsItemPath("/vv"));
+		assertEquals("x-svn:///svn/r1^/vv?p=7", parent.getLogicalId());
+		assertEquals("x-svn://x.y/svn/r1^/vv?p=7", parent.getLogicalIdFull());
 	}
 	
 	@Test
@@ -147,6 +147,19 @@ public class CmsItemIdArgTest {
 		//CmsItemId repoAlso = i1.withRelPath(new CmsItemPath("/"));
 		//assertEquals("x-svn://x.y/parent/repo^/", repoAlso.getLogicalIdFull());
 		assertEquals("CmsItemPath can not represent root", null, repo.getRelPath());
+	}
+	
+	@Test
+	public void testWithRelPathEncoding() {
+		CmsItemId i1 = new CmsItemIdArg("x-svn:///svn/demo1^/v/a%20b/c.xml");
+		assertEquals("Should preserve logicalId encoding", 
+				"x-svn:///svn/demo1^/v/a%20b", i1.withRelPath(new CmsItemPath("/v/a b")).getLogicalId());
+		try {
+			i1.withRelPath(new CmsItemPath("/v/a b/d.xml"));
+			fail("only parents can be supported, unless we want to introduce encoding logic in CmsItemIdArg");
+		} catch (IllegalArgumentException e) {
+			assertEquals("New path based on this CmsItemIdArg must be parent of /v/a b/c.xml", e.getMessage());
+		}
 	}
 	
 	@Test

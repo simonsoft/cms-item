@@ -10,8 +10,8 @@ import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 
 /**
- * Concrete class for use in the common case when a logical id
- * is provided as string argument to an operation.
+ * Concrete class for use in the common case when a valid logical id
+ * is known from metadata etc and provided as string argument to an operation.
  * 
  * Mutable: allows adding of hostname and peg revision if not already set.
  * 
@@ -124,7 +124,7 @@ public class CmsItemIdArg implements CmsItemId {
 	 */
 	public void setPegRev(long pegRev) {
 		if (isPegged()) {
-			throw new IllegalStateException("Peg revision already set for " + getLogicalIdPath());
+			throw new IllegalStateException("Peg revision already set for " + getLogicalId());
 		} else {
 			this.pegRev = pegRev;
 		}
@@ -146,24 +146,13 @@ public class CmsItemIdArg implements CmsItemId {
 		return new CmsRepository(getRepositoryUrl());
 	}
 
-	private String getQuery() {
-		return getQuery(this.pegRev);
-	}
-		
-	private String getQuery(Long anyPegRev) {
-		if (anyPegRev != null) {
-			return PEG + anyPegRev;
-		}
-		return "";
-	}
-
 	/**
 	 * Used for example when separating object and revision fields in a form.
 	 * @return Location part of the id, no peg rev.
-	 */
 	public String getLogicalIdPath() {
 		return PROTO_PREFIX + parent + repo + "^" + relpath;
 	}
+	 */	
 	
 	@Override
 	public String getUrl() {
@@ -180,7 +169,7 @@ public class CmsItemIdArg implements CmsItemId {
 	 */
 	@Override
 	public String getLogicalId() {
-		return getLogicalIdPath() + getQuery();
+		return toString("", relpath, pegRev);
 	}
 
 	@Override
@@ -188,21 +177,66 @@ public class CmsItemIdArg implements CmsItemId {
 		if (!isFullyQualified()) {
 			throw new IllegalStateException("Hostname unknown for " + getLogicalId());
 		}
-		return PROTO_PREFIX + host + parent + repo + "^" + relpath + getQuery();
+		return toString(host, relpath, pegRev);
 	}
 
 	@Override
 	public CmsItemPath getRelPath() {
+		return getRelPath(relpath);
+	}
+	
+	
+	private String getQuery(Long anyPegRev) {
+		if (anyPegRev != null) {
+			return PEG + anyPegRev;
+		}
+		return "";
+	}
+	
+	private CmsItemPath getRelPath(String relpathEncoded) {
 		String decoded;
 		try {
-			decoded = URLDecoder.decode(relpath, "UTF-8");
+			decoded = URLDecoder.decode(relpathEncoded, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException("Failed to decode with charset UTF-8");
 		}
-		if (REPO_ROOT_PATH.equals(relpath)) {
+		if (REPO_ROOT_PATH.equals(relpathEncoded)) {
 			return null;
 		}
 		return new CmsItemPath(decoded);
+	}
+	
+	private String toString(String anyHost, String relpathEncoded, Long anyPegRev) {
+		return PROTO_PREFIX
+				+ anyHost
+				+ parent + repo + "^" 
+				+ (relpathEncoded == null ? REPO_ROOT_PATH : relpathEncoded)
+				+ getQuery(anyPegRev);
+	}
+	
+	/**
+	 * As this implementation can not do encoding it only accepts new path that is ancestor of current.
+	 * Use SvnLogicalId for more complex manipulations.
+	 */
+	@Override
+	public CmsItemId withRelPath(CmsItemPath newRelPath) {
+		if (newRelPath == null) {
+			return new CmsItemIdArg(toString(host, null, pegRev)); 
+		}
+		if (!newRelPath.isAncestorOf(getRelPath())) {
+			throw new IllegalArgumentException("New path based on this CmsItemIdArg must be parent of /v/a b/c.xml");
+		}
+		for (String p = relpath; p.length() > 0; p = p.replaceFirst("/[^/]+$", "")) {
+			if (getRelPath(p).equals(newRelPath)) {
+				return new CmsItemIdArg(toString(host, p, pegRev));
+			}
+		}
+		throw new RuntimeException("Failed to get encoded parent " + newRelPath + " from " + this);
+	}
+
+	@Override
+	public CmsItemId withPegRev(Long newPegRev) {
+		return new CmsItemIdArg(toString(host, relpath, newPegRev));
 	}
 
 	@Override
@@ -239,24 +273,6 @@ public class CmsItemIdArg implements CmsItemId {
 			}
 			return true;
 		}
-	}
-
-	private String toString(CmsItemPath anyRelPath, Long anyPegRev) {
-		return PROTO_PREFIX
-				+ (isFullyQualified() ? host : "")
-				+ parent + repo + "^" 
-				+ (anyRelPath == null ? REPO_ROOT_PATH : anyRelPath) 
-				+ getQuery(anyPegRev);
-	}
-	
-	@Override
-	public CmsItemId withRelPath(CmsItemPath newRelPath) {
-		return new CmsItemIdArg(toString(newRelPath, this.pegRev));
-	}
-
-	@Override
-	public CmsItemId withPegRev(Long newPegRev) {
-		return new CmsItemIdArg(toString(new CmsItemPath(this.relpath), newPegRev));
 	}
 
 }
