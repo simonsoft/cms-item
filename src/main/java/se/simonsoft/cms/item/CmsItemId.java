@@ -13,13 +13,13 @@ package se.simonsoft.cms.item;
 public interface CmsItemId {
 	
 	/**
-	 * Implementation detail.
+	 * Shared across implementations.
 	 */
-	public static final String PROTO = "x-svn";
+	static final String PROTO = "x-svn";
 	/**
-	 * Implementation detail.
+	 * Shared across implementations.
 	 */
-	public static final String PROTO_PREFIX = PROTO + "://";
+	static final String PROTO_PREFIX = PROTO + "://";
 	
 	/**
 	 * Resource URL, no query string. Not even revision number.
