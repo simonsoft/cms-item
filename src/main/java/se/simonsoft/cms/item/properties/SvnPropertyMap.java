@@ -13,6 +13,11 @@ import org.slf4j.LoggerFactory;
  * Parses String property values to different Java types depending the
  * format rules for Simonsoft CMS.
  * Provides public getters and setters for the available property types.
+ * 
+ * Implements CmsItemProperties with no need for prior detachment,
+ * because properties are profived to {@link #store(String, String)} and then kept in memory,
+ * so there are no open connections to the repository.
+ * When used as {@link SvnPropertyMap} modification state is also kept in memory.
  */
 public class SvnPropertyMap implements CmsItemProperties {
 

@@ -8,6 +8,9 @@ import java.util.Set;
  * 
  * The modification and storage behavior of the SvnProperty* classes
  * is still undefined outside adapter code.
+ * 
+ * Instances should be safe to keep in memory for a long time,
+ * i.e. can not keep an open connection to repository.
  */
 public interface CmsItemProperties {
 
