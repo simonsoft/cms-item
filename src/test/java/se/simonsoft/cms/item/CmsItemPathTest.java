@@ -312,6 +312,25 @@ public class CmsItemPathTest {
 	}
 	
 	@Test
+	public void testSubPathNegative() {
+		CmsItemPath path = new CmsItemPath("/folder name/subfolder/file with space.xml");
+		
+		// Testing negative fromIndex.
+		assertEquals(new CmsItemPath("/test/file with space.xml"), new CmsItemPath("/test").append(path.subPath(-1)));
+		assertEquals(new CmsItemPath("/test/file with space.xml"), new CmsItemPath("/test").append(path.subPath(-1, 3)));
+		assertEquals(new CmsItemPath("/test/subfolder/file with space.xml"), new CmsItemPath("/test").append(path.subPath(-2, 3)));
+		assertEquals(new CmsItemPath("/test/folder name/subfolder/"), new CmsItemPath("/test").append(path.subPath(-3, 2)));
+		// Testing negative toIndex;
+		assertEquals(new CmsItemPath("/test/folder name/"), new CmsItemPath("/test").append(path.subPath(0, -2)));
+		// Testing both negative Index;
+		assertEquals(new CmsItemPath("/test/folder name/subfolder/"), new CmsItemPath("/test").append(path.subPath(-3, -1)));
+		// For completeness: Both 0 is valid and returns an empty list.
+		assertEquals(new CmsItemPath("/test/"), new CmsItemPath("/test").append(path.subPath(0, 0)));
+
+		
+	}
+	
+	@Test
 	public void testIsAncestorOf() {
 		
 		CmsItemPath path = new CmsItemPath("/folder name/subfolder/file with space.xml");

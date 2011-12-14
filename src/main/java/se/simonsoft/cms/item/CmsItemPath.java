@@ -246,15 +246,26 @@ public class CmsItemPath {
 	 */
 	public List<String> subPath(int fromIndex, int toIndex) {
 		
-		return this.getPathSegments().subList(fromIndex, toIndex);
+		List<String> pathList = this.getPathSegments();
+		int fromAbs = fromIndex;
+		if (fromIndex < 0) {
+			fromAbs = pathList.size() + fromIndex;
+		}
+		
+		int toAbs = toIndex;
+		if (toIndex < 0) {
+			toAbs = pathList.size() + toIndex;
+		}
+		
+		return this.getPathSegments().subList(fromAbs, toAbs);
 	}
 	/** Returns a portion of this path as a list, from fromIndex to the end of the path.
 	 * @param fromIndex - low endpoint (inclusive) of the subList
 	 */ 
 	public List<String> subPath(int fromIndex) {
 		
-		List<String> pathList = this.getPathSegments(); 
-		return this.getPathSegments().subList(fromIndex, pathList.size());
+		List<String> pathList = this.getPathSegments();
+		return this.subPath(fromIndex, pathList.size());
 	}
 	
 	/** Determines if this path is an ancestor of child.
