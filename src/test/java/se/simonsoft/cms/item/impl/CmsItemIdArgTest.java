@@ -182,5 +182,16 @@ public class CmsItemIdArgTest {
 		assertEquals("x-svn://x.y/svn/r^/a/b.xml?p=9", i1.withPegRev(9L).getLogicalIdFull());
 		assertEquals(i1, i1.withPegRev(1234L).withPegRev(null));
 	}
+	
+	@Test
+	public void testEqualsAfterWith() {
+		CmsItemId i = new CmsItemIdArg("x-svn://local.test/r^/y");
+		assertTrue(i.equals(i.withPegRev(null)));
+		assertTrue(i.withPegRev(null).equals(i));
+		CmsItemId ip = new CmsItemIdArg("x-svn://local.test/r^/y?p=1");
+		assertTrue(ip.withPegRev(null).equals(i));
+		assertTrue(i.equals(ip.withPegRev(null)));
+		assertTrue(i.withRelPath(null).equals(new CmsItemIdArg("x-svn://local.test/r^/")));
+	}
 
 }
