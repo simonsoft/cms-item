@@ -120,9 +120,8 @@ public class CmsItemIdArg implements CmsItemId {
 	}
 	
 	/**
+	 * Used specifically for user input, like {@link #setHostname(String)}
 	 * @param pegRev when given as an optional parameter alongside the id
-	 * @deprecated Could probably be removed now that {@link #withPegRev(Long)} exists,
-	 *  but when getting form input make sure that existing peg rev is not overwritten
 	 */
 	public void setPegRev(long pegRev) {
 		if (isPegged()) {
