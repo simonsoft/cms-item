@@ -4,7 +4,10 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedSet;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -152,6 +155,7 @@ public class CmsItemPathTest {
 	@Test
 	public void testGetNameSegmentPosition() {
 		CmsItemPath p = new CmsItemPath("/folder/file.xml");
+		assertEquals(2, p.getPathSegmentsCount());
 		//assertEquals("folder", p.getName(0)); // old "index"
 		//assertEquals("file.xml", p.getName(1)); // old "index"
 		assertEquals("folder", p.getName(1));
@@ -407,6 +411,27 @@ public class CmsItemPathTest {
 			path.getPathSegments().retainAll(Arrays.asList("subfolder"));
 			fail("should be immutable");
 		} catch (UnsupportedOperationException e) {};
+	}
+	
+	@Test
+	public void testCompare() {
+		LinkedList<CmsItemPath> p = new LinkedList<CmsItemPath>();
+		p.add(new CmsItemPath("/aa/a"));
+		p.add(new CmsItemPath("/a/b"));
+		p.add(new CmsItemPath("/ab/e"));
+		p.add(new CmsItemPath("/aB/e"));
+		p.add(new CmsItemPath("/ab/f"));
+		p.add(new CmsItemPath("/ab"));
+		p.add(new CmsItemPath("/ac/d"));
+		Collections.sort(p);
+		assertEquals("/a/b", "" + p.get(0));
+		assertEquals("Path sorting should be case insensitive", "/aa/a", "" + p.get(1));
+		assertEquals("/ab", "" + p.get(2));
+		// Folders should be sorted together we should be smarter than this
+		//also upper case would preferrable come before lower case
+		assertEquals("/ab/e", "" + p.get(3));
+		assertEquals("/aB/e", "" + p.get(4));
+		assertEquals("/ab/f", "" + p.get(5));
 	}
 
 

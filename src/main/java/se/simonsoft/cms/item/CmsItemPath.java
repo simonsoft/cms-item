@@ -27,7 +27,7 @@ import java.util.regex.Pattern;
  * On a higher level, root path can be represented with null. This is to Subversion's
  * special handling of repository root, i.e. most operations are not allowed.  
  */
-public class CmsItemPath {
+public class CmsItemPath implements Comparable<CmsItemPath> {
 
 	public static final String URL_ENCODING_CHARSET = "UTF-8";
 
@@ -115,6 +115,13 @@ public class CmsItemPath {
 		}
 		
 		return result;
+	}
+	
+	/**
+	 * @return the number of parth segments, 1 or more
+	 */
+	public int getPathSegmentsCount() {
+		return getPathSegmentsArray().length; // could be made more efficent when someone has time to spend on that
 	}
 	
 	/** Provides the whole path as an array of path segments.
@@ -322,6 +329,14 @@ public class CmsItemPath {
 	public String toString() {
 		// TODO normalize?
 		return path;
+	}
+
+	@Override
+	public int compareTo(CmsItemPath path) {
+		if (path == null) {
+			return toString().compareTo(null);
+		}
+		return toString().toLowerCase().compareTo(path.toString().toLowerCase());
 	}
 	
 }
