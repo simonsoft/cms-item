@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.SortedSet;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -196,6 +195,15 @@ public class CmsItemPathTest {
 		assertEquals(new CmsItemPath("/a"), new CmsItemPath("/a/b c/d/").getParent().getParent());
 		assertEquals(new CmsItemPath("/a/b c"), new CmsItemPath("/a/b c/d/f.txt").getParent().getParent());
 	}
+	
+	@Test
+	public void testGetAncestors() {
+		CmsItemPath p = new CmsItemPath("/a/b c/d");
+		List<CmsItemPath> ps = p.getAncestors();
+		assertEquals("Paths should be sorted from root up", new CmsItemPath("/a"), ps.get(0));
+		assertEquals(new CmsItemPath("/a/b c"), ps.get(1));
+		assertEquals(2, ps.size());
+	}
 
 	@Test
 	public void testAppend() {
@@ -286,6 +294,7 @@ public class CmsItemPathTest {
 		
 		List<String> pathList = path.getPathSegments();
 		assertEquals(3, pathList.size());
+		assertEquals(3, path.getSize());
 		assertEquals("folder name", pathList.get(0));
 		assertEquals("subfolder", pathList.get(1));
 		assertEquals("file with space.xml", pathList.get(2));

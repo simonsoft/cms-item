@@ -3,6 +3,8 @@ package se.simonsoft.cms.item;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -118,6 +120,14 @@ public class CmsItemPath implements Comparable<CmsItemPath> {
 	}
 	
 	/**
+	 * Alias for {@link #getPathSegmentsCount()}
+	 * @return the number of paths segments, 1 or more
+	 */
+	public int getSize() {
+		return getPathSegmentsCount();
+	}
+	
+	/**
 	 * @return the number of parth segments, 1 or more
 	 */
 	public int getPathSegmentsCount() {
@@ -221,6 +231,20 @@ public class CmsItemPath implements Comparable<CmsItemPath> {
 		} 
 		
 		return new CmsItemPath('/' + noslashPath.substring(0, lastIdx));		
+	}
+	
+	/**
+	 * @return all paths in order from top level to immediate parent
+	 */
+	public List<CmsItemPath> getAncestors() {
+		List<CmsItemPath> list = new LinkedList<CmsItemPath>();
+		CmsItemPath p = this.getParent();
+		while (p != null) {
+			list.add(p);
+			p = p.getParent();
+		}
+		Collections.reverse(list);
+		return list;
 	}
 	
 	/** Appends a single path segment to the path.
