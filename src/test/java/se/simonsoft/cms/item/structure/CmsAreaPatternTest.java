@@ -167,6 +167,7 @@ public class CmsAreaPatternTest {
 		assertFalse("relative without label not ok", relative.isPathInside(new CmsItemPath("/lang/x.gif")));		
 		assertEquals("sv_SE", relative.getPathLabel(t));
 		assertEquals("/ab/graphics/001/123.tif", "" + relative.getPathOutside(t));
+		assertEquals("/ab/graphics/001/lang", "" + relative.getArea(master));
 	}
 	
 	@Test

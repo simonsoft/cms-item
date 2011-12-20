@@ -34,11 +34,17 @@ public class CmsAreaPattern {
 	}
 	
 	/**
-	 * @param master A path outside area
-	 * @return The relative path to the area folder where the master would be placed 
+	 * Returns the top level folder of releases or translations, parent of label folders.
+	 * @param master A path outside area, could be a folder as long as path depth is larger than {@link #getAreaItemPathOffset()}
+	 * @return The path to the area folder inside the corresponding slave would be placed 
 	 */
 	public CmsItemPath getArea(CmsItemPath master) {
-		List<String> a = new LinkedList<String>(master.getPathSegments()).subList(0, getAreaPathSegmentIndex() - 1);
+		List<String> a = new LinkedList<String>(master.getPathSegments());
+		if (isAreaRelative()) {
+			a.remove(a.size() - 1);
+		} else {
+			a = a.subList(0, getAreaPathSegmentIndex() - 1);
+		}
 		a.add(getAreaName());
 		return concat(a);
 	}
