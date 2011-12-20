@@ -17,4 +17,15 @@ public class CmsTranslationsPattern extends CmsAreaPattern {
 		super(configValue);
 	}
 
+	/**
+	 * @return The graphics translation path that corresponds to this config.
+	 */
+	public CmsTranslationsPattern getGraphicsPattern() {
+		if (this.isAreaRelative()) {
+			throw new UnsupportedOperationException("The pattern '" + this
+					+ "' is already relative and can't be converted to a graphics translation pattern");
+		}
+		return new CmsTranslationsPattern(getAreaName());
+	}
+
 }
