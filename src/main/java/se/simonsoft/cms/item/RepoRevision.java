@@ -1,6 +1,9 @@
 package se.simonsoft.cms.item;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Represents a single repository-wide revision identifier that can be used to identify a baseline.
@@ -8,6 +11,11 @@ import java.util.Date;
  */
 public class RepoRevision {
 
+	private static final DateFormat ISO_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+	static {
+		ISO_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+	}
+	
 	private long number;
 	private Date date;
 
@@ -31,6 +39,18 @@ public class RepoRevision {
 	 */
 	public Date getDate() {
 		return this.date;
+	}
+	
+	/**
+	 * @return ISO 8601 formatted date, no millis, UTC time without timezone identifyer, append Z to clarify UTC
+	 */
+	public String getDateIso() {
+		return ISO_FORMAT.format(getDate());
+	}
+
+	@Override
+	public String toString() {
+		return this.getClass().getSimpleName() + ":" + getNumber() + "," + getDateIso(); 
 	}
 	
 }
