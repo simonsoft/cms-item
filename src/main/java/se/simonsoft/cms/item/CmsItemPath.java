@@ -1,5 +1,6 @@
 package se.simonsoft.cms.item;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,7 +30,9 @@ import java.util.regex.Pattern;
  * On a higher level, root path can be represented with null. This is to Subversion's
  * special handling of repository root, i.e. most operations are not allowed.  
  */
-public class CmsItemPath implements Comparable<CmsItemPath> {
+public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	public static final String URL_ENCODING_CHARSET = "UTF-8";
 
@@ -40,7 +43,9 @@ public class CmsItemPath implements Comparable<CmsItemPath> {
 	private static final Pattern VALID_PATH_PATTERN = Pattern.compile('^' + VALID_PATH + '$');
 	
 	private String path;
-	private List<String> pathList = null;
+	
+	// simple performance improvement for repeated list operations
+	private transient List<String> pathList = null;
 
 	/**
 	 * @param path with leading slash, trailing slash will be trimmed
@@ -277,15 +282,15 @@ public class CmsItemPath implements Comparable<CmsItemPath> {
 	 */
 	public List<String> subPath(int fromIndex, int toIndex) {
 		
-		List<String> pathList = this.getPathSegments();
+		List<String> plist = this.getPathSegments();
 		int fromAbs = fromIndex;
 		if (fromIndex < 0) {
-			fromAbs = pathList.size() + fromIndex;
+			fromAbs = plist.size() + fromIndex;
 		}
 		
 		int toAbs = toIndex;
 		if (toIndex < 0) {
-			toAbs = pathList.size() + toIndex;
+			toAbs = plist.size() + toIndex;
 		}
 		
 		return this.getPathSegments().subList(fromAbs, toAbs);
@@ -295,8 +300,8 @@ public class CmsItemPath implements Comparable<CmsItemPath> {
 	 */ 
 	public List<String> subPath(int fromIndex) {
 		
-		List<String> pathList = this.getPathSegments();
-		return this.subPath(fromIndex, pathList.size());
+		List<String> plist = this.getPathSegments();
+		return this.subPath(fromIndex, plist.size());
 	}
 	
 	/** Determines if this path is an ancestor of child.
