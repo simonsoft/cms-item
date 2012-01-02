@@ -91,7 +91,7 @@ public class CmsItemIdArg implements CmsItemId {
 	
 	/**
 	 * @param fullyQualifiedName Often set by the web application and not the caller
-	 * when the caller is on the same server.
+	 * when the caller is on the same server, including port if non-standard
 	 */
 	public void setHostname(String fullyQualifiedName) {
 		if (isFullyQualified()) {
