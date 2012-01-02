@@ -28,6 +28,8 @@ public class CmsRepositoryTest {
 		assertEquals("", r.getParentPath());
 		assertEquals("r", r.getName());
 		assertEquals("https://x.y.zz:32123/r", r.toString());
+		assertEquals("x.y.zz:32123", r.getHost());
+		assertEquals("x.y.zz", r.getHostname());
 	}
 
 	@Test

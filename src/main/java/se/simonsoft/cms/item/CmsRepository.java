@@ -47,6 +47,18 @@ public class CmsRepository {
 		this.name = name;
 	}
 	
+	public String getHost() {
+		return this.host;
+	}
+	
+	public String getHostname() {
+		int c = this.host.indexOf(':');
+		if (c >= 0) {
+			return this.host.substring(0, c);
+		}
+		return this.host;
+	}
+	
 	/**
 	 * @return URL to server root, no trailing slash, protocol http or https
 	 */
