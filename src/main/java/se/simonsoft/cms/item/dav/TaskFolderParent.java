@@ -18,6 +18,6 @@ public interface TaskFolderParent {
 	 * @param secret part of the folder name, provides uniqueness
 	 * @return a new folder, not created but unique and reserved, parent folder existing adn writable
 	 */
-	TaskFolder createTask(TaskSecret secret);
+	TaskFolder getNew(TaskSecret secret);
 	
 }

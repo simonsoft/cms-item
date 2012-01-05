@@ -1,5 +1,7 @@
 package se.simonsoft.cms.item.dav;
 
+import java.util.Date;
+
 /**
  * Provides a secret for creating new task folders.
  *
@@ -10,5 +12,10 @@ package se.simonsoft.cms.item.dav;
 public interface TaskSecret {
 
 	String getSecret();
+
+	/**
+	 * @return The timestamp after which the task folder should be deleted
+	 */
+	Date getExpiry();
 	
 }
