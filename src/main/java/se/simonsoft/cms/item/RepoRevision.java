@@ -8,6 +8,8 @@ import java.util.TimeZone;
 /**
  * Represents a single repository-wide revision identifier that can be used to identify a baseline.
  * In the Subversion world this is a number that is increased for every commit.
+ * The accompanying timestamp is the universal method of representing a baseline
+ * in a centralized version control system.
  */
 public class RepoRevision {
 
