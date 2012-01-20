@@ -11,7 +11,20 @@ import java.util.Date;
  */
 public interface TaskSecret {
 
+	/**
+	 * @return A name prefix to group the folders, such as an activity name.
+	 */
+	String getPrefix();
+	
+	/**
+	 * @return The random string that makes the URL secret.
+	 */
 	String getSecret();
+	
+	/**
+	 * @return The timestamp at creation, normally currentTimeMillis
+	 */
+	Date getCreation();
 
 	/**
 	 * @return The timestamp after which the task folder should be deleted
