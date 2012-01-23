@@ -27,6 +27,7 @@ import org.json.simple.parser.ParseException;
  */
 public class SvnPropertyValueList implements SvnPropertyValue<List<String>> {
 	
+	final transient String originalValue;
 	private List<?> value;
 	private boolean modified;
 	
@@ -44,9 +45,14 @@ public class SvnPropertyValueList implements SvnPropertyValue<List<String>> {
 	 * @param modified set to false to state that the value is identical to the current stored value
 	 */
 	SvnPropertyValueList(List<?> value, boolean modified) {
+		this(value, modified, null); // unknown
+	}
+
+	SvnPropertyValueList(List<?> value, boolean modified, String valueAsString) {
 		this.value = copy(value);
 		this.modified = modified;
-	}
+		this.originalValue = valueAsString;
+	}	
 	
 	private <T> List<T> copy(List<T> source) {
 		return new ArrayList<T>(source);
@@ -69,7 +75,7 @@ public class SvnPropertyValueList implements SvnPropertyValue<List<String>> {
 	 * @throws ValueParseException If the string is not parseable to this class's data structure
 	 */
 	protected SvnPropertyValueList(String svnPropertyValue) throws ValueParseException {
-		this(parse(svnPropertyValue), false);
+		this(parse(svnPropertyValue), false, svnPropertyValue);
 	}
 	
 	private static List<?> parse(String svnPropertyValue) throws ValueParseException {

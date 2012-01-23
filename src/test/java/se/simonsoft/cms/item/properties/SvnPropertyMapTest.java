@@ -88,9 +88,24 @@ public class SvnPropertyMapTest {
 		assertNull("Should return null when the property does not exist", map.getString("key1"));
 		map.putProperty("key1", new LinkedList<String>());
 		String wrongType = map.getString("key1");
-		assertNull("Should return null if asked for the wrong type", wrongType);
+		assertNull("In the edit API, getString should return null if prop was set as list", wrongType);
 		assertTrue("Callers can use containsPropety to see why they got null", map.containsProperty("key1"));
+		// We could add API to set the original value too
+		//map.putProperty("key1", new LinkedList<String>(), "[]");
 	}
+
+	@Test
+	public void testGetPropertyValueString() {
+		SvnPropertyMap map = new SvnPropertyMap();
+		map.store("key1", "[]");
+		map.store("key2", "val");
+		map.store("key3", "{}");
+		CmsItemProperties props = (CmsItemProperties) map;
+		assertEquals("val", props.getString("key2"));
+		assertEquals("When reading properties from svn, getString should always return the exact value", 
+				"[]", props.getString("key1"));
+		assertEquals("getList should still return null for non-lists", null, props.getList("key2"));
+	}	
 	
 	@Test //add restrictions after 1.0 release?//(expected=SvnFatalException.class)
 	public void testPutPropertyOverwriteDifferentType() {
@@ -105,7 +120,7 @@ public class SvnPropertyMapTest {
 		map.store("p1", "value");
 		map.store("p2", " value\n");
 		assertEquals("value", map.getString("p1"));
-		assertEquals("values shoudl not be trimmed", " value\n", map.getString("p2"));
+		assertEquals("values should not be trimmed", " value\n", map.getString("p2"));
 	}
 	
 	@Test
@@ -115,8 +130,8 @@ public class SvnPropertyMapTest {
 		assertEquals("Should parse json list to List and allow nulls", null, map.getList("p1").get(0));
 		assertEquals("Should parse json list to List", "a", map.getList("p1").get(1));
 		// Should we or should we not?
-		assertEquals("Should not allow a JSON value to be read as string",
-				null, map.getString("p1"));
+		assertEquals("Should allow a JSON value to be read as string",
+				"[null, \"a\"]", map.getString("p1"));
 	}
 	
 	@Test

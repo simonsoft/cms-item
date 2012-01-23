@@ -28,6 +28,7 @@ public interface CmsItemProperties {
 	/**
 	 * @param key Property name
 	 * @return The value of the property or null if not set,
+	 *  could return null for added or changed properties in a read-write impl.
 	 *  TODO parse error or null if binary?
 	 */
 	String getString(String key);
