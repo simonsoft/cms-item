@@ -55,9 +55,17 @@ public class SvnPropertyMap implements CmsItemProperties {
 			return ((SvnPropertyValueString) value).getValue();
 		}
 		if (value instanceof SvnPropertyValueList) {
-			return ((SvnPropertyValueList) value).originalValue;
+			return getString((SvnPropertyValueList) value);
 		}
 		return null;
+	}
+
+
+	private String getString(SvnPropertyValueList value) {
+		if (value.isModified() || value.originalValue == null) {
+			return value.getSvnString();
+		}
+		return value.originalValue;
 	}
 
 

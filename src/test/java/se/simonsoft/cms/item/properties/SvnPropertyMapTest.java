@@ -87,25 +87,29 @@ public class SvnPropertyMapTest {
 		SvnPropertyMap map = new SvnPropertyMap();
 		assertNull("Should return null when the property does not exist", map.getString("key1"));
 		map.putProperty("key1", new LinkedList<String>());
-		String wrongType = map.getString("key1");
-		assertNull("In the edit API, getString should return null if prop was set as list", wrongType);
+		String listAsString = map.getString("key1");
+		assertEquals("Should serialize added list to string if requested", "[]", listAsString);
 		assertTrue("Callers can use containsPropety to see why they got null", map.containsProperty("key1"));
-		// We could add API to set the original value too
-		//map.putProperty("key1", new LinkedList<String>(), "[]");
+		map.putProperty("key2", Arrays.asList("x", "y"));
+		assertEquals("Serialization", "[\"x\",\"y\"]", map.getString("key2"));
 	}
 
 	@Test
 	public void testGetPropertyValueString() {
 		SvnPropertyMap map = new SvnPropertyMap();
-		map.store("key1", "[]");
+		map.store("key1", "[   ]");
 		map.store("key2", "val");
 		map.store("key3", "{}");
 		CmsItemProperties props = (CmsItemProperties) map;
 		assertEquals("val", props.getString("key2"));
 		assertEquals("When reading properties from svn, getString should always return the exact value", 
-				"[]", props.getString("key1"));
+				"[   ]", props.getString("key1"));
 		assertEquals("getList should still return null for non-lists", null, props.getList("key2"));
-	}	
+		// not the way to do it?//map.getList("key1").add("added");
+		map.putProperty("key1", Arrays.asList("added"));
+		assertEquals("Should get a new serialized value after modification", 
+				"[\"added\"]", props.getString("key1"));
+	}
 	
 	@Test //add restrictions after 1.0 release?//(expected=SvnFatalException.class)
 	public void testPutPropertyOverwriteDifferentType() {
