@@ -22,7 +22,6 @@ public class Base32 {
 	
 	private SecureRandom r = null;
 
-	// TODO deprecate, make instance, name encode/) (allow future interface for plugging in encoding)
 	/**
 	 * @deprecated Use instance method 
 	 */
