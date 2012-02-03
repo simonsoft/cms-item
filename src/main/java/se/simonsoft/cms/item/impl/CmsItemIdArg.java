@@ -144,6 +144,9 @@ public class CmsItemIdArg implements CmsItemId {
 	
 	@Override
 	public CmsRepository getRepository() {
+		if (!isFullyQualified()) {
+			return new CmsRepositoryHostnameUnknown(parent.substring(0, parent.length() - 1), repo, getLogicalId());
+		}
 		return new CmsRepository(getRepositoryUrl());
 	}
 

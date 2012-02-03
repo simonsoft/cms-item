@@ -194,4 +194,32 @@ public class CmsItemIdArgTest {
 		assertTrue(i.withRelPath(null).equals(new CmsItemIdArg("x-svn://local.test/r^/")));
 	}
 
+	@Test
+	public void testNoHostRepo() {
+		CmsItemIdArg i = new CmsItemIdArg("x-svn:///parent/repo^/x");
+		assertEquals("repo", i.getRepository().getName());
+		assertEquals("/parent", i.getRepository().getParentPath());
+		try {
+			i.getRepository().getUrl();
+			fail("Should throw exception on repository URL until hostname is set");
+		} catch (IllegalStateException e) {
+			assertEquals("Hostname unknown for x-svn:///parent/repo^/x", e.getMessage());
+		}
+		try {
+			i.getRepository().getHost();
+			fail("Should throw exception on repository host until hostname is set");
+		} catch (IllegalStateException e) {
+			assertEquals("Hostname unknown for x-svn:///parent/repo^/x", e.getMessage());
+		}
+		try {
+			i.getRepository().getServerRootUrl();
+			fail("Should throw exception on server url until hostname is set");
+		} catch (IllegalStateException e) {
+			assertEquals("Hostname unknown for x-svn:///parent/repo^/x", e.getMessage());
+		}		
+		i.setHostname("host.name");
+		assertEquals("http://host.name/parent/repo", i.getRepository().getUrl());
+		assertEquals("/parent", i.getRepository().getParentPath());
+	}
+	
 }
