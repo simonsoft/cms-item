@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
+import se.simonsoft.cms.item.CmsRepository;
 
 public class CmsItemIdArgTest {
 	
@@ -216,7 +217,15 @@ public class CmsItemIdArgTest {
 			fail("Should throw exception on server url until hostname is set");
 		} catch (IllegalStateException e) {
 			assertEquals("Hostname unknown for x-svn:///parent/repo^/x", e.getMessage());
-		}		
+		}
+		assertEquals("toString can not produce a URL so the best info we have is the logicalId of the repo",
+				"x-svn:///parent/repo^", i.getRepository().toString());
+		assertTrue(i.getRepository().equals(i.getRepository()));
+		assertTrue(i.getRepository().equals(i.withPegRev(1L).getRepository()));
+		assertFalse(i.getRepository().equals(new CmsItemIdArg("x-svn://x.y/parent/repo^/x").getRepository()));
+		assertFalse(i.getRepository().equals(new CmsRepository("http://x.y/parent/repo")));
+		assertNotNull(i.getRepository().hashCode());
+		// now set hostname
 		i.setHostname("host.name");
 		assertEquals("http://host.name/parent/repo", i.getRepository().getUrl());
 		assertEquals("/parent", i.getRepository().getParentPath());
