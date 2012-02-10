@@ -47,10 +47,20 @@ public class CmsRepository {
 		this.name = name;
 	}
 	
+	public boolean isFullyQualified() {
+		throw new UnsupportedOperationException("Not implemented"); // TODO use this class to support the state in CmsRepositoryHostnameUnknown 
+	}
+	
+	/**
+	 * @return hostname and possibly port
+	 */
 	public String getHost() {
 		return this.host;
 	}
 	
+	/**
+	 * @return hostname without port
+	 */
 	public String getHostname() {
 		int c = this.host.indexOf(':');
 		if (c >= 0) {

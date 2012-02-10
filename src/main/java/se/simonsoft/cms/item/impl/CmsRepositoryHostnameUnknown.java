@@ -2,6 +2,7 @@ package se.simonsoft.cms.item.impl;
 
 import se.simonsoft.cms.item.CmsRepository;
 
+@Deprecated // For 1.9, 
 class CmsRepositoryHostnameUnknown extends CmsRepository {
 
 	private String logicalId;
