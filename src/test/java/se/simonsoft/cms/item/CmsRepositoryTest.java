@@ -39,4 +39,33 @@ public class CmsRepositoryTest {
 		CmsRepository r2 = new CmsRepository("https", "demo.simonsoftcms.se", "/svn", "demo1");
 		assertEquals("https://demo.simonsoftcms.se/svn/demo1", r2.toString());
 	}
+	
+	@Test
+	public void testHostUnknown() {
+		CmsRepository r = new CmsRepository("/parent", "repo1");
+		assertFalse(r.isHostKnown());
+		assertEquals("/parent", r.getParentPath());
+		assertEquals("repo1", r.getName());
+		try {
+			r.getHost();
+			fail("Should throw exception for getHost when host is unknown");
+		} catch (IllegalStateException e) {
+			assertEquals("Repository identified only by parent path and name: /parent/repo1", e.getMessage());
+		}
+		try {
+			r.getServerRootUrl();
+			fail("Should throw exception for getServerRootUrl when host is unknown");
+		} catch (IllegalStateException e) {
+			assertEquals("Repository identified only by parent path and name: /parent/repo1", e.getMessage());
+		}
+		try {
+			r.getUrl();
+			fail("Should throw exception for getUrl when host is unknown");
+		} catch (IllegalStateException e) {
+			assertEquals("Repository identified only by parent path and name: /parent/repo1", e.getMessage());
+		}
+		assertEquals("CmsRepository:/parent/repo1", r.toString());
+		assertTrue(r.equals(new CmsRepository(null, null, "/parent", "repo1")));
+		assertFalse(r.equals(new CmsRepository("http", "host.name", "/parent", "repo1")));
+	}
 }

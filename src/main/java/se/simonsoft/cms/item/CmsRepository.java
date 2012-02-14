@@ -47,14 +47,32 @@ public class CmsRepository {
 		this.name = name;
 	}
 	
-	public boolean isFullyQualified() {
-		throw new UnsupportedOperationException("Not implemented"); // TODO use this class to support the state in CmsRepositoryHostnameUnknown 
+	/**
+	 * Used to name a repository when a hostname is not known.
+	 * Needed because we sometimes have logical ids without host.
+	 * 
+	 * @param parentPath With leading but not traling slash
+	 * @param name Repository name, no slashes
+	 */
+	public CmsRepository(String parentPath, String name) {
+		this(null, null, parentPath, name);
+	}
+	
+	/**
+	 * Analogous to isFullyQualified in SvnLogicalId.
+	 * @return true if the repository URL is known, false if only parent path and repo name
+	 */
+	public boolean isHostKnown() {
+		return this.host != null;
 	}
 	
 	/**
 	 * @return hostname and possibly port
 	 */
 	public String getHost() {
+		if (!isHostKnown()) {
+			throw new IllegalStateException("Repository identified only by parent path and name: " + this.parent + "/" + this.name);
+		}
 		return this.host;
 	}
 	
@@ -62,6 +80,9 @@ public class CmsRepository {
 	 * @return hostname without port
 	 */
 	public String getHostname() {
+		if (!isHostKnown()) {
+			throw new IllegalStateException("Repository identified only by parent path and name: " + this.parent + "/" + this.name);
+		}
 		int c = this.host.indexOf(':');
 		if (c >= 0) {
 			return this.host.substring(0, c);
@@ -73,6 +94,9 @@ public class CmsRepository {
 	 * @return URL to server root, no trailing slash, protocol http or https
 	 */
 	public String getServerRootUrl() {
+		if (!isHostKnown()) {
+			throw new IllegalStateException("Repository identified only by parent path and name: " + this.parent + "/" + this.name);
+		}
 		return protocol + "://" + host;
 	}
 	
@@ -108,8 +132,14 @@ public class CmsRepository {
 		return toString().hashCode();
 	}
 
+	/**
+	 * @return URL if host is known, string containing class name, parent path and name if not
+	 */
 	@Override
 	public String toString() {
+		if (!isHostKnown()) {
+			return "CmsRepository:" + getParentPath() + "/" + getName();
+		}		
 		return getUrl();
 	}
 	

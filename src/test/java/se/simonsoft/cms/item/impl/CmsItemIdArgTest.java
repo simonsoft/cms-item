@@ -70,7 +70,7 @@ public class CmsItemIdArgTest {
 		try {
 			p.getUrl();
 		} catch (IllegalStateException e) {
-			assertEquals("Hostname unknown for " + p.getLogicalId(), e.getMessage());
+			assertEquals("Repository identified only by parent path and name: /svn/demo1", e.getMessage());
 		}
 		p.setHostname("x.y.z");
 		assertTrue(p.isFullyQualified());
@@ -204,22 +204,22 @@ public class CmsItemIdArgTest {
 			i.getRepository().getUrl();
 			fail("Should throw exception on repository URL until hostname is set");
 		} catch (IllegalStateException e) {
-			assertEquals("Hostname unknown for x-svn:///parent/repo^/x", e.getMessage());
+			assertEquals("Repository identified only by parent path and name: /parent/repo", e.getMessage());
 		}
 		try {
 			i.getRepository().getHost();
 			fail("Should throw exception on repository host until hostname is set");
 		} catch (IllegalStateException e) {
-			assertEquals("Hostname unknown for x-svn:///parent/repo^/x", e.getMessage());
+			assertEquals("Repository identified only by parent path and name: /parent/repo", e.getMessage());
 		}
 		try {
 			i.getRepository().getServerRootUrl();
 			fail("Should throw exception on server url until hostname is set");
 		} catch (IllegalStateException e) {
-			assertEquals("Hostname unknown for x-svn:///parent/repo^/x", e.getMessage());
+			assertEquals("Repository identified only by parent path and name: /parent/repo", e.getMessage());
 		}
 		assertEquals("toString can not produce a URL so the best info we have is the logicalId of the repo",
-				"x-svn:///parent/repo^", i.getRepository().toString());
+				"CmsRepository:/parent/repo", i.getRepository().toString());
 		assertTrue(i.getRepository().equals(i.getRepository()));
 		assertTrue(i.getRepository().equals(i.withPegRev(1L).getRepository()));
 		assertFalse(i.getRepository().equals(new CmsItemIdArg("x-svn://x.y/parent/repo^/x").getRepository()));
