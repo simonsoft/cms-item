@@ -27,18 +27,17 @@
 		<system>Trac</system>
 		<url>https://pds-svn-gbg.pdsvision.net/trac/modules/${prject.artifactId}</url>
 	</issueManagement>
-	
+
 	<ciManagement>
-    	<system>hudson</system>
-    	<url>http://hudson.pdsvision.net:8080/</url>
+		<system>jenkins</system>
+		<url>http://build.pdsvision.net/</url>
 	</ciManagement>
 
 	<repositories>
 		<repository>
 			<id>pdsvisionReleases</id>
 			<name>PDSVision Releases</name>
-			<url>http://hudson.pdsvision.net/repository</url>
-			<layout>default</layout>
+			<url>http://build.pdsvision.net/releases/</url>
 		</repository>
 	</repositories>
 	
