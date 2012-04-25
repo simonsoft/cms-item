@@ -2,13 +2,20 @@ package se.simonsoft.cms.item;
 
 /**
  * Used instead of String to identify CMS items (a.k.a. objects/entries/files or folders).
- * 
+ * <p>
  * The interface methods should return the <em>persistent</em> form of id,
  * typically location and revision -- never parameters for transformation etc.
- * 
+ * <p>
  * Typically immutable as the different getters provides identifiers in different contexts.
- * 
+ * <p>
  * Facilitates mocking when unit testing methods that deal with CMS paths and URLs.
+ * <p>
+ * Can <em>not</em> be used to distinguish between files and folders.
+ * The rationale for this is that these ids often come as string input from user operations,
+ * where there is no such metadata and a convention on trailing slash is difficult to enforce.
+ * Full item information is provided through {@link CmsItem}, for example from {@link CmsItemLookup}.
+ * Services that return lists of ids may instead provide method variants returning only files,
+ * only folders and both.
  */
 public interface CmsItemId {
 	

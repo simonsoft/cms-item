@@ -12,6 +12,12 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
 public interface CmsItem {
 
 	CmsItemId getId();
+
+	/**
+	 * Item "kind" can not be identified from {@link #getId()}.
+	 * @return file or folder or special kinds
+	 */
+	CmsItemKind getKind();
 	
 	/**
 	 * @return Item status value, arbitrary value (enum defined per customer), null if not set
