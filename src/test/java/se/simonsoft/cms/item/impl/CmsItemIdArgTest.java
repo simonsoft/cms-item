@@ -3,6 +3,9 @@ package se.simonsoft.cms.item.impl;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -193,6 +196,21 @@ public class CmsItemIdArgTest {
 		assertTrue(ip.withPegRev(null).equals(i));
 		assertTrue(i.equals(ip.withPegRev(null)));
 		assertTrue(i.withRelPath(null).equals(new CmsItemIdArg("x-svn://local.test/r^/")));
+	}
+	
+	@Test
+	public void testEqualsAndHashCode() {
+		CmsItemIdArg id1 = new CmsItemIdArg("x-svn://local.test/r^/x");
+		CmsItemIdArg id2 = new CmsItemIdArg("x-svn://local.test/r^/x");
+		assertTrue(id1.equals(id2));
+		Set<CmsItemId> hashSet = new HashSet<CmsItemId>();
+		hashSet.add(id1);
+		assertTrue("Equal ids must have the same hash code or collections may fail to note the equality",
+				hashSet.contains(id2));
+		assertFalse("Different path should in general result in different hash code",
+				id1.hashCode() == new CmsItemIdArg("x-svn://local.test/r^/y").hashCode());
+		assertTrue("hashCode is allowed to ignore hostname", // SvnLogicalId does the same through toString ecluding hostname
+				id1.hashCode() == new CmsItemIdArg("x-svn:///r^/x").hashCode());
 	}
 
 	@Test

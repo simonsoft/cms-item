@@ -282,4 +282,9 @@ public class CmsItemIdArg implements CmsItemId {
 		}
 	}
 
+	@Override
+	public int hashCode() {
+		return getLogicalId().hashCode();
+	}
+
 }

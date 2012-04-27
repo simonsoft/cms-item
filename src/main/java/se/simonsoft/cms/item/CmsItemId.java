@@ -87,6 +87,6 @@ public interface CmsItemId {
 	 * @param newPegRev Any peg revision, null to make ID represent HEAD.
 	 * @return Same ID but with new peg revision
 	 */
-	CmsItemId withPegRev(Long newPegRev); 
+	CmsItemId withPegRev(Long newPegRev);
 
 }
