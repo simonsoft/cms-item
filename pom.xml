@@ -8,15 +8,10 @@
 	
 	<name>CMS file abstraction</name>
 	<url>http://www.simonsoft.se/</url>
-
-	<inceptionYear>2009-2012</inceptionYear>
-	<organization>
-		<name>Simonsoft Nordic AB</name>
-	</organization>
 	
 	<parent>
 		<groupId>se.simonsoft</groupId>
-		<artifactId>simonsoft-maven-parent</artifactId>
+		<artifactId>cms-maven-parent</artifactId>
 		<version>2.0</version>
 		<relativePath/>
 	</parent>
@@ -61,29 +56,5 @@
 		    <version>1.1</version>
 		</dependency>	
 	</dependencies>
-	
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.mycila.maven-license-plugin</groupId>
-				<artifactId>maven-license-plugin</artifactId>
-				<version>1.10.b1</version>
-				<configuration>
-					<header>src/license-header.txt</header>
-					<properties>
-						<year>${project.inceptionYear}</year>
-						<owner>${project.organization.name}</owner>
-					</properties>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>	
 	
 </project>
