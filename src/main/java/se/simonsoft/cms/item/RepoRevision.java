@@ -23,8 +23,14 @@ import java.util.TimeZone;
 /**
  * Represents a single repository-wide revision identifier that can be used to identify a baseline.
  * In the Subversion world this is a number that is increased for every commit.
+ * 
  * The accompanying timestamp is the universal method of representing a baseline
  * in a centralized version control system.
+ * URL + timestamp identifies a baseline in a DVCS.
+ * 
+ * The timestamp also provides the most human readable form of identification,
+ * formatted either as a date and time or as "X [unit] ago"
+ * (arguably after small svn revision numbers).
  */
 public class RepoRevision {
 
@@ -33,6 +39,9 @@ public class RepoRevision {
 		ISO_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
 	}
 	
+	private static final long DATE_ONLY_MIN = 631152000000L; // 1990-01-01
+	
+	private boolean numberIsTimestamp = false;
 	private long number;
 	private Date date;
 
@@ -40,9 +49,20 @@ public class RepoRevision {
 		this.number = revisionNumber;
 		this.date = revisionTimestamp;
 	}
+
+	public RepoRevision(Date revisionTimestamp) {
+		this(revisionTimestamp.getTime(), revisionTimestamp);
+		if (revisionTimestamp.getTime() < DATE_ONLY_MIN) {
+			throw new IllegalArgumentException("Date-only revision not allowed before " 
+					+ ISO_FORMAT.format(DATE_ONLY_MIN) + ", got " + ISO_FORMAT.format(revisionTimestamp));
+		}
+		this.numberIsTimestamp = true;
+	}
 	
 	/**
-	 * @return The commit revision number.
+	 * The API allows this number to be the timestamp,
+	 * which in practice is the case when number > 
+	 * @return The commit revision number
 	 */
 	public long getNumber() {
 		return this.number;
@@ -65,9 +85,15 @@ public class RepoRevision {
 		return ISO_FORMAT.format(getDate());
 	}
 
+	/**
+	 * @return Revision in backend's native format
+	 */
 	@Override
 	public String toString() {
-		return this.getClass().getSimpleName() + ":" + getNumber() + "," + getDateIso(); 
+		if (numberIsTimestamp) {
+			return getDateIso();
+		}
+		return Long.toString(number); 
 	}
 	
 }

@@ -13,23 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package se.simonsoft.cms.item.editor;
+package se.simonsoft.cms.item.commit;
 
-import java.io.File;
+import java.util.LinkedList;
+import java.util.List;
 
-import se.simonsoft.cms.item.CmsItemPath;
-import se.simonsoft.cms.item.properties.CmsItemProperties;
-
-public class FileModification {
-
-	public FileModification(CmsItemPath pathInRepository,
-			long baseRevision, File baseFile, File workingFile) {
-		
-	}
+public class CmsCommitChangeset extends LinkedList<CmsCommitChangesetItem>
+		implements List<CmsCommitChangesetItem> {
 	
-	public FileModification setPropsets(CmsItemProperties propertyChanges) {
-		// TODO svn 1.7 supports line based prop diff, we should too
-		return this;
+	private static final long serialVersionUID = 1L;
+
+	private String historyMessage = null;
+
+	public String getHistoryMessage() {
+		return historyMessage;
 	}
-	
+
+	public void setHistoryMessage(String historyMessage) {
+		this.historyMessage = historyMessage;
+	}
+
 }

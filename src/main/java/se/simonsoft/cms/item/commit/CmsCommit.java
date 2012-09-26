@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package se.simonsoft.cms.item.editor;
+package se.simonsoft.cms.item.commit;
 
+public interface CmsCommit {
 
-public class FileModifications {
-
-	public void add(FileModification fileModification) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	public void run(CmsCommitChangeset fileModifications);
+	
 }

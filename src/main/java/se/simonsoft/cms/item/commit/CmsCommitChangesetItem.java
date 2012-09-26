@@ -13,10 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package se.simonsoft.cms.item.editor;
+package se.simonsoft.cms.item.commit;
 
-public interface CmsCommit {
+import se.simonsoft.cms.item.CmsItemPath;
+import se.simonsoft.cms.item.RepoRevision;
 
-	public void run(FileModifications fileModifications);
+public interface CmsCommitChangesetItem {
+
+	CmsItemPath getPath();
+
+	RepoRevision getBaseRevision();
 	
 }
