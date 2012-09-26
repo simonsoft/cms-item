@@ -22,16 +22,10 @@ import se.simonsoft.cms.item.RepoRevision;
  * A modification of contents and/or properties at a {@link CmsItemPath}
  * in a repository given by execution context.
  */
-public interface CmsCommitChange extends Comparable<CmsCommitChange> {
+public interface CmsCommitChange {
 
 	CmsItemPath getPath();
 
 	RepoRevision getBaseRevision();
-	
-	/**
-	 * @param path see {@link #getPath()}
-	 * @return sort order
-	 */
-	int compareTo(CmsItemPath path);
 	
 }

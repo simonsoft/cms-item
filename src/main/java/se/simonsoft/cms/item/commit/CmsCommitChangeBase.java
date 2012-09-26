@@ -1,26 +1,19 @@
 package se.simonsoft.cms.item.commit;
 
-import se.simonsoft.cms.item.CmsItemPath;
-
 public abstract class CmsCommitChangeBase implements CmsCommitChange {
 
-	/**
-	 * Sorting on path.
-	 */
-	@Override
-	public int compareTo(CmsCommitChange item) {
-		if (item == null) {
-			return compareTo((CmsItemPath) null);
-		}
-		return compareTo(getPath());
-	}
+	protected enum StatContent { _, M, A, R, D }
+	protected enum StatProps { _, M }
+
+	protected abstract StatContent getStatContents();
+	
+	protected abstract StatProps getStatProps();
+	
+	protected abstract boolean isCopy();
 
 	@Override
-	public int compareTo(CmsItemPath path) {
-		if (path == null) {
-			return getPath() == null ? 0 : getPath().compareTo(null);
-		}
-		return getPath().compareTo(path);
+	public String toString() {
+		return "" + getStatContents() + getStatProps() + (isCopy() ? "+" : "_") + ":" + getPath();
 	}
-
+	
 }

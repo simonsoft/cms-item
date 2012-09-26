@@ -40,7 +40,22 @@ public class FileModification extends CmsCommitChangeBase {
 		this.baseFile = baseFile;
 		this.workingFile = workingFile;
 	}
+	
+	@Override
+	protected StatContent getStatContents() {
+		return StatContent.M;
+	}
 
+	@Override
+	protected StatProps getStatProps() {
+		return StatProps._;
+	}
+
+	@Override
+	protected boolean isCopy() {
+		return false;
+	}
+	
 	@Override
 	public CmsItemPath getPath() {
 		return path;
