@@ -20,7 +20,7 @@ import java.io.InputStream;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 
-public class FileModification implements CmsCommitChangesetItem {
+public class FileModification extends CmsCommitChangeBase {
 
 	private CmsItemPath path;
 	private RepoRevision baseRevision;
@@ -28,7 +28,7 @@ public class FileModification implements CmsCommitChangesetItem {
 	private InputStream workingFile;
 
 	/**
-	 * @param pathInRepository see {@link CmsCommitChangesetItem#getPath()}
+	 * @param pathInRepository see {@link CmsCommitChange#getPath()}
 	 * @param baseRevision the revision that changes are based on, used to check for conflicts with other changes
 	 * @param baseFile, the original file that changes are based on, stream will be opened when item processing starts and closed afterwards
 	 * @param workingFile, current contents, stream will be opened when item processing starts and closed afterwards

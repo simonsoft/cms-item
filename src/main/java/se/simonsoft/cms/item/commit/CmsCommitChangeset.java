@@ -15,22 +15,54 @@
  */
 package se.simonsoft.cms.item.commit;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-public class CmsCommitChangeset extends LinkedList<CmsCommitChangesetItem>
-		implements List<CmsCommitChangesetItem> {
+import se.simonsoft.cms.item.CmsItemPath;
+
+/**
+ * Item modifications, never two of them at the same path.
+ */
+public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
+		implements List<CmsCommitChange> {
 	
 	private static final long serialVersionUID = 1L;
 
 	private String historyMessage = null;
-
+	private boolean keepLocks = false;
+	private Map<String, String> locks = new HashMap<String, String>();
+	
 	public String getHistoryMessage() {
 		return historyMessage;
 	}
 
 	public void setHistoryMessage(String historyMessage) {
 		this.historyMessage = historyMessage;
+	}
+
+	public boolean isKeepLocks() {
+		return keepLocks;
+	}
+
+	public void setKeepLocks(boolean keepLocks) {
+		this.keepLocks = keepLocks;
+	}
+
+	public Map<String, String> getLocks() {
+		return locks;
+	}
+
+	public void setLocks(Map<CmsItemPath, String> locks) {
+		locks.clear();
+		for (CmsItemPath p : locks.keySet()) {
+			addLock(p, locks.get(p));
+		}
+	}
+	
+	public void addLock(CmsItemPath path, String lockToken) {
+		locks.put(path.getPath(), lockToken);
 	}
 
 }

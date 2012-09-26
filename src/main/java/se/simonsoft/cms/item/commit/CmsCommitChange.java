@@ -18,10 +18,20 @@ package se.simonsoft.cms.item.commit;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 
-public interface CmsCommitChangesetItem {
+/**
+ * A modification of contents and/or properties at a {@link CmsItemPath}
+ * in a repository given by execution context.
+ */
+public interface CmsCommitChange extends Comparable<CmsCommitChange> {
 
 	CmsItemPath getPath();
 
 	RepoRevision getBaseRevision();
+	
+	/**
+	 * @param path see {@link #getPath()}
+	 * @return sort order
+	 */
+	int compareTo(CmsItemPath path);
 	
 }

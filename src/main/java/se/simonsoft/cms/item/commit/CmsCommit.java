@@ -15,8 +15,10 @@
  */
 package se.simonsoft.cms.item.commit;
 
+import se.simonsoft.cms.item.RepoRevision;
+
 public interface CmsCommit {
 
-	public void run(CmsCommitChangeset fileModifications);
+	public RepoRevision run(CmsCommitChangeset fileModifications);
 	
 }

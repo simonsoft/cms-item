@@ -50,7 +50,7 @@ public class RepoRevision {
 		this.date = revisionTimestamp;
 	}
 
-	public RepoRevision(Date revisionTimestamp) {
+	protected RepoRevision(Date revisionTimestamp) {
 		this(revisionTimestamp.getTime(), revisionTimestamp);
 		if (revisionTimestamp.getTime() < DATE_ONLY_MIN) {
 			throw new IllegalArgumentException("Date-only revision not allowed before " 
