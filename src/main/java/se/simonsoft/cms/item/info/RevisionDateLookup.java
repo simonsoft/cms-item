@@ -26,7 +26,7 @@ import se.simonsoft.cms.item.RepoRevision;
  * Only already fetched revisions are checked in {@link #containsKey(Object)} and {@link #containsValue(Object)}.
  * Known (and trusted) pairs can be added to map using {@link #put(Long, Date)}.
  * 
- * @deprecated This was the idea that led to {@link RepositoryLookup#getRevisionTimestamp(se.simonsoft.cms.item.CmsRepository, Object)}
+ * @deprecated This was the idea that led to {@link CmsRepositoryLookup#getRevisionTimestamp(se.simonsoft.cms.item.CmsRepository, Object)}
  */
 public interface RevisionDateLookup extends Map<Long, Date> {
 

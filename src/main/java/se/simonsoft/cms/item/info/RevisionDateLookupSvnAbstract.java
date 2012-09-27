@@ -21,7 +21,7 @@ import java.util.TreeMap;
 /**
  * Handles caching and map API based for date lookups.
  * 
- * @deprecated Caching behavior should be specified in {@link RepositoryLookup}, API for manual add of entries could be added
+ * @deprecated Caching behavior should be specified in {@link CmsRepositoryLookup}, API for manual add of entries could be added
  */
 public abstract class RevisionDateLookupSvnAbstract extends TreeMap<Long, Date>
 		implements RevisionDateLookup {

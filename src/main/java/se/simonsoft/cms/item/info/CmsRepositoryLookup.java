@@ -10,7 +10,7 @@ import se.simonsoft.cms.item.RepoRevision;
  * 
  * TODO evaluate service, collect impl pieces for example YoungestRevision in webapp.
  */
-public interface RepositoryLookup {
+public interface CmsRepositoryLookup {
 
 	/**
 	 * @param repository the central repository to check
