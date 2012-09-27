@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package se.simonsoft.cms.item.events;
+package se.simonsoft.cms.item.info;
 
 import java.util.Date;
 import java.util.TreeMap;
 
 /**
  * Handles caching and map API based for date lookups.
+ * 
+ * @deprecated Caching behavior should be specified in {@link RepositoryLookup}, API for manual add of entries could be added
  */
 public abstract class RevisionDateLookupSvnAbstract extends TreeMap<Long, Date>
 		implements RevisionDateLookup {

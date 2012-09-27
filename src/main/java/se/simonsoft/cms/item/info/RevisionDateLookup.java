@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package se.simonsoft.cms.item.events;
+package se.simonsoft.cms.item.info;
 
 import java.util.Date;
 import java.util.Map;
@@ -25,6 +25,8 @@ import se.simonsoft.cms.item.RepoRevision;
  * Looks up date on {@link #get(Object)} and is expected to cache for future use with same revision.
  * Only already fetched revisions are checked in {@link #containsKey(Object)} and {@link #containsValue(Object)}.
  * Known (and trusted) pairs can be added to map using {@link #put(Long, Date)}.
+ * 
+ * @deprecated This was the idea that led to {@link RepositoryLookup#getRevisionTimestamp(se.simonsoft.cms.item.CmsRepository, Object)}
  */
 public interface RevisionDateLookup extends Map<Long, Date> {
 
