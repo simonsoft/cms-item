@@ -15,10 +15,13 @@
  */
 package se.simonsoft.cms.item;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
 /**
- * Models a specific revision of a file entry in the CMS.
+ * Models a specific revision of a file or folder entry in the CMS.
  * 
  * The interfaces in this package are provided as a means of handling CMS contents
  * that is independent of retrieval method. Data could originate from repository access,
@@ -48,5 +51,17 @@ public interface CmsItem {
 	 * @return all versioned properties on this item
 	 */
 	CmsItemProperties getProperties();
+	
+	/**
+	 * Opens a connection to a file and writes its content to a stream.
+	 * @param receiver accepts contents of arbitrary length at arbitrary speed
+	 * @return access to contents, opened and closed by caller
+	 * @throws {@link se.simonsoft.cms.item.info.CmsConnectionException} if repository connection failed
+	 * @throws {@link se.simonsoft.cms.item.info.CmsItemNotFoundException} if the item has disappeard after the {@link CmsItem} instance was returned
+	 * @throws {@link se.simonsoft.cms.item.info.CmsTransferException} instead of checked IOException and the like
+	 * @throws IOException if transport failed
+	 * @throws UnsupportedOperationException if item is folder or backend does not support content reading
+	 */
+	void getContents(OutputStream receiver) throws UnsupportedOperationException;
 	
 }
