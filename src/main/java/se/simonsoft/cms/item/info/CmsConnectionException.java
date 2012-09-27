@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package se.simonsoft.cms.item;
+package se.simonsoft.cms.item.info;
 
 /**
- * @deprecated use {@link se.simonsoft.cms.item.info.CmsConnectionException}
+ * Error thrown if connection to the CMS server, repository etc
+ * could not be established.
+ * 
+ * When thrown in a high level interface like {@link CmsItemLookup},
+ * it it safe to assume that the underlying implementation has attempted
+ * retries and that the error is persistent.
  */
-public class CmsConnectionException extends RuntimeException {
+public class CmsConnectionException extends se.simonsoft.cms.item.CmsConnectionException {
 
 	private static final long serialVersionUID = 1L;
 

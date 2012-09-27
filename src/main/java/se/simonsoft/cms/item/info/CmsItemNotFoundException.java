@@ -13,7 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package se.simonsoft.cms.item;
+package se.simonsoft.cms.item.info;
+
+import se.simonsoft.cms.item.CmsItemId;
+
 
 /**
  * Thrown when communication succeeds but the item is not found.
@@ -24,23 +27,17 @@ package se.simonsoft.cms.item;
  * 
  * Services that rely on indexed data might want to retry a few times before
  * throwing this error as it may occur because of indexing delays.
- * 
- * @deprecated Use {@link se.simonsoft.cms.item.info.CmsItemNotFoundException}
  */
-public class CmsItemNotFoundException extends RuntimeException {
+public class CmsItemNotFoundException extends se.simonsoft.cms.item.CmsItemNotFoundException {
 
 	private static final long serialVersionUID = 1L;
 	private CmsItemId id;
 
 	public CmsItemNotFoundException(CmsItemId id) {
-		this(id, "Not found: " + id);
-	}
-	
-	public CmsItemNotFoundException(CmsItemId id, String message) {
-		super(message);
+		super(id, "Not found: " + id);
 		this.id = id;
 	}
-
+	
 	public CmsItemId getId() {
 		return id;
 	}

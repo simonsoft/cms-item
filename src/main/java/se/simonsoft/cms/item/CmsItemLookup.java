@@ -19,7 +19,9 @@ package se.simonsoft.cms.item;
  * Provides access to CMS contents using repository, indexing, working copy, caching or a combination.
  * 
  * Implementations can be either cross-repository, requiring paths/URLs/logicalIds with repo specified,
- * or single-repo throwing exceptions if repo is specified and not identical to the connected repo. 
+ * or single-repo throwing exceptions if repo is specified and not identical to the connected repo.
+ * 
+ * @deprecated use {@link se.simonsoft.cms.item.info.CmsItemLookup}
  */
 public interface CmsItemLookup {
 
