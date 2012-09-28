@@ -17,11 +17,14 @@ package se.simonsoft.cms.item.info;
 
 import se.simonsoft.cms.item.CmsItem;
 import se.simonsoft.cms.item.CmsItemId;
+import se.simonsoft.cms.item.commit.CmsCommit;
 
 /**
  * Ideas for locking service, draft interface.
  * 
  * TODO Evaluate lock information directly from CmsItemLookup
+ * 
+ * TODO How to pass own locks to {@link CmsCommit}
  */
 public interface CmsLocking {
 
