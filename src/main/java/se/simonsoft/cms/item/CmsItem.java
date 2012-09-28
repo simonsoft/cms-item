@@ -26,6 +26,10 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
  * The interfaces in this package are provided as a means of handling CMS contents
  * that is independent of retrieval method. Data could originate from repository access,
  * working copy, index, cache etc. and might be fetched as needed instead of at instantiation.
+ * 
+ * Implementations may delay fetching of {@link #getProperties()} and {@link #getContents(OutputStream)}
+ * but if the item was instantiated with HEAD revision both properties and contents
+ * should be fetched from the revision that was HEAD at the time.
  */
 public interface CmsItem {
 
@@ -57,7 +61,6 @@ public interface CmsItem {
 	 * @param receiver accepts contents of arbitrary length at arbitrary speed
 	 * @return access to contents, opened and closed by caller
 	 * @throws {@link se.simonsoft.cms.item.info.CmsConnectionException} if repository connection failed
-	 * @throws {@link se.simonsoft.cms.item.info.CmsItemNotFoundException} if the item has disappeard after the {@link CmsItem} instance was returned
 	 * @throws {@link se.simonsoft.cms.item.info.CmsTransferException} instead of checked IOException and the like
 	 * @throws IOException if transport failed
 	 * @throws UnsupportedOperationException if item is folder or backend does not support content reading
