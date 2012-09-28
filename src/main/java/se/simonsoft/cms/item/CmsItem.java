@@ -34,7 +34,13 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
 public interface CmsItem {
 
 	CmsItemId getId();
-
+	
+	/**
+	 * The definition of commit revision at move etc is up to the backend, still.
+	 * @return the commit revision of the fetched item, often called "last changed"
+	 */
+	RepoRevision getRevision();
+	
 	/**
 	 * Item "kind" can not be identified from {@link #getId()}.
 	 * @return file or folder or special kinds
