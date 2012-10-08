@@ -20,7 +20,7 @@ import java.io.InputStream;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 
-public class FileAdd extends CmsCommitChangeBase {
+public class FileAdd implements CmsCommitChange {
 
 	private CmsItemPath path;
 	private RepoRevision baseRevision;
@@ -38,21 +38,6 @@ public class FileAdd extends CmsCommitChangeBase {
 		this.path = path;
 		this.baseRevision = parentFolderBaseRevision;
 		this.contents = contents;
-	}
-	
-	@Override
-	protected StatContent getStatContents() {
-		return StatContent.A;
-	}
-
-	@Override
-	protected StatProps getStatProps() {
-		return StatProps._;
-	}
-
-	@Override
-	protected boolean isCopy() {
-		return false;
 	}	
 	
 	@Override
@@ -70,6 +55,12 @@ public class FileAdd extends CmsCommitChangeBase {
 	 */
 	public InputStream getContents() {
 		return contents;
+	}
+
+	@Override
+	public String toString() {
+		// add, no prop support yet, no copy support yet
+		return "A___" + getPath().getPath();
 	}
 
 }

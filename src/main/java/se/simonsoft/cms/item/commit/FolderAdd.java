@@ -18,7 +18,7 @@ package se.simonsoft.cms.item.commit;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 
-public class FolderAdd extends CmsCommitChangeBase {
+public class FolderAdd implements CmsCommitChange {
 
 	private CmsItemPath path;
 	private RepoRevision baseRevision;
@@ -39,18 +39,9 @@ public class FolderAdd extends CmsCommitChangeBase {
 	}
 
 	@Override
-	protected StatContent getStatContents() {
-		return StatContent.A;
-	}
-
-	@Override
-	protected StatProps getStatProps() {
-		return StatProps._;
-	}
-
-	@Override
-	protected boolean isCopy() {
-		return false;
+	public String toString() {
+		// add, no prop support yet, no copy support yet, folder
+		return "A___" + getPath().getPath() + "/";
 	}
 
 }
