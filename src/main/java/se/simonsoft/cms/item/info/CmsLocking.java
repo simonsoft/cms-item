@@ -33,11 +33,7 @@ public interface CmsLocking {
 	void unlock(CmsItemId item, LockToken lockToken);
 	
 	/**
-	 * @deprecated probably directly in {@link CmsItem}, useful anyway?
-	 */
-	boolean isLocked(CmsItemId item);
-	
-	/**
+	 * @return lock properties or null if the item is not locked
 	 * @deprecated probably directly in {@link CmsItem}
 	 */
 	LockInfo getLock(CmsItemId item);
@@ -51,8 +47,19 @@ public interface CmsLocking {
 	 */
 	LockToken getKnownLock(CmsItemId item);
 	
-	LockToken lockSteal(CmsItemId item, String message);
+	/**
+	 * Removes existing lock on an item in the repository, regardless of owner.
+	 * Use {@link #unlock(CmsItemId, LockToken)} with a token for safe unlock within an operation.
+	 * @param item An item that is locked (or any item?)
+	 */
+	void lockBreak(CmsItemId item);
 	
+	/**
+	 * Same as {@link #lock(CmsItemId, String)} but also breaks existing locks by anyone.
+	 * @param item
+	 * @param message
+	 * @return
+	 */
 	LockToken lockOrSteal(CmsItemId item, String message);
 	
 }
