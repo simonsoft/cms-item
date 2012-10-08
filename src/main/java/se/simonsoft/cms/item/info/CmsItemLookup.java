@@ -56,4 +56,12 @@ public interface CmsItemLookup extends se.simonsoft.cms.item.CmsItemLookup {
 	Set<CmsItemId> getImmediateFolders(CmsItemId parent)
 		throws CmsConnectionException, CmsItemNotFoundException;
 	
+	/**
+	 * Get contents recursively. This is an expensive operation that should be used with care,
+	 * but it is essential to for example admin tasks.
+	 * @param parent
+	 * @return
+	 */
+	Iterable<CmsItemId> getDescendants(CmsItemId parent);
+	
 }
