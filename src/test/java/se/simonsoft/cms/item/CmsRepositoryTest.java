@@ -83,4 +83,5 @@ public class CmsRepositoryTest {
 		assertTrue(r.equals(new CmsRepository(null, null, "/parent", "repo1")));
 		assertFalse(r.equals(new CmsRepository("http", "host.name", "/parent", "repo1")));
 	}
+	
 }

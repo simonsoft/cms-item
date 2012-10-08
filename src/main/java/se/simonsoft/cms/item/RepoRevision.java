@@ -96,4 +96,19 @@ public class RepoRevision {
 		return Long.toString(number); 
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) return false;
+		if (!(obj instanceof RepoRevision)) return false;
+		RepoRevision r = (RepoRevision) obj;
+		if (number != r.getNumber()) return false;
+		if (!date.equals(r.getDate())) return false;
+		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		return (int) (getNumber() % Integer.MAX_VALUE);
+	}
+	
 }
