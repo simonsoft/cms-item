@@ -15,23 +15,6 @@
 		<version>2.1</version>
 		<relativePath/>
 	</parent>
-	
-	<scm>
-		<developerConnection>
-			scm:svn:https://pds-svn-gbg.pdsvision.net/svn/modules/${project.artifactId}/trunk
-		</developerConnection>
-		<tag>HEAD</tag>
-	</scm>
-
-	<issueManagement>
-		<system>Trac</system>
-		<url>https://pds-svn-gbg.pdsvision.net/trac/modules/${prject.artifactId}</url>
-	</issueManagement>
-
-	<ciManagement>
-		<system>jenkins</system>
-		<url>http://build.pdsvision.net/</url>
-	</ciManagement>
 
 	<repositories>
 		<repository>
