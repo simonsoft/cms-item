@@ -28,6 +28,7 @@ import se.simonsoft.cms.item.CmsItemId;
  * Services that rely on indexed data might want to retry a few times before
  * throwing this error as it may occur because of indexing delays.
  */
+@SuppressWarnings("deprecation") // for backwards compatibility
 public class CmsItemNotFoundException extends se.simonsoft.cms.item.CmsItemNotFoundException {
 
 	private static final long serialVersionUID = 1L;
