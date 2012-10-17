@@ -93,10 +93,10 @@ public class CmsRepositoryTest {
 				new CmsRepository("http://test.net:81/svn/r1").equals(new CmsRepository("https://test.net/svn/r1")));
 		assertFalse("Any custom ports used for https and it could be separate hosts",
 				new CmsRepository("http://test.net/svn/r1").equals(new CmsRepository("https://test.net:444/svn/r1")));
-		assertFalse("Specifying port 80 is also suspicious",
+		assertTrue("Specifying port 80 should be normalized",
 				new CmsRepository("http://test.net:80/svn/r1").equals(new CmsRepository("https://test.net/svn/r1")));
-		assertFalse("Specifying port 443 is also suspicious",
-				new CmsRepository("http://test.net:80/svn/r1").equals(new CmsRepository("https://test.net/svn/r1")));
+		assertTrue("Specifying port 443 should be normalized",
+				new CmsRepository("http://test.net/svn/r1").equals(new CmsRepository("https://test.net:443/svn/r1")));
 	}
 	
 }
