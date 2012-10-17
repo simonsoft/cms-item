@@ -99,4 +99,24 @@ public class CmsRepositoryTest {
 				new CmsRepository("http://test.net/svn/r1").equals(new CmsRepository("https://test.net:443/svn/r1")));
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testHostNotEmpty() {
+		new CmsRepository("", "/svn", "repo");
+	}
+
+	@Test(expected=IllegalArgumentException.class)
+	public void testHostnameNotEmpty() {
+		new CmsRepository("http", "", "/svn", "repo");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testParentTrailingSlash() {
+		new CmsRepository("http://test.me", "/svn/", "repo");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testParentNoLeadingSlash() {
+		new CmsRepository("http://test.me", "svn", "repo");
+	}
+	
 }

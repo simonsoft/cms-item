@@ -52,14 +52,26 @@ public class CmsRepository {
 		this.protocol = m.group(1);
 		this.host = m.group(2);
 		this.parent = parentPath;
-		this.name = name;		
+		this.name = name;
+		if (parent == null || parent.endsWith("/") || !parent.startsWith("/")) {
+			throw new IllegalArgumentException("Parent path must have leading but no trailing slash, got " + parent);
+		}		
 	}
 	
 	public CmsRepository(String protocol, String hostWithOptionalPort, String parentPath, String name) {
+		if (protocol != null && protocol.length() == 0) {
+			throw new IllegalArgumentException("Protocol can be null but not empty");
+		}
+		if (hostWithOptionalPort != null && hostWithOptionalPort.length() == 0) {
+			throw new IllegalArgumentException("Hostname can be null but not empty");
+		}
 		this.protocol = protocol;
 		this.host = hostWithOptionalPort;
 		this.parent = parentPath;
 		this.name = name;
+		if (parent == null || parent.endsWith("/") || !parent.startsWith("/")) {
+			throw new IllegalArgumentException("Parent path must have leading but no trailing slash, got " + parent);
+		}
 	}
 	
 	/**
