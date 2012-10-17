@@ -264,4 +264,10 @@ public class CmsItemIdArgTest {
 		assertEquals("/parent", i.getRepository().getParentPath());
 	}
 	
+	@Test
+	public void testEqualsPortNumber() {
+		assertTrue(new CmsItemIdArg("x-svn://x.y:123/p/repo^/x").equals(new CmsItemIdArg("x-svn://x.y:123/p/repo^/x")));
+		assertFalse(new CmsItemIdArg("x-svn://x.y:123/p/repo^/x").equals(new CmsItemIdArg("x-svn://x.y:124/p/repo^/x")));
+	}
+	
 }

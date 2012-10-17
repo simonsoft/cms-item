@@ -84,4 +84,19 @@ public class CmsRepositoryTest {
 		assertFalse(r.equals(new CmsRepository("http", "host.name", "/parent", "repo1")));
 	}
 	
+	@Test
+	public void testEqualsHttpHttpsStandardPorts() {
+		assertTrue(new CmsRepository("http://test.net/svn/r1").equals(new CmsRepository("http://test.net/svn/r1")));
+		assertTrue("Equals should be true for standard ports regardless of http/https",
+				new CmsRepository("http://test.net/svn/r1").equals(new CmsRepository("https://test.net/svn/r1")));
+		assertFalse("Any custom ports used and it could be separate hosts",
+				new CmsRepository("http://test.net:81/svn/r1").equals(new CmsRepository("https://test.net/svn/r1")));
+		assertFalse("Any custom ports used for https and it could be separate hosts",
+				new CmsRepository("http://test.net/svn/r1").equals(new CmsRepository("https://test.net:444/svn/r1")));
+		assertFalse("Specifying port 80 is also suspicious",
+				new CmsRepository("http://test.net:80/svn/r1").equals(new CmsRepository("https://test.net/svn/r1")));
+		assertFalse("Specifying port 443 is also suspicious",
+				new CmsRepository("http://test.net:80/svn/r1").equals(new CmsRepository("https://test.net/svn/r1")));
+	}
+	
 }
