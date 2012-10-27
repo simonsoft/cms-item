@@ -55,6 +55,14 @@ public interface CmsItemId {
 	String getUrl();
 	
 	/**
+	 * Returns URL used in UI operations on the same host.
+	 * For contexts where it is validated or guaranteed that all items are from the same host.
+	 * @return Resource URL from server root starting with slash, encoded, excluding query string
+	 *
+	String getUrlAtHost();
+	*/
+	
+	/**
 	 * The exact revision, if specified, i.e. never HEAD or date or anything but the integer.
 	 * @return revision number, or null for revision not specified (HEAD in subversion terminology)
 	 */
