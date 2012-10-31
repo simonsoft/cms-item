@@ -69,6 +69,11 @@ public class CmsItemIdUrl implements CmsItemId {
 	}
 
 	@Override
+	public String getUrlAtHost() {
+		return null;
+	}
+	
+	@Override
 	public Long getPegRev() {
 		return pegRev;
 	}

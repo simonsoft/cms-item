@@ -180,6 +180,11 @@ public class CmsItemIdArg implements CmsItemId {
 		}
 		return getRepository().getUrl() + relpath;
 	}
+	
+	@Override
+	public String getUrlAtHost() {
+		return null;
+	}
 
 	@Override
 	public Long getPegRev() {

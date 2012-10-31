@@ -153,6 +153,15 @@ public class CmsRepository {
 	}
 	
 	/**
+	 * Returns URL used in UI operations on the same host.
+	 * Unlike {@link #getUrl()} this is supported when host is not known (see {@link #CmsRepository(String, String)}.
+	 * @return Repository URL from server root starting with slash
+	 */
+	public String getUrlAtHost() {
+		return null;
+	}
+	
+	/**
 	 * @return name of the repository, last part of path, also called "base"
 	 */
 	public String getName() {

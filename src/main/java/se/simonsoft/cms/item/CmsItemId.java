@@ -57,10 +57,10 @@ public interface CmsItemId {
 	/**
 	 * Returns URL used in UI operations on the same host.
 	 * For contexts where it is validated or guaranteed that all items are from the same host.
+	 * Unlike {@link #getUrl()} all impls must always support this, including when protocol or host is not known.
 	 * @return Resource URL from server root starting with slash, encoded, excluding query string
-	 *
+	 */
 	String getUrlAtHost();
-	*/
 	
 	/**
 	 * The exact revision, if specified, i.e. never HEAD or date or anything but the integer.
