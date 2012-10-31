@@ -42,6 +42,7 @@ public class CmsRepository {
 		this.host = m.group(2);
 		this.parent = m.group(3);
 		this.name = m.group(4);
+		normalize();
 	}
 	
 	public CmsRepository(String rootUrl, String parentPath, String name) {
@@ -55,7 +56,8 @@ public class CmsRepository {
 		this.name = name;
 		if (parent == null || parent.endsWith("/") || !parent.startsWith("/")) {
 			throw new IllegalArgumentException("Parent path must have leading but no trailing slash, got " + parent);
-		}		
+		}
+		normalize();
 	}
 	
 	public CmsRepository(String protocol, String hostWithOptionalPort, String parentPath, String name) {
@@ -72,6 +74,7 @@ public class CmsRepository {
 		if (parent == null || parent.endsWith("/") || !parent.startsWith("/")) {
 			throw new IllegalArgumentException("Parent path must have leading but no trailing slash, got " + parent);
 		}
+		normalize();
 	}
 	
 	/**
@@ -83,6 +86,21 @@ public class CmsRepository {
 	 */
 	public CmsRepository(String parentPath, String name) {
 		this(null, null, parentPath, name);
+		normalize();
+	}
+	
+	/**
+	 * Called last in every constructor.
+	 */
+	private void normalize() {
+		if (protocol != null && host != null) {
+			if ("http".equals(protocol) && host.endsWith(":80")) {
+				host = getHostname();
+			}
+			if ("https".equals(protocol) && host.endsWith(":443")) {
+				host = getHostname();
+			}
+		}
 	}
 	
 	/**

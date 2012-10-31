@@ -121,4 +121,14 @@ public class CmsRepositoryTest {
 		new CmsRepository("http://test.me", "svn", "repo");
 	}
 	
+	@Test
+	public void testNormalizePort() {
+		assertEquals("myhost", new CmsRepository("http://myhost:80/s/r").getHost());
+		assertEquals("myhost:443", new CmsRepository("http://myhost:443/s/r").getHost());
+		assertEquals("sslhost", new CmsRepository("https://sslhost:443/s/r").getHost());
+		assertEquals("sslhost:80", new CmsRepository("https://sslhost:80/s/r").getHost());
+		assertEquals("myhost", new CmsRepository("http://myhost:80", "/s", "r").getHost());
+		assertEquals("myhost", new CmsRepository("http", "myhost:80", "/s", "r").getHost());
+	}
+	
 }
