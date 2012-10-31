@@ -77,7 +77,8 @@ public class CmsItemIdUrlTest {
 		assertTrue(new CmsItemIdUrl(repo1, p1).equals(
 				new CmsItemIdUrl(new CmsRepository(repo1.getUrl()), new CmsItemPath(p1.getPath()))));
 		assertFalse(new CmsItemIdUrl(repo1, p1).equals(new CmsItemIdUrl(repo1, new CmsItemPath("/p2"))));
-		assertFalse(new CmsItemIdUrl(repo1, p1).equals(new CmsItemIdUrl(
+		assertTrue("Should consider http/https equal when on standard ports",
+				new CmsItemIdUrl(repo1, p1).equals(new CmsItemIdUrl(
 				new CmsRepository(repo1.getUrl().replace("http", "https")), p1)));
 		assertTrue(new CmsItemIdUrl(repo1, p1).withPegRev(3L)
 				.equals(new CmsItemIdUrl(repo1, p1).withPegRev(3L)));

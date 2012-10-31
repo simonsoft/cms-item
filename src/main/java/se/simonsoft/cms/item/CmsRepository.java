@@ -151,7 +151,16 @@ public class CmsRepository {
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj != null && toString().equals(obj.toString());
+		if (obj == null) return false;
+		if (obj instanceof String) return toString().equals(obj.toString());
+		if (!(obj instanceof CmsRepository)) return false;
+		CmsRepository r = (CmsRepository) obj;
+		if (isHostKnown()) {
+			if (!getHost().equals(r.getHost())) return false;
+		} else {
+			if (r.isHostKnown()) return false;
+		}
+		return getParentPath().equals(r.getParentPath()) && getName().equals(r.getName());
 	}
 
 	@Override

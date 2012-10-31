@@ -30,9 +30,11 @@ public class CmsRepositoryTest {
 		assertEquals("re%20po1", r.getName());
 		assertEquals("http://cmsdemo.pdsvision.net/svn/re%20po1", r.toString());
 		assertTrue(r.equals(new CmsRepository("http://cmsdemo.pdsvision.net/svn/re%20po1")));
-		assertFalse(r.equals(new CmsRepository("https://cmsdemo.pdsvision.net/svn/re%20po1")));
+		assertTrue("http/https on standard ports should be considered equal",
+				r.equals(new CmsRepository("https://cmsdemo.pdsvision.net/svn/re%20po1")));
 		assertTrue("equals with string should be ok", r.equals("http://cmsdemo.pdsvision.net/svn/re%20po1"));
-		assertFalse("slash must match", r.equals("http://cmsdemo.pdsvision.net/svn/re%20po1/"));
+		assertFalse("trailing slash makes a lot of difference when building URLs",
+				r.equals("http://cmsdemo.pdsvision.net/svn/re%20po1/"));
 	}
 	
 	@Test
