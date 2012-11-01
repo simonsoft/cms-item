@@ -37,13 +37,10 @@ public abstract class ChecksumBase implements Checksum {
 	}	
 	
 	/**
-	 * Very strict equals, requires same response from all {@link #has(se.simonsoft.cms.item.Checksum.Algorithm)} 
-	 * Might some day be relaxed with rules on what we need to consider files identical.
+	 * Very strict equals, requires same response from all {@link #has(se.simonsoft.cms.item.Checksum.Algorithm)}
 	 * 
 	 * This method aims for usefulness in collections, allowing different Checksum
 	 * implementations (i.e. from files, indexes, svn server etc).
-	 * Implementations that really require all stored values to be identical should
-	 * compare the checksums one by one.
 	 */
 	@Override
 	public boolean equals(Object obj) {
@@ -53,6 +50,14 @@ public abstract class ChecksumBase implements Checksum {
 		}
 		return false;
 	}
+
+	@Override
+	public boolean equalsKnown(Checksum obj) {
+		for (Algorithm a : Algorithm.values()) {
+			if (has(a) && obj.has(a) && getHex(a).equals(obj.getHex(a))) return true;
+		}
+		return false;
+	}	
 	
 	private String concat(Checksum c) {
 		StringBuffer s = new StringBuffer();

@@ -66,6 +66,28 @@ public class ChecksumBaseTest {
 		Checksum c2 = new ChecksumRead(new Algorithm[]{});
 		assertFalse("At least one checksum is required for equals", c1.equals(c2));
 	}
+
+	@Test
+	public void testEqualsKnown() throws IOException {
+		InputStream source = new ByteArrayInputStream("testing\n".getBytes());
+		Checksum c1 = new ChecksumRead().add(source);
+		Checksum c2 = mock(Checksum.class);
+		when(c2.has(Algorithm.MD5)).thenReturn(true);
+		when(c2.has(Algorithm.SHA1)).thenReturn(false);
+		when(c2.getHex(Algorithm.MD5)).thenReturn(c1.getMd5());
+		assertFalse("Should not be strictly equals because algorithm set does not match", c1.equals(c2));
+		assertTrue("Should be equalsKnown because the intersection of algorithms matches", c1.equalsKnown(c2));
+		Checksum c3 = mock(Checksum.class);
+		when(c3.has(Algorithm.MD5)).thenReturn(false);
+		when(c3.has(Algorithm.SHA1)).thenReturn(true);
+		when(c3.getHex(Algorithm.MD5)).thenReturn(c1.getMd5());
+		when(c3.getHex(Algorithm.SHA1)).thenReturn(c1.getSha1());
+		assertTrue("Should be equalsKnown because the intersection of algorithms matches", c1.equalsKnown(c3));
+		Checksum c4 = mock(Checksum.class);
+		when(c4.has(Algorithm.MD5)).thenReturn(false);
+		when(c4.has(Algorithm.SHA1)).thenReturn(false);
+		assertFalse("Should not be equals because there is no algorithm overlap", c1.equalsKnown(c4));
+	}	
 	
 	@Test
 	public void testToString() {

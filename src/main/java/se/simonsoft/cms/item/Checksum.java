@@ -56,4 +56,10 @@ public interface Checksum {
 	 */
 	public boolean equals(Object obj);
 	
+	/**
+	 * @param obj other checksum
+	 * @return true if at least one algorithm is used in both objects and all used in both match
+	 */
+	public boolean equalsKnown(Checksum obj);
+	
 }
