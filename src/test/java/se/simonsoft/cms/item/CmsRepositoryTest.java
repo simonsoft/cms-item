@@ -131,4 +131,10 @@ public class CmsRepositoryTest {
 		assertEquals("myhost", new CmsRepository("http", "myhost:80", "/s", "r").getHost());
 	}
 	
+	@Test
+	public void testGetUrlAtHost() {
+		assertEquals("/svn/repo1", new CmsRepository("http://myhost/svn/repo1").getUrlAtHost());
+		assertEquals("/svn/re%20po1", new CmsRepository("http://myhost/svn/re%20po1").getUrlAtHost());
+	}
+	
 }

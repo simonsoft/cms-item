@@ -183,7 +183,7 @@ public class CmsItemIdArg implements CmsItemId {
 	
 	@Override
 	public String getUrlAtHost() {
-		return null;
+		return parent + repo + relpath;
 	}
 
 	@Override

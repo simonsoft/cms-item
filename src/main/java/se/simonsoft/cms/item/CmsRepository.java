@@ -149,7 +149,7 @@ public class CmsRepository {
 	 * @return Full ÚRL to repository, no trailing slash, should be ascii only
 	 */
 	public String getUrl() {
-		return getServerRootUrl() + getParentPath() + "/" + getName();
+		return getServerRootUrl() + getUrlAtHost();
 	}
 	
 	/**
@@ -158,7 +158,7 @@ public class CmsRepository {
 	 * @return Repository URL from server root starting with slash
 	 */
 	public String getUrlAtHost() {
-		return null;
+		return getParentPath() + "/" + getName();
 	}
 	
 	/**

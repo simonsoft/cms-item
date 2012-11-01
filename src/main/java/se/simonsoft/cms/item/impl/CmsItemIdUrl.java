@@ -70,7 +70,7 @@ public class CmsItemIdUrl implements CmsItemId {
 
 	@Override
 	public String getUrlAtHost() {
-		return null;
+		return getRepository().getUrlAtHost() + urlencode(path);
 	}
 	
 	@Override
@@ -123,7 +123,7 @@ public class CmsItemIdUrl implements CmsItemId {
 		StringBuffer enc = new StringBuffer();
 		try {
 			for (String p : path.getPathSegments()) {
-				enc.append('/').append(URLEncoder.encode(p, URLENCODE_ENCODING));
+				enc.append('/').append(URLEncoder.encode(p, URLENCODE_ENCODING).replace("+", "%20"));
 			}
 		} catch (Exception e) {
 			throw new RuntimeException("Url encoding " + URLENCODE_ENCODING + " failed for " + path);

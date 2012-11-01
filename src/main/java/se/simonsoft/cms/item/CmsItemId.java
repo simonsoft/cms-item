@@ -55,7 +55,7 @@ public interface CmsItemId {
 	String getUrl();
 	
 	/**
-	 * Returns URL used in UI operations on the same host.
+	 * Returns URL used in UI operations on the same host, a "URI reference".
 	 * For contexts where it is validated or guaranteed that all items are from the same host.
 	 * Unlike {@link #getUrl()} all impls must always support this, including when protocol or host is not known.
 	 * @return Resource URL from server root starting with slash, encoded, excluding query string

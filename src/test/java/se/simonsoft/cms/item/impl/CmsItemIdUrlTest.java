@@ -124,4 +124,11 @@ public class CmsItemIdUrlTest {
 				"http://+&%/r1/p1", new CmsItemIdUrl(renc, p1).getUrl());
 	}
 	
+	@Test
+	public void testUris() {
+		assertEquals("/svn/repo1/v/ab/c.xml", new CmsItemIdUrl(repo1, new CmsItemPath("/v/ab/c.xml")).getUrlAtHost());
+		assertEquals("/svn/repo1/v/a%20b/c.xml", new CmsItemIdUrl(repo1, new CmsItemPath("/v/a b/c.xml")).getUrlAtHost());
+		assertEquals("/svn/repo1/v/a%20b/c%20d.xml", new CmsItemIdUrl(repo1, new CmsItemPath("/v/a b/c d.xml")).getUrlAtHost());
+	}	
+	
 }
