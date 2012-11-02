@@ -32,6 +32,11 @@ public class CmsRepositoryInspection extends CmsRepository {
 
 	private File adminPath;
 
+	public CmsRepositoryInspection(String repositoryUrl, File localAdminPath) {
+		super(repositoryUrl);
+		this.adminPath = localAdminPath;
+	}
+	
 	/**
 	 * @param parentPath With leading but not traling slash
 	 * @param name Repository name, no slashes
