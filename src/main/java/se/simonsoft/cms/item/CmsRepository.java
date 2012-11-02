@@ -175,6 +175,14 @@ public class CmsRepository {
 	public String getParentPath() {
 		return parent;
 	}
+	
+	/**
+	 * In case we some day introduce support for whitespaces and non-asciis in repo name or parent
+	 * @return analogous to {@link #getUrlAtHost()} but never encoded, common as prefix to path in indexing etc
+	 */
+	public String getPath() {
+		return getParentPath() + "/" + getName();
+	}
 
 	@Override
 	public boolean equals(Object obj) {
