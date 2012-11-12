@@ -36,10 +36,17 @@ public interface CmsItem {
 	CmsItemId getId();
 	
 	/**
-	 * The definition of commit revision at move etc is up to the backend, still.
+	 * The revision when this item in its current state (contents and properties) was committed.
+	 * Note that this could have happened at a different path than current.
 	 * @return the commit revision of the fetched item, often called "last changed"
 	 */
-	RepoRevision getRevision();
+	RepoRevision getRevisionChanged();
+	
+	/**
+	 * Should we complement getRevisionChanged()?
+	 * @return first revision when this item was available at its current path with its current contents
+	 */
+	//RepoRevision getRevisionPath();
 	
 	/**
 	 * Item "kind" can not be identified from {@link #getId()}.
