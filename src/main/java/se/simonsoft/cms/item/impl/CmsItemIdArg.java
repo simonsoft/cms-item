@@ -45,7 +45,7 @@ public class CmsItemIdArg implements CmsItemId {
 	
 	public static final String HTTP_PREFIX = "http://";
 	public static final String PEG = "?p=";
-	public static final Pattern NICE = Pattern.compile(PROTO_PREFIX + "([^/]*)(.*/)([^^]*)\\^(/|[^?]+[^/])/?(?:\\?p=(\\d+))?");
+	public static final Pattern NICE = Pattern.compile(PROTO_PREFIX + "([^/]*)(.*/)([^:^]*)\\^(/|[^:?]+[^/])/?(?:\\?p=(\\d+))?");
 	
 	/**
 	 * Root path is not represented in CmsItemPath so we need to define
