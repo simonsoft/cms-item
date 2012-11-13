@@ -33,6 +33,9 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
  */
 public interface CmsItem {
 
+	/**
+	 * @return the ID with which this item is fetced, thus getPegRev can differ from {@link #getRevisionChanged()}
+	 */
 	CmsItemId getId();
 	
 	/**
