@@ -41,6 +41,16 @@ public class CmsItemIdArgTest {
 		new CmsItemIdArg("x-svn://svn/demo1^/vvab/graphics/0001.tif");
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testValidateColonInRepo() {
+		new CmsItemIdArg("x-svn:///svn/d:mo1^/vvab/graphics/0001.tif");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testValidateColonInPath() {
+		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/grap:ics/0001.tif");
+	}
+	
 	@Test
 	public void testPegHost() {
 		CmsItemIdArg p = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1^/vvab/xml/Docs/Sa%20s.xml?p=9");
