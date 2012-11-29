@@ -26,6 +26,13 @@ public interface CmsCommitChange {
 
 	CmsItemPath getPath();
 
+	/**
+	 * Important because all operations assume that they know the current state of the repository,
+	 * but that state is always from a certain point in time (or actually a time range unless there is an exact revision number).
+	 * @return the revision that changes are based on, used to check for conflicts with other changes
+	 */
 	RepoRevision getBaseRevision();
+	
+	// TODO getProperties(); though not for Delete?
 	
 }

@@ -29,7 +29,7 @@ public class FileAdd implements CmsCommitChange {
 	/**
 	 * 
 	 * @param path
-	 * @param parentFolderBaseRevision
+	 * @param baseRevisionForParent
 	 * @param contents Will be opened and closed when the item is processed
 	 */
 	public FileAdd(CmsItemPath path,
@@ -38,7 +38,7 @@ public class FileAdd implements CmsCommitChange {
 		this.path = path;
 		this.baseRevision = parentFolderBaseRevision;
 		this.contents = contents;
-	}	
+	}
 	
 	@Override
 	public CmsItemPath getPath() {
