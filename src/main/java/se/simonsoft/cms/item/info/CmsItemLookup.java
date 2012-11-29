@@ -30,15 +30,6 @@ import se.simonsoft.cms.item.CmsItemId;
 public interface CmsItemLookup extends se.simonsoft.cms.item.CmsItemLookup {
 	
 	/**
-	 * Fast check if item exists in HEAD.
-	 * @param id Rel path only, no peg rev
-	 * @return true if the path exists in HEAD now
-	 * @throws CmsConnectionException
-	 */
-	boolean isExisting(CmsItemId id)
-		throws CmsConnectionException;	
-	
-	/**
 	 * @param parent folder, optional peg rev
 	 * @return children, iteration order decided by backend
 	 * @throws CmsConnectionException if connection to the server or repository failed
