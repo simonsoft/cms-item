@@ -37,6 +37,7 @@ public interface CmsItemProperties {
 
 	/**
 	 * @return Names of all properties that are set on the item
+	 * TODO includes binary properties?
 	 */
 	Set<String> getKeySet();
 	
