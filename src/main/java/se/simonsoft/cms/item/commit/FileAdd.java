@@ -19,12 +19,14 @@ import java.io.InputStream;
 
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
+import se.simonsoft.cms.item.properties.CmsItemProperties;
 
 public class FileAdd implements CmsCommitChange {
 
 	private CmsItemPath path;
 	private RepoRevision baseRevision;
 	private InputStream contents;
+	private CmsItemProperties properties = null;
 
 	/**
 	 * 
@@ -39,6 +41,17 @@ public class FileAdd implements CmsCommitChange {
 		this.baseRevision = parentFolderBaseRevision;
 		this.contents = contents;
 	}
+	
+	/**
+	 * Could be an interface method unless we want the specific class for chaining.
+	 * @param properties propset to be executed for {@link CmsItemProperties#getKeySet()} while other properties are left unchanged,
+	 *  null value means delete the property, empty value means set or keep it but make it empty
+	 * @return this instance for chaining
+	 */
+	public CmsCommitChange setPropertyChange(CmsItemProperties properties) {
+		this.properties  = properties;
+		return this;
+	}	
 	
 	@Override
 	public CmsItemPath getPath() {
@@ -57,6 +70,13 @@ public class FileAdd implements CmsCommitChange {
 		return contents;
 	}
 
+	/**
+	 * @return null if no property changes
+	 */
+	public CmsItemProperties getPropertyChange() {
+		return properties;
+	}	
+	
 	@Override
 	public String toString() {
 		// add, no prop support yet, no copy support yet
