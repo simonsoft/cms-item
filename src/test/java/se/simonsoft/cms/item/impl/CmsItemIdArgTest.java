@@ -201,7 +201,7 @@ public class CmsItemIdArgTest {
 			i1.withRelPath(new CmsItemPath("/v/a b/d.xml"));
 			fail("only parents can be supported, unless we want to introduce encoding logic in CmsItemIdArg");
 		} catch (IllegalArgumentException e) {
-			assertEquals("New path based on this CmsItemIdArg must be parent of /v/a b/c.xml", e.getMessage());
+			assertEquals("New path based on this CmsItemIdArg must be parent of '/v/a b/c.xml'", e.getMessage());
 		}
 	}
 	

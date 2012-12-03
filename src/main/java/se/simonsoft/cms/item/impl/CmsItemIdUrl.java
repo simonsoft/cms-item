@@ -130,5 +130,10 @@ public class CmsItemIdUrl implements CmsItemId {
 		}
 		return enc.toString();
 	}
+
+	@Override
+	public String toString() {
+		return repository.toString() + getRelPath();
+	}
 	
 }
