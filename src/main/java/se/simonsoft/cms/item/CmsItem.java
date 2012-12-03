@@ -83,4 +83,9 @@ public interface CmsItem {
 	 */
 	void getContents(OutputStream receiver) throws UnsupportedOperationException;
 	
+	/**
+	 * API to be decided.
+	 */
+	// CmsItemLock getLock();
+	
 }

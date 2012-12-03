@@ -13,13 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package se.simonsoft.cms.item.info;
+package se.simonsoft.cms.item;
 
-import se.simonsoft.cms.item.CmsItemLock;
+import java.lang.management.LockInfo;
+import java.util.Date;
+
+import se.simonsoft.cms.item.info.CmsLocking;
+import se.simonsoft.cms.item.info.LockToken;
 
 /**
- * For API discussion. See also {@link CmsItemLock}.
+ * More ideas on locking, see 
+ * {@link LockInfo}, {@link LockToken}, {@link CmsLocking}
  */
-public class LockInfo {
+public interface CmsItemLock {
 
+	String getComment();
+
+	Date getDateCreation();
+	
+	Date getDateExpiration();
+	
+	/**
+	 * @return the lock token
+	 */
+	String getID();
+
+	/**
+	 * @return username
+	 */
+	String getOwner(); 
+	
 }

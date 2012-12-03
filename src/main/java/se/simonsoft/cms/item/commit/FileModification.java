@@ -17,6 +17,7 @@ package se.simonsoft.cms.item.commit;
 
 import java.io.InputStream;
 
+import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 
@@ -39,6 +40,14 @@ public class FileModification implements CmsCommitChange {
 		this.baseRevision = baseRevision;
 		this.baseFile = baseFile;
 		this.workingFile = workingFile;
+	}
+	
+	/**
+	 * @param lock to allow commit to locked file, will be unlocked after commit
+	 * @return instance for chaining
+	 */
+	public FileModification setLock(CmsItemLock lock) {
+		throw new UnsupportedOperationException("Not implemented");
 	}
 	
 	@Override

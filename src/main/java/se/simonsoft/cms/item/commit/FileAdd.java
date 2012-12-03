@@ -51,7 +51,7 @@ public class FileAdd implements CmsCommitChange {
 	public CmsCommitChange setPropertyChange(CmsItemProperties properties) {
 		this.properties  = properties;
 		return this;
-	}	
+	}
 	
 	@Override
 	public CmsItemPath getPath() {

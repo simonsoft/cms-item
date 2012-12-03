@@ -15,6 +15,7 @@
  */
 package se.simonsoft.cms.item.commit;
 
+import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
@@ -43,12 +44,20 @@ public class FilePropertyChange implements CmsCommitChange {
 	}
 	
 	/**
+	 * @param lock to allow commit to locked file, will be unlocked after commit
+	 * @return instance for chaining
+	 */
+	public FileModification setLock(CmsItemLock lock) {
+		throw new UnsupportedOperationException("Not implemented");
+	}	
+	
+	/**
 	 * @return property changes as returned by {@link CmsItemProperties#getKeySet()} to be executed on the item, while other properties are left unchanged,
 	 *  null value means delete the property, empty value means set or keep it but make it empty
 	 */
 	public CmsItemProperties getPropertyChange() {
 		return properties;
-	}
+	}	
 	
 	@Override
 	public CmsItemPath getPath() {
