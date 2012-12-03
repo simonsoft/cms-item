@@ -251,7 +251,7 @@ public class CmsItemIdArg implements CmsItemId {
 			return new CmsItemIdArg(toString(host, null, pegRev)); 
 		}
 		if (!newRelPath.isAncestorOf(getRelPath())) {
-			throw new IllegalArgumentException("New path based on this CmsItemIdArg must be parent of /v/a b/c.xml");
+			throw new IllegalArgumentException("New path based on this CmsItemIdArg must be parent of '" + getRelPath() + "'");
 		}
 		for (String p = relpath; p.length() > 0; p = p.replaceFirst("/[^/]+$", "")) {
 			if (getRelPath(p).equals(newRelPath)) {
