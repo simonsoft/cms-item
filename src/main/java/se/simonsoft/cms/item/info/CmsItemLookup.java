@@ -40,6 +40,9 @@ public interface CmsItemLookup extends se.simonsoft.cms.item.CmsItemLookup {
 
 	/**
 	 * Typically used from services, while {@link #getImmediates(CmsItemId)} is used for browsing.
+	 * 
+	 * TODO decide which revision number to return: commit, path or argument's
+	 * 
 	 * @param parent folder or repository root, optional peg rev
 	 * @return children that are folders, iteration order decided by backend
 	 * @throws CmsConnectionException if connection to the server or repository failed
@@ -51,6 +54,9 @@ public interface CmsItemLookup extends se.simonsoft.cms.item.CmsItemLookup {
 	/**
 	 * Typically used from services, while {@link #getImmediates(CmsItemId)} is used for browsing.
 	 * Symlinks, if supported by backend, should not be included.
+	 * 
+	 * TODO decide which revision number to return: commit, path or argument's
+	 * 
 	 * @param parent folder or repository root, optional peg rev
 	 * @return children that are files, iteration order decided by backend
 	 * @throws CmsConnectionException if connection to the server or repository failed
