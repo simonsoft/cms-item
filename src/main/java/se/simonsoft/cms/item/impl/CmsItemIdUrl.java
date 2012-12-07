@@ -48,6 +48,10 @@ public class CmsItemIdUrl implements CmsItemId {
 		this.pegRev = pegRev;
 	}
 
+	public CmsItemIdUrl(CmsRepository repository, String targetCmsItemPath) {
+		this(repository, new CmsItemPath(targetCmsItemPath));
+	}
+
 	@Override
 	public String getLogicalIdFull() throws UnsupportedOperationException {
 		throw new UnsupportedOperationException("Logical ID requested for URL-only item id " + getUrl());
@@ -71,6 +75,10 @@ public class CmsItemIdUrl implements CmsItemId {
 	@Override
 	public String getUrlAtHost() {
 		return getRepository().getUrlAtHost() + urlencode(path);
+	}
+	
+	public String getUrlAndPeg() {
+		return getUrl() + (getPegRev() == null ? "" : "?p=" + getPegRev());
 	}
 	
 	@Override
@@ -101,18 +109,23 @@ public class CmsItemIdUrl implements CmsItemId {
 	@Override
 	public boolean equals(Object obj) {
 		return obj != null
-				&& obj instanceof CmsItemIdUrl
-				&& equalsId((CmsItemIdUrl) obj);
+				&& obj instanceof CmsItemId
+				&& equalsId((CmsItemId) obj);
 	}
 
-	private boolean equalsId(CmsItemIdUrl id) {
+	private boolean equalsId(CmsItemId id) {
 		if (!repository.equals(id.getRepository())) return false;
 		if (!path.equals(id.getRelPath())) return false;
 		if (pegRev == null) {
-			return id.pegRev == null;
+			return id.getPegRev() == null;
 		} else {
 			return pegRev.equals(id.getPegRev());
 		}
+	}
+
+	@Override
+	public int hashCode() {
+		return getUrlAndPeg().hashCode();
 	}
 
 	/**
@@ -126,7 +139,7 @@ public class CmsItemIdUrl implements CmsItemId {
 				enc.append('/').append(URLEncoder.encode(p, URLENCODE_ENCODING).replace("+", "%20"));
 			}
 		} catch (Exception e) {
-			throw new RuntimeException("Url encoding " + URLENCODE_ENCODING + " failed for " + path);
+			throw new RuntimeException("Url encoding " + URLENCODE_ENCODING + " failed for path " + path);
 		}
 		return enc.toString();
 	}

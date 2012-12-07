@@ -92,8 +92,25 @@ public class CmsItemIdUrlTest {
 				.equals(new CmsItemIdUrl(repo1, p1)));
 		assertTrue(new CmsItemIdUrl(repo1, p1).withPegRev(3L).withPegRev(null)
 				.equals(new CmsItemIdUrl(repo1, p1)));
+		assertEquals(new CmsItemIdUrl(repo1, p1).hashCode(), new CmsItemIdUrl(repo1, p1).hashCode());
+		assertEquals(new CmsItemIdUrl(repo1, p1).withPegRev(3L).hashCode(), new CmsItemIdUrl(repo1, p1).withPegRev(3L).hashCode());		
 	}
 
+	@Test
+	public void testEqualsCmsItemIdArg() {
+		CmsItemIdArg arg1 = new CmsItemIdArg("x-svn://localhost:1234/svn/repo1^" + p1);
+		assertTrue(new CmsItemIdUrl(repo1, p1).equals(arg1));
+	}
+	
+	@Test
+	public void testEqualsArbitraryId() {
+		CmsItemId id1 = mock(CmsItemId.class);
+		when(id1.getRepository()).thenReturn(repo1);
+		when(id1.getRelPath()).thenReturn(p1);
+		when(id1.getPegRev()).thenReturn(9L);
+		assertTrue(new CmsItemIdUrl(repo1, p1).withPegRev(9L).equals(id1));
+	}
+	
 	@Test
 	public void testWithPegRev() {
 		CmsItemIdUrl id1 = new CmsItemIdUrl(repo1, p1);
