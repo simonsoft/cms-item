@@ -44,7 +44,7 @@ public interface CmsItemLookup extends se.simonsoft.cms.item.CmsItemLookup {
 	 * TODO decide which revision number to return: commit, path or argument's
 	 * TODO return with null revision if argument is HEAD? Then you would have to look up current head to get commit revisions.
 	 * 
-	 * @param parent folder or repository root, optional peg rev
+	 * @param parent folder or repository root, optional peg rev, should support withRelPath and withPegRev
 	 * @return children that are folders, iteration order decided by backend
 	 * @throws CmsConnectionException if connection to the server or repository failed
 	 * @throws CmsItemNotFoundException if the item could not be found
@@ -58,7 +58,7 @@ public interface CmsItemLookup extends se.simonsoft.cms.item.CmsItemLookup {
 	 * 
 	 * TODO decide which revision number to return: commit, path or argument's
 	 * 
-	 * @param parent folder or repository root, optional peg rev
+	 * @param parent folder or repository root, optional peg rev, should support withRelPath and withPegRev
 	 * @return children that are files, iteration order decided by backend
 	 * @throws CmsConnectionException if connection to the server or repository failed
 	 * @throws CmsItemNotFoundException if the item could not be found
