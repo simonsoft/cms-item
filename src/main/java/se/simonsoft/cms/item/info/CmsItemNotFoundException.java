@@ -16,6 +16,8 @@
 package se.simonsoft.cms.item.info;
 
 import se.simonsoft.cms.item.CmsItemId;
+import se.simonsoft.cms.item.CmsItemPath;
+import se.simonsoft.cms.item.CmsRepository;
 
 
 /**
@@ -32,15 +34,26 @@ import se.simonsoft.cms.item.CmsItemId;
 public class CmsItemNotFoundException extends se.simonsoft.cms.item.CmsItemNotFoundException {
 
 	private static final long serialVersionUID = 1L;
-	private CmsItemId id;
+	
+	private CmsRepository repository;
+	private CmsItemPath path;
 
 	public CmsItemNotFoundException(CmsItemId id) {
-		super(id, "Not found: " + id);
-		this.id = id;
+		this(id.getRepository(), id.getRelPath());
 	}
 	
-	public CmsItemId getId() {
-		return id;
+	public CmsItemNotFoundException(CmsRepository repository, CmsItemPath atPath) {
+		super(null, "Not found: " + repository + atPath);
+		this.repository = repository;
+		this.path = atPath;
 	}
 
+	public CmsRepository getRepository() {
+		return repository;
+	}
+
+	public CmsItemPath getPath() {
+		return path;
+	}
+	
 }
