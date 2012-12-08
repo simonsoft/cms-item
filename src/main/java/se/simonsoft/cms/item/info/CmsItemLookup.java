@@ -42,6 +42,7 @@ public interface CmsItemLookup extends se.simonsoft.cms.item.CmsItemLookup {
 	 * Typically used from services, while {@link #getImmediates(CmsItemId)} is used for browsing.
 	 * 
 	 * TODO decide which revision number to return: commit, path or argument's
+	 * TODO return with null revision if argument is HEAD? Then you would have to look up current head to get commit revisions.
 	 * 
 	 * @param parent folder or repository root, optional peg rev
 	 * @return children that are folders, iteration order decided by backend
