@@ -20,6 +20,7 @@ import java.io.InputStream;
 import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
+import se.simonsoft.cms.item.properties.CmsItemProperties;
 
 public class FileModification implements CmsCommitChange {
 
@@ -27,6 +28,7 @@ public class FileModification implements CmsCommitChange {
 	private RepoRevision baseRevision;
 	private InputStream baseFile;
 	private InputStream workingFile;
+	private CmsItemProperties properties;
 
 	/**
 	 * @param pathInRepository see {@link CmsCommitChange#getPath()}
@@ -50,6 +52,17 @@ public class FileModification implements CmsCommitChange {
 		throw new UnsupportedOperationException("Not implemented");
 	}
 	
+	/**
+	 * Could be an interface method unless we want the specific class for chaining.
+	 * @param properties propset to be executed for {@link CmsItemProperties#getKeySet()} while other properties are left unchanged,
+	 *  null value means delete the property, empty value means set or keep it but make it empty
+	 * @return this instance for chaining
+	 */
+	public FileModification setPropertyChange(CmsItemProperties properties) {
+		this.properties = properties;
+		return this;
+	}	
+	
 	@Override
 	public CmsItemPath getPath() {
 		return path;
@@ -66,6 +79,13 @@ public class FileModification implements CmsCommitChange {
 
 	public InputStream getWorkingFile() {
 		return workingFile;
+	}
+	
+	/**
+	 * @return null if no property changes
+	 */
+	public CmsItemProperties getPropertyChange() {
+		return properties;
 	}
 	
 	@Override

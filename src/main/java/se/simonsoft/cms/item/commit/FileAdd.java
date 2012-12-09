@@ -75,7 +75,7 @@ public class FileAdd implements CmsCommitChange {
 	 */
 	public CmsItemProperties getPropertyChange() {
 		return properties;
-	}	
+	}
 	
 	@Override
 	public String toString() {
