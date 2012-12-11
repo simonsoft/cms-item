@@ -112,6 +112,16 @@ public class CmsRepositoryTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
+	public void testHostUrlNotEmpty1() {
+		new CmsRepository("http://", "/svn", "repo");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testHostUrlNotEmpty2() {
+		new CmsRepository("http:///", "/svn", "repo");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
 	public void testParentTrailingSlash() {
 		new CmsRepository("http://test.me", "/svn/", "repo");
 	}
