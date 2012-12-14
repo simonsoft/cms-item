@@ -41,6 +41,7 @@ public class CmsItemNotFoundException extends RuntimeException {
 		this.id = id;
 	}
 
+	@Deprecated // use new class's getPath and getRepository
 	public CmsItemId getId() {
 		return id;
 	}
