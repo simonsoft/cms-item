@@ -16,7 +16,6 @@
 package se.simonsoft.cms.item.impl;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -54,7 +53,7 @@ public class CmsItemIdArgTest {
 	@Test
 	public void testPegHost() {
 		CmsItemIdArg p = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1^/vvab/xml/Docs/Sa%20s.xml?p=9");
-		assertTrue(p.isFullyQualified());
+		assertTrue(p.getRepository().isHostKnown());
 		assertTrue(p.isFullyQualifiedOriginally());
 		assertTrue(p.isPegged());
 		assertTrue(p.isPeggedOriginally());
@@ -66,18 +65,19 @@ public class CmsItemIdArgTest {
 	@Test
 	public void testPegNoHost() {
 		CmsItemIdArg p = new CmsItemIdArg("x-svn:///svn/demo1^/vvab/xml/sections/In%20in.xml?p=101");
-		assertFalse(p.isFullyQualified());
+		assertFalse(p.getRepository().isHostKnown());
 		assertFalse(p.isFullyQualifiedOriginally());
 		assertTrue(p.isPegged());
 		assertTrue(p.isPeggedOriginally());
 		p.setHostnameOrValidate("example.net");
+		assertEquals("http://example.net/svn/demo1", p.getRepository().getUrl());
 		assertEquals("http://example.net/svn/demo1/vvab/xml/sections/In%20in.xml", p.getUrl());
 	}
 	
 	@Test
 	public void testNoHostNoPeg() {
 		CmsItemIdArg p = new CmsItemIdArg("x-svn:///svn/demo1^/vvab/graphics/0001.tif");
-		assertFalse(p.isFullyQualified());
+		assertFalse(p.getRepository().isHostKnown());
 		assertFalse(p.isFullyQualifiedOriginally());
 		assertFalse(p.isPegged());
 		assertFalse(p.isPeggedOriginally());
@@ -101,7 +101,7 @@ public class CmsItemIdArgTest {
 			assertEquals("Repository identified only by parent path and name: /svn/demo1", e.getMessage());
 		}
 		p.setHostname("x.y.z");
-		assertTrue(p.isFullyQualified());
+		assertTrue(p.getRepository().isHostKnown());
 		assertFalse(p.isFullyQualifiedOriginally());
 		assertEquals("x-svn:///svn/demo1^/vvab/graphics/0001.tif", p.getLogicalId());
 		assertEquals("x-svn://x.y.z/svn/demo1^/vvab/graphics/0001.tif", p.getLogicalIdFull());
@@ -148,22 +148,10 @@ public class CmsItemIdArgTest {
 		CmsItemIdArg i1 = new CmsItemIdArg("x-svn:///svn/d1^/vv/r/A/xml/8.xml");
 		assertTrue(i1.equals(new CmsItemIdArg("x-svn:///svn/d1^/vv/r/A/xml/8.xml")));
 		i1.setHostname("x.y");
-		// not sure about this
-		assertFalse("Hostname difference", i1.equals(new CmsItemIdArg("x-svn:///svn/d1^/vv/r/A/xml/8.xml")));
-		assertFalse("Hostname difference other way", new CmsItemIdArg("x-svn:///svn/d1^/vv/r/A/xml/8.xml").equals(i1));
-	}
-	
-	@Test
-	public void testEqualsOtherImpl() {
-		CmsItemIdArg i1 = new CmsItemIdArg("x-svn:///svn/d1^/vv/r/A/xml/8.xml");
-		// other CmsItemIds
-		CmsItemId i3 = mock(CmsItemId.class);
-		when(i3.getLogicalId()).thenReturn("x-svn:///svn/d1^/vv/r/A/xml/8.xml");
-		assertTrue("Same logicalId, no host info", i1.equals(i3));
-		when(i3.getLogicalIdFull()).thenReturn("x-svn://host.xy/svn/d1^/vv/r/A/xml/8.xml");
-		assertFalse("Can't know if the id is the same when only one has hostname", i1.equals(i3));
-		i1.setHostname("host.xy");
-		assertTrue("Same logicalIdFull", i1.equals(i3));
+		assertTrue("Assume same hostname when one is not set",
+				i1.equals(new CmsItemIdArg("x-svn:///svn/d1^/vv/r/A/xml/8.xml")));
+		assertTrue("Assume the other way too",
+				new CmsItemIdArg("x-svn:///svn/d1^/vv/r/A/xml/8.xml").equals(i1));
 	}
 	
 	@Test
@@ -175,21 +163,27 @@ public class CmsItemIdArgTest {
 		assertEquals("For consistency, URLs can not have traling slash", 
 				"http://x.y/svn/r1/vv", parent.getUrl());
 	}
+
+	@Test
+	public void testRepoRootId() {
+		CmsItemId repoId = new CmsItemIdArg("x-svn://local.test/r^/");
+		assertEquals(null, repoId.getRelPath());
+	}
 	
 	@Test
 	public void testWithRelPathToRepoRoot() {
 		CmsItemId i1 = new CmsItemIdArg("x-svn://x.y/parent/repo^/a/b.xml");
-		CmsItemId repo = i1.withRelPath(null);
-		assertEquals("x-svn:///parent/repo^/", repo.getLogicalId());
+		CmsItemId repoId = i1.withRelPath(null);
+		assertEquals("x-svn:///parent/repo^/", repoId.getLogicalId());
 		assertEquals("For consistency, URLs can not have traling slash",
-				"http://x.y/parent/repo", repo.getUrl());
+				"http://x.y/parent/repo", repoId.getUrl());
 		CmsItemId i2 = new CmsItemIdArg("x-svn://x.y/p/r^/a?p=9");
 		CmsItemId repoRootRev = i2.withRelPath(null);
 		assertEquals("x-svn:///p/r^/?p=9", repoRootRev.getLogicalId());
 		// We have not path to represent root
 		//CmsItemId repoAlso = i1.withRelPath(new CmsItemPath("/"));
 		//assertEquals("x-svn://x.y/parent/repo^/", repoAlso.getLogicalIdFull());
-		assertEquals("CmsItemPath can not represent root", null, repo.getRelPath());
+		assertEquals("CmsItemPath can not represent root", null, repoId.getRelPath());
 	}
 	
 	@Test
@@ -265,8 +259,9 @@ public class CmsItemIdArgTest {
 				"CmsRepository:/parent/repo", i.getRepository().toString());
 		assertTrue(i.getRepository().equals(i.getRepository()));
 		assertTrue(i.getRepository().equals(i.withPegRev(1L).getRepository()));
-		assertFalse(i.getRepository().equals(new CmsItemIdArg("x-svn://x.y/parent/repo^/x").getRepository()));
-		assertFalse(i.getRepository().equals(new CmsRepository("http://x.y/parent/repo")));
+		assertTrue("assume same host when one is not set",
+				i.getRepository().equals(new CmsItemIdArg("x-svn://x.y/parent/repo^/x").getRepository()));
+		assertTrue(i.getRepository().equals(new CmsRepository("http://x.y/parent/repo")));
 		assertNotNull(i.getRepository().hashCode());
 		// now set hostname
 		i.setHostname("host.name");

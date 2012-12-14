@@ -15,8 +15,6 @@
  */
 package se.simonsoft.cms.item.impl;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,7 +33,7 @@ import se.simonsoft.cms.item.CmsRepository;
  * This class never needs to deal with encoding of logical ID, which is tricky,
  * only decoding of path, which is simple. Assuming hostname is always ascii.
  */
-public class CmsItemIdArg implements CmsItemId {
+public class CmsItemIdArg extends CmsItemIdBase {
 
 	// TODO before adding more validation here make sure it can be shared
 	// between SvnLogicalId and other implementations.
@@ -43,7 +41,7 @@ public class CmsItemIdArg implements CmsItemId {
 	// but since it is used to process input incrementally
 	// it needs an explicit validate() method for semantic validation.
 	
-	public static final String HTTP_PREFIX = "http://";
+	public static final String DEFAULT_PROTOCOL = "http";
 	public static final String PEG = "?p=";
 	public static final Pattern NICE = Pattern.compile(PROTO_PREFIX + "([^/]*)(.*/)([^:^]*)\\^(/|[^:?]+[^/])/?(?:\\?p=(\\d+))?");
 	
@@ -55,13 +53,11 @@ public class CmsItemIdArg implements CmsItemId {
 	 */
 	public static final String REPO_ROOT_PATH = "/";
 	
-	private String host = "";
-	private String parent;
-	private String repo;
-	private String relpath;
+	private String relpathEncoded; // the path part of the logical ID
 	private Long pegRev = null;
 	private boolean orgfull;
 	private boolean orgpeg;
+	private CmsRepository repository;
 	
 	/**
 	 * @param logicalId with or without hostname and peg rev
@@ -71,21 +67,31 @@ public class CmsItemIdArg implements CmsItemId {
 		if (!m.matches()) {
 			throw new IllegalArgumentException("Not a valid logical id: " + logicalId);
 		}
-		this.host = m.group(1);
-		this.parent = m.group(2);
-		this.repo = m.group(3);
-		this.relpath = m.group(4);
+		String host = m.group(1);
+		String parent = m.group(2);
+		String repo = m.group(3);
+		if (host.length() == 0) {
+			this.repository = new CmsRepository(parent.substring(0, parent.length() - 1), repo);
+		} else {
+			this.repository = new CmsRepository(DEFAULT_PROTOCOL, host, parent.substring(0, parent.length() - 1), repo);
+			this.orgfull = true;
+		}
+		this.relpathEncoded = m.group(4);
 		if (m.group(5) != null) {
 			this.pegRev  = Long.parseLong(m.group(5));
 			this.orgpeg = true;
 		}
-		if (isFullyQualified()) {
-			this.orgfull = true;
-		}
 	}
 	
-	public boolean isFullyQualified() {
-		return host.length() > 0;
+	protected CmsItemIdArg(CmsRepository repository, String relpathEncoded, Long pegRev) {
+		this.repository = repository;
+		this.orgfull = repository.isHostKnown();
+		this.relpathEncoded = relpathEncoded;
+		if (relpathEncoded == null) {
+			throw new IllegalArgumentException("relpath can be " + REPO_ROOT_PATH + " but not null");
+		}
+		this.pegRev = pegRev;
+		this.orgpeg = pegRev != null;
 	}
 	
 	public boolean isFullyQualifiedOriginally() {
@@ -109,13 +115,13 @@ public class CmsItemIdArg implements CmsItemId {
 	 * when the caller is on the same server, including port if non-standard
 	 */
 	public void setHostname(String fullyQualifiedName) {
-		if (isFullyQualified()) {
+		if (repository.isHostKnown()) {
 			throw new IllegalStateException("Hostname already set for " + getLogicalIdFull());
 		}
 		if (fullyQualifiedName == null || fullyQualifiedName.length() == 0) {
 			throw new IllegalArgumentException("Method not intended for removing hostname");
 		}
-		host = fullyQualifiedName;
+		repository = new CmsRepository(DEFAULT_PROTOCOL, fullyQualifiedName, repository.getParentPath(), repository.getName());
 	}
 	
 	/**
@@ -125,8 +131,8 @@ public class CmsItemIdArg implements CmsItemId {
 	 */
 	public void setHostnameOrValidate(String fullyQualifiedName)
 			throws IllegalArgumentException {
-		if (isFullyQualified()) {
-			if (!host.equals(fullyQualifiedName))  {
+		if (repository.isHostKnown()) {
+			if (!repository.getHostname().equals(fullyQualifiedName))  {
 				throw new IllegalArgumentException("Unexpected hostname in " + getLogicalIdFull() + ", expected " + fullyQualifiedName);
 			}
 		} else {
@@ -151,18 +157,15 @@ public class CmsItemIdArg implements CmsItemId {
 	 * a current repository connection session.
 	 */
 	public String getRepositoryUrl() {
-		if (!isFullyQualified()) {
+		if (!repository.isHostKnown()) {
 			throw new IllegalStateException("Hostname unknown for " + getLogicalId());
-		}
-		return HTTP_PREFIX + host + parent + repo;
+		}		
+		return getRepository().getUrl();
 	}
 	
 	@Override
 	public CmsRepository getRepository() {
-		if (!isFullyQualified()) {
-			return new CmsRepository(parent.substring(0, parent.length() - 1), repo);
-		}
-		return new CmsRepository(getRepositoryUrl());
+		return repository;
 	}
 
 	/**
@@ -175,15 +178,15 @@ public class CmsItemIdArg implements CmsItemId {
 	
 	@Override
 	public String getUrl() {
-		if (REPO_ROOT_PATH.equals(relpath)) {
+		if (REPO_ROOT_PATH.equals(relpathEncoded)) {
 			return getRepository().getUrl();
 		}
-		return getRepository().getUrl() + relpath;
+		return getRepository().getUrl() + relpathEncoded;
 	}
 	
 	@Override
 	public String getUrlAtHost() {
-		return parent + repo + relpath;
+		return getRepository().getUrlAtHost() + relpathEncoded;
 	}
 
 	@Override
@@ -196,20 +199,28 @@ public class CmsItemIdArg implements CmsItemId {
 	 */
 	@Override
 	public String getLogicalId() {
-		return toString("", relpath, pegRev);
+		return getLogicalId("");
 	}
 
 	@Override
 	public String getLogicalIdFull() {
-		if (!isFullyQualified()) {
+		if (!repository.isHostKnown()) {
 			throw new IllegalStateException("Hostname unknown for " + getLogicalId());
 		}
-		return toString(host, relpath, pegRev);
+		return getLogicalId(repository.getHost());
+	}
+	
+	protected String getLogicalId(String anyHost) {
+		return PROTO_PREFIX
+				+ anyHost
+				+ repository.getParentPath() + "/" + repository.getName() + "^" 
+				+ relpathEncoded
+				+ getQuery(pegRev);		
 	}
 
 	@Override
 	public CmsItemPath getRelPath() {
-		return getRelPath(relpath);
+		return getRelPath(relpathEncoded);
 	}
 	
 	
@@ -221,24 +232,11 @@ public class CmsItemIdArg implements CmsItemId {
 	}
 	
 	private CmsItemPath getRelPath(String relpathEncoded) {
-		String decoded;
-		try {
-			decoded = URLDecoder.decode(relpathEncoded, "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("Failed to decode with charset UTF-8");
-		}
 		if (REPO_ROOT_PATH.equals(relpathEncoded)) {
 			return null;
 		}
+		String decoded = urldecode(relpathEncoded);
 		return new CmsItemPath(decoded);
-	}
-	
-	private String toString(String anyHost, String relpathEncoded, Long anyPegRev) {
-		return PROTO_PREFIX
-				+ anyHost
-				+ parent + repo + "^" 
-				+ (relpathEncoded == null ? REPO_ROOT_PATH : relpathEncoded)
-				+ getQuery(anyPegRev);
 	}
 	
 	/**
@@ -248,14 +246,14 @@ public class CmsItemIdArg implements CmsItemId {
 	@Override
 	public CmsItemId withRelPath(CmsItemPath newRelPath) {
 		if (newRelPath == null) {
-			return new CmsItemIdArg(toString(host, null, pegRev)); 
+			return new CmsItemIdArg(repository, REPO_ROOT_PATH, pegRev);
 		}
 		if (!newRelPath.isAncestorOf(getRelPath())) {
 			throw new IllegalArgumentException("New path based on this CmsItemIdArg must be parent of '" + getRelPath() + "'");
 		}
-		for (String p = relpath; p.length() > 0; p = p.replaceFirst("/[^/]+$", "")) {
+		for (String p = relpathEncoded; p.length() > 0; p = p.replaceFirst("/[^/]+$", "")) {
 			if (getRelPath(p).equals(newRelPath)) {
-				return new CmsItemIdArg(toString(host, p, pegRev));
+				return new CmsItemIdArg(repository, p, pegRev);
 			}
 		}
 		throw new RuntimeException("Failed to get encoded parent " + newRelPath + " from " + this);
@@ -263,48 +261,16 @@ public class CmsItemIdArg implements CmsItemId {
 
 	@Override
 	public CmsItemId withPegRev(Long newPegRev) {
-		return new CmsItemIdArg(toString(host, relpath, newPegRev));
+		return new CmsItemIdArg(repository, relpathEncoded, newPegRev);
 	}
 
 	@Override
 	public String toString() {
-		if (isFullyQualified()) {
+		if (repository.isHostKnown()) {
 			return getLogicalIdFull();
 		} else {
 			return getLogicalId();
 		}
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null || !(obj instanceof CmsItemId)) {
-			return false;
-		}
-		CmsItemId o = (CmsItemId) obj;
-		if (isFullyQualified()) {
-			try {
-				return getLogicalIdFull().equals(o.getLogicalIdFull());
-			} catch (Exception e) {
-				return false;
-			}
-		} else {
-			if (!getLogicalId().equals(o.getLogicalId())) {
-				return false;
-			}
-			try {
-				if (o.getLogicalIdFull() != null && !getLogicalId().equals(o.getLogicalIdFull())) {
-					return false;
-				}
-			} catch (Exception e) {
-				// ignore
-			}
-			return true;
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return getLogicalId().hashCode();
 	}
 
 }

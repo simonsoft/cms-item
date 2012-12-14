@@ -53,8 +53,27 @@ public class CmsRepositoryTest {
 	public void testPartsConstructor() {
 		CmsRepository r = new CmsRepository("https://x.y.zz:321", "/parent/path", "repo");
 		assertEquals("https://x.y.zz:321/parent/path/repo", r.toString());
+		assertEquals("https://x.y.zz:321/parent/path/repo", r.getUrl());
 		CmsRepository r2 = new CmsRepository("https", "demo.simonsoftcms.se", "/svn", "demo1");
 		assertEquals("https://demo.simonsoftcms.se/svn/demo1", r2.toString());
+		try {
+			new CmsRepository("http", "x.y/", "/s", "r");
+			fail("Should validate host");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+		try {
+			new CmsRepository("http:", "x.y", "/s", "r");
+			fail("Should validate protocol");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+		try {
+			new CmsRepository("http//", "x.y", "/s", "r");
+			fail("Should validate protocol");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
 	}
 	
 	@Test
@@ -82,13 +101,24 @@ public class CmsRepositoryTest {
 			assertEquals("Repository identified only by parent path and name: /parent/repo1", e.getMessage());
 		}
 		assertEquals("CmsRepository:/parent/repo1", r.toString());
+		
 		assertTrue(r.equals(new CmsRepository(null, null, "/parent", "repo1")));
-		assertFalse(r.equals(new CmsRepository("http", "host.name", "/parent", "repo1")));
+		assertTrue(new CmsRepository(null, null, "/parent", "repo1").equals(r));
+		 
+		assertTrue("By design we should assume equals=true if one of the repository instances has no host",
+				r.equals(new CmsRepository("http", "host.name", "/parent", "repo1")));
+		assertTrue(new CmsRepository("/parent", "repo1").equals(r));
+		assertFalse(r.equals(new CmsRepository("http://host.name/parent/repo2")));
+		assertFalse(new CmsRepository("/parent", "repo3").equals(r));
+		
+		assertEquals(new CmsRepository("http://host.name/parent/repo1").hashCode(), r.hashCode());
+		assertEquals(new CmsRepository("http", "host.name", "/parent", "repo1").hashCode(), r.hashCode());
 	}
 	
 	@Test
 	public void testEqualsHttpHttpsStandardPorts() {
 		assertTrue(new CmsRepository("http://test.net/svn/r1").equals(new CmsRepository("http://test.net/svn/r1")));
+		assertFalse(new CmsRepository("http://tes.net/svn/r1").equals(new CmsRepository("http://test.net/svn/r1")));
 		assertTrue("Equals should be true for standard ports regardless of http/https",
 				new CmsRepository("http://test.net/svn/r1").equals(new CmsRepository("https://test.net/svn/r1")));
 		assertFalse("Any custom ports used and it could be separate hosts",
@@ -99,6 +129,7 @@ public class CmsRepositoryTest {
 				new CmsRepository("http://test.net:80/svn/r1").equals(new CmsRepository("https://test.net/svn/r1")));
 		assertTrue("Specifying port 443 should be normalized",
 				new CmsRepository("http://test.net/svn/r1").equals(new CmsRepository("https://test.net:443/svn/r1")));
+		assertEquals(new CmsRepository("http://test.net/svn/r1").hashCode(), new CmsRepository("https://test.net:443/svn/r1").hashCode());
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -131,6 +162,11 @@ public class CmsRepositoryTest {
 		new CmsRepository("http://test.me", "svn", "repo");
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testHostIllegalChars() {
+		new CmsRepository("http", "://test.me", "/svn", "repo");
+	}
+	
 	@Test
 	public void testNormalizePort() {
 		assertEquals("myhost", new CmsRepository("http://myhost:80/s/r").getHost());
@@ -145,6 +181,15 @@ public class CmsRepositoryTest {
 	public void testGetUrlAtHost() {
 		assertEquals("/svn/repo1", new CmsRepository("http://myhost/svn/repo1").getUrlAtHost());
 		assertEquals("/svn/re%20po1", new CmsRepository("http://myhost/svn/re%20po1").getUrlAtHost());
+	}
+	
+	@Test
+	public void testRepositoryInServerRoot() {
+		CmsRepository r = new CmsRepository("http://myhost/repoN");
+		assertNotNull("Parent path starts with slash and does not need to be null if root", r.getParentPath());
+		assertEquals("", r.getParentPath());
+		assertTrue(new CmsRepository("", "repoN").equals(r));
+		assertFalse(new CmsRepository("/svn", "repoN").equals(r));
 	}
 	
 }

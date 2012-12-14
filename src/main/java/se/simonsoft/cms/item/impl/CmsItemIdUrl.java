@@ -15,8 +15,6 @@
  */
 package se.simonsoft.cms.item.impl;
 
-import java.net.URLEncoder;
-
 import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
@@ -30,9 +28,7 @@ import se.simonsoft.cms.item.CmsRepository;
  * For operations having access to a logical ID,
  * use {@link CmsItemIdArg} instead.
  */
-public class CmsItemIdUrl implements CmsItemId {
-
-	public static final String URLENCODE_ENCODING = "UTF-8";
+public class CmsItemIdUrl extends CmsItemIdBase {
 	
 	private CmsItemPath path;
 	private CmsRepository repository;
@@ -104,44 +100,6 @@ public class CmsItemIdUrl implements CmsItemId {
 	@Override
 	public CmsItemId withPegRev(Long newPegRev) {
 		return new CmsItemIdUrl(repository, path, newPegRev);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		return obj != null
-				&& obj instanceof CmsItemId
-				&& equalsId((CmsItemId) obj);
-	}
-
-	private boolean equalsId(CmsItemId id) {
-		if (!repository.equals(id.getRepository())) return false;
-		if (!path.equals(id.getRelPath())) return false;
-		if (pegRev == null) {
-			return id.getPegRev() == null;
-		} else {
-			return pegRev.equals(id.getPegRev());
-		}
-	}
-
-	@Override
-	public int hashCode() {
-		return getUrlAndPeg().hashCode();
-	}
-
-	/**
-	 * @param path a valid path, file system style
-	 * @return urlencoded UTF-8 except slashes
-	 */
-	static String urlencode(CmsItemPath path) {
-		StringBuffer enc = new StringBuffer();
-		try {
-			for (String p : path.getPathSegments()) {
-				enc.append('/').append(URLEncoder.encode(p, URLENCODE_ENCODING).replace("+", "%20"));
-			}
-		} catch (Exception e) {
-			throw new RuntimeException("Url encoding " + URLENCODE_ENCODING + " failed for path " + path);
-		}
-		return enc.toString();
 	}
 
 	@Override

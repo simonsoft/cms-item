@@ -64,14 +64,25 @@ public class CmsRepository {
 		if (protocol != null && protocol.length() == 0) {
 			throw new IllegalArgumentException("Protocol can be null but not empty");
 		}
+		if (protocol != null && protocol.indexOf(':') + protocol.indexOf('/') > -2) {
+			throw new IllegalArgumentException("Invalid protocol " + protocol);
+		}
 		if (hostWithOptionalPort != null && hostWithOptionalPort.length() == 0) {
 			throw new IllegalArgumentException("Hostname can be null but not empty");
+		}
+		if (hostWithOptionalPort != null && hostWithOptionalPort.contains("/")) {
+			throw new IllegalArgumentException("Path character found in host " + hostWithOptionalPort);
 		}
 		this.protocol = protocol;
 		this.host = hostWithOptionalPort;
 		this.parent = parentPath;
 		this.name = name;
-		if (parent == null || parent.endsWith("/") || !parent.startsWith("/")) {
+		if (parent == null) {
+			throw new IllegalArgumentException("Parent path can not be null");
+		}
+		if (parent.length() == 0) {
+			// OK, repositories at server root
+		} else if (parent.endsWith("/") || !parent.startsWith("/")) {
 			throw new IllegalArgumentException("Parent path must have leading but no trailing slash, got " + parent);
 		}
 		normalize();
@@ -184,23 +195,28 @@ public class CmsRepository {
 		return getParentPath() + "/" + getName();
 	}
 
+	/**
+	 * Verifies that parent path and repository name is identical.
+     * Verifies host equality on the two instances only if host is known on both.
+     * That is for consistency with CmsItemId and because different host is quite uncommon
+	 * while temporarily passing CmsItemId without host is quite common.
+	 * Callers can specifically check that repo1.isHostKnown() == repo2.isHostKnown().
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) return false;
 		if (obj instanceof String) return toString().equals(obj.toString());
 		if (!(obj instanceof CmsRepository)) return false;
 		CmsRepository r = (CmsRepository) obj;
-		if (isHostKnown()) {
+		if (isHostKnown() && r.isHostKnown()) {
 			if (!getHost().equals(r.getHost())) return false;
-		} else {
-			if (r.isHostKnown()) return false;
 		}
 		return getParentPath().equals(r.getParentPath()) && getName().equals(r.getName());
 	}
 
 	@Override
 	public int hashCode() {
-		return toString().hashCode();
+		return getPath().hashCode();
 	}
 
 	/**
