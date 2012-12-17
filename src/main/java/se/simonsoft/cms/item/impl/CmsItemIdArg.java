@@ -132,7 +132,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	public void setHostnameOrValidate(String fullyQualifiedName)
 			throws IllegalArgumentException {
 		if (repository.isHostKnown()) {
-			if (!repository.getHostname().equals(fullyQualifiedName))  {
+			if (!repository.getHost().equals(fullyQualifiedName))  {
 				throw new IllegalArgumentException("Unexpected hostname in " + getLogicalIdFull() + ", expected " + fullyQualifiedName);
 			}
 		} else {

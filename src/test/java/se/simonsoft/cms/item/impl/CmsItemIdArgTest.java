@@ -285,4 +285,15 @@ public class CmsItemIdArgTest {
 				"/svn/not allowed/v/a%20b/c.xml", new CmsItemIdArg("x-svn:///svn/not allowed^/v/a%20b/c.xml").getUrlAtHost());
 	}
 	
+	@Test
+	public void testHostnameMatchPort() {
+		new CmsItemIdArg("x-svn://host.x:1234/svn/r^/x").setHostnameOrValidate("host.x:1234");
+		try {
+			new CmsItemIdArg("x-svn://host.x:1234/svn/r^/x").setHostnameOrValidate("host.x");
+			fail("Should require exactly the same host for set after instantiation");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+	}
+	
 }

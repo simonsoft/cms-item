@@ -22,7 +22,7 @@ import se.simonsoft.cms.item.info.CmsLocking;
 import se.simonsoft.cms.item.info.LockToken;
 
 /**
- * More ideas on locking, see 
+ * More ideas on locking, from CmsItem#getLock, see 
  * {@link LockInfo}, {@link LockToken}, {@link CmsLocking}
  */
 public interface CmsItemLock {
