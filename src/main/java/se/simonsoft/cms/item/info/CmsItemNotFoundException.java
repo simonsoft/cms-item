@@ -37,23 +37,41 @@ public class CmsItemNotFoundException extends se.simonsoft.cms.item.CmsItemNotFo
 	
 	private CmsRepository repository;
 	private CmsItemPath path;
+	private Object revision;
 
 	public CmsItemNotFoundException(CmsItemId id) {
-		this(id.getRepository(), id.getRelPath());
+		this(id.getRepository(), id.getRelPath(), id.getPegRev());
 	}
 	
 	public CmsItemNotFoundException(CmsRepository repository, CmsItemPath atPath) {
-		super(null, "Not found: " + repository + atPath);
-		this.repository = repository;
-		this.path = atPath;
+		this(repository, atPath, null);
 	}
 
+	/**
+	 * @param repository the repository that was accessed
+	 * @param atPath the path that was tried
+	 * @param atRevision the revision at which the path was tried, toString should produce user readable representation
+	 */
+	public CmsItemNotFoundException(CmsRepository repository, CmsItemPath atPath, Object atRevision) {
+		super(null, "Not found: " + repository + atPath + (atRevision == null ? "" : "@" + atRevision));
+		this.repository = repository;
+		this.path = atPath;
+		this.revision = atRevision;
+	}
+	
 	public CmsRepository getRepository() {
 		return repository;
 	}
 
 	public CmsItemPath getPath() {
 		return path;
+	}
+	
+	/**
+	 * @return The revision at which access was attempted, null if HEAD
+	 */
+	public Object getRevision() {
+		return revision;
 	}
 	
 }
