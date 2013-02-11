@@ -85,6 +85,8 @@ public interface CmsItem {
 	
 	/**
 	 * API to be decided.
+	 * Does <em>not</em> aquire lock, only gets lock info.
+	 * @return lock information if the item is locked, null if it is not
 	 */
 	// CmsItemLock getLock();
 	

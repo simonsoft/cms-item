@@ -15,10 +15,29 @@
  */
 package se.simonsoft.cms.item.commit;
 
+import se.simonsoft.cms.item.CmsItemId;
+import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.RepoRevision;
 
 public interface CmsCommit {
 
-	public RepoRevision run(CmsCommitChangeset fileModifications);
+	public RepoRevision run(CmsCommitChangeset fileModifications) throws CmsItemLockedException;
+	
+	/**
+	 * API to be decided.
+	 * @param message
+	 * @param expory null if lock should never expire
+	 * @param item
+	 * @return
+	 * @throws CmsItemLockedException
+	 */
+	//public CmsItemLock lock(String message, Date expiry, CmsItemId... item) throws CmsItemLockedException;
+	
+	/**
+	 * API to be decided.
+	 * @param otherUsersToo
+	 * @param item
+	 */
+	//public void unlock(boolean otherUsersToo, CmsItemId... item);
 	
 }

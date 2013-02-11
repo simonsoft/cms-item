@@ -19,11 +19,11 @@ import java.lang.management.LockInfo;
 import java.util.Date;
 
 import se.simonsoft.cms.item.info.CmsLocking;
-import se.simonsoft.cms.item.info.LockToken;
 
 /**
- * More ideas on locking, from CmsItem#getLock, see 
- * {@link LockInfo}, {@link LockToken}, {@link CmsLocking}
+ * Ideas on locking, from CmsItem#getLock.
+ * API mimics svn_lock_t struct but does not have a path because to us the relation is from item to lock,
+ * and abstractions may allow many items to share the same lock.
  */
 public interface CmsItemLock {
 

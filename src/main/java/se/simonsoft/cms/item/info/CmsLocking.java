@@ -17,6 +17,7 @@ package se.simonsoft.cms.item.info;
 
 import se.simonsoft.cms.item.CmsItem;
 import se.simonsoft.cms.item.CmsItemId;
+import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.commit.CmsCommit;
 
 /**
@@ -28,15 +29,15 @@ import se.simonsoft.cms.item.commit.CmsCommit;
  */
 public interface CmsLocking {
 
-	LockToken lock(CmsItemId item, String message);
+	CmsItemLock lock(CmsItemId item, String message);
 	
-	void unlock(CmsItemId item, LockToken lockToken);
+	void unlock(CmsItemId item, CmsItemLock lockToken);
 	
 	/**
 	 * @return lock properties or null if the item is not locked
 	 * @deprecated probably directly in {@link CmsItem}
 	 */
-	LockInfo getLock(CmsItemId item);
+	CmsItemLock getLock(CmsItemId item);
 	
 	/**
 	 * Implementation may cache granted locks <em>per user</em> like a working copy
@@ -45,11 +46,11 @@ public interface CmsLocking {
 	 * @param item
 	 * @return null if token is not known or item is not locked
 	 */
-	LockToken getKnownLock(CmsItemId item);
+	CmsItemLock getKnownLock(CmsItemId item);
 	
 	/**
 	 * Removes existing lock on an item in the repository, regardless of owner.
-	 * Use {@link #unlock(CmsItemId, LockToken)} with a token for safe unlock within an operation.
+	 * Use {@link #unlock(CmsItemId, CmsItemLock)} with a token for safe unlock within an operation.
 	 * @param item An item that is locked (or any item?)
 	 */
 	void lockBreak(CmsItemId item);
@@ -60,6 +61,6 @@ public interface CmsLocking {
 	 * @param message
 	 * @return
 	 */
-	LockToken lockOrSteal(CmsItemId item, String message);
+	CmsItemLock lockOrSteal(CmsItemId item, String message);
 	
 }
