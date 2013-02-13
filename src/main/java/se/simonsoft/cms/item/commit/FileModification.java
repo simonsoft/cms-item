@@ -17,7 +17,6 @@ package se.simonsoft.cms.item.commit;
 
 import java.io.InputStream;
 
-import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
@@ -29,7 +28,6 @@ public class FileModification implements CmsCommitChange {
 	private InputStream baseFile;
 	private InputStream workingFile;
 	private CmsItemProperties properties;
-	private CmsItemLock lock = null;
 
 	/**
 	 * @param pathInRepository see {@link CmsCommitChange#getPath()}
@@ -43,15 +41,6 @@ public class FileModification implements CmsCommitChange {
 		this.baseRevision = baseRevision;
 		this.baseFile = baseFile;
 		this.workingFile = workingFile;
-	}
-	
-	/**
-	 * @param lock to allow commit to locked file, will be unlocked after commit
-	 * @return instance for chaining
-	 */
-	public FileModification setLock(CmsItemLock lock) {
-		this.lock  = lock;
-		return this;
 	}
 	
 	/**
@@ -88,10 +77,6 @@ public class FileModification implements CmsCommitChange {
 	 */
 	public CmsItemProperties getPropertyChange() {
 		return properties;
-	}
-	
-	public CmsItemLock getLock() {
-		return lock;
 	}
 	
 	@Override

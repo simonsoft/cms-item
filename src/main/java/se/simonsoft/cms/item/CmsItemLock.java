@@ -28,6 +28,9 @@ public interface CmsItemLock {
 
 	Date getDateCreation();
 	
+	/**
+	 * @return many subversion clients don't support this
+	 */
 	Date getDateExpiration();
 	
 	/**
