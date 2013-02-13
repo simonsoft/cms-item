@@ -29,6 +29,7 @@ public class FileModification implements CmsCommitChange {
 	private InputStream baseFile;
 	private InputStream workingFile;
 	private CmsItemProperties properties;
+	private CmsItemLock lock = null;
 
 	/**
 	 * @param pathInRepository see {@link CmsCommitChange#getPath()}
@@ -49,7 +50,8 @@ public class FileModification implements CmsCommitChange {
 	 * @return instance for chaining
 	 */
 	public FileModification setLock(CmsItemLock lock) {
-		throw new UnsupportedOperationException("Not implemented");
+		this.lock  = lock;
+		return this;
 	}
 	
 	/**
@@ -89,7 +91,7 @@ public class FileModification implements CmsCommitChange {
 	}
 	
 	public CmsItemLock getLock() {
-		throw new UnsupportedOperationException("Not implemented");
+		return lock;
 	}
 	
 	@Override
