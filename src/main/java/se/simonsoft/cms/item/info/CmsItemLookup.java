@@ -92,12 +92,8 @@ public interface CmsItemLookup extends se.simonsoft.cms.item.CmsItemLookup {
 	
 	/**
 	 * Returns items that are currently locked.
-	 * @param parent under which to look for locks, null for repository root
-	 * @param recursive
-	 * @param lockMessageGlob currently only wildcard (asterisk) meaning 0+ arbitrary chars at beginnning OR end of string, wildcard can not be escaped so meaningful strings should not contain wildcard
-	 * @return
-	 * @throws UnsupportedOperationException for example on non-null glob if globbing pattern is not supported
+	 * @param query Filtering
 	 */
-	// Set<CmsItemId> getLocked(CmsItemId parent, boolean recursive, String lockMessageGlob);
+	Set<CmsItemId> getLocked(CmsLockQuery query);
 	
 }
