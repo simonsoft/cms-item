@@ -15,10 +15,16 @@
  */
 package se.simonsoft.cms.item.commit;
 
-import se.simonsoft.cms.item.CmsItemId;
+import java.util.Date;
+
 import se.simonsoft.cms.item.CmsItemLock;
+import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 
+/**
+ * Operations that modify the repository in atomic changesets
+ * (and transient locks).
+ */
 public interface CmsCommit {
 
 	public RepoRevision run(CmsCommitChangeset fileModifications) throws CmsItemLockedException;
@@ -29,13 +35,13 @@ public interface CmsCommit {
 	 * @param expory null if lock should never expire
 	 * @param item
 	 * @return
-	 * @throws CmsItemLockedException
+	 * @throws CmsItemLockedException if a modification does hot 
 	 */
-	//public CmsItemLock lock(String message, Date expiry, CmsItemId... item) throws CmsItemLockedException;
+	//public CmsItemLock lock(String message, Date expiry, CmsItemPath... item) throws CmsItemLockedException;
 	
 	/**
 	 * API to be decided.
-	 * @param otherUsersToo
+	 * @param otherUsersToo true to force unlock regardless of ownership
 	 * @param item
 	 */
 	//public void unlock(boolean otherUsersToo, CmsItemId... item);

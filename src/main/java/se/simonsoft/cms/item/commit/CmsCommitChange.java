@@ -15,6 +15,7 @@
  */
 package se.simonsoft.cms.item.commit;
 
+import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 
@@ -34,5 +35,8 @@ public interface CmsCommitChange {
 	RepoRevision getBaseRevision();
 	
 	// TODO getProperties(); though not for Delete?
+	
+	// TODO maybe optional, how to handle the difference between unlock or keep lock att commit?
+	//CmsItemLock getLock();
 	
 }

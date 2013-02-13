@@ -15,10 +15,7 @@
  */
 package se.simonsoft.cms.item;
 
-import java.lang.management.LockInfo;
 import java.util.Date;
-
-import se.simonsoft.cms.item.info.CmsLocking;
 
 /**
  * Ideas on locking, from CmsItem#getLock.

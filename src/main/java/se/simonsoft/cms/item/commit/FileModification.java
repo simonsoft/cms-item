@@ -88,6 +88,10 @@ public class FileModification implements CmsCommitChange {
 		return properties;
 	}
 	
+	public CmsItemLock getLock() {
+		throw new UnsupportedOperationException("Not implemented");
+	}
+	
 	@Override
 	public String toString() {
 		// modified, no prop support yet, no copy support yet
