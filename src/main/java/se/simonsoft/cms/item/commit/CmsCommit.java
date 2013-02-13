@@ -15,8 +15,6 @@
  */
 package se.simonsoft.cms.item.commit;
 
-import java.util.Date;
-
 import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
@@ -26,24 +24,26 @@ import se.simonsoft.cms.item.RepoRevision;
  * (and transient locks).
  */
 public interface CmsCommit {
-
+	
 	public RepoRevision run(CmsCommitChangeset fileModifications) throws CmsItemLockedException;
 	
 	/**
-	 * API to be decided.
-	 * @param message
-	 * @param expory null if lock should never expire
-	 * @param item
-	 * @return
-	 * @throws CmsItemLockedException if a modification does hot 
+	 * Locks an item.
+	 * Lock expiry date is not supported in the general svn case.
+	 * Multiple items not supported because in svn they would have different tokens even if locked in the same operations.
+	 * @param message Lock comment
+	 * @param item Item to lock
+	 * @return identical Lock for all items (TODO is this the same token?)
+	 * @throws CmsItemLockedException If a path is already locked
 	 */
-	//public CmsItemLock lock(String message, Date expiry, CmsItemPath... item) throws CmsItemLockedException;
+	public CmsItemLock lock(String message, CmsItemPath item) throws CmsItemLockedException;
 	
 	/**
-	 * API to be decided.
-	 * @param otherUsersToo true to force unlock regardless of ownership
-	 * @param item
+	 * Release lock on item without making a commit.
+	 * Assumes that the application guards agains unitentional lock breaking.
+	 * @param item to be unlocked
+	 * @param lock with the token for unlock, breaks lock if different user than authenticated
 	 */
-	//public void unlock(boolean otherUsersToo, CmsItemId... item);
+	public void unlock(CmsItemPath item, CmsItemLock lock);
 	
 }
