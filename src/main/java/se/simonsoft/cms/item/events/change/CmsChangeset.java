@@ -18,6 +18,7 @@ package se.simonsoft.cms.item.events.change;
 import java.util.List;
 import java.util.Map;
 
+import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 
@@ -27,6 +28,13 @@ import se.simonsoft.cms.item.RepoRevision;
 public interface CmsChangeset {
 
 	RepoRevision getRevision();
+	
+	/**
+	 * Supports the most common use case - services listening for changes to a specific item.
+	 * @param item
+	 * @return
+	 */
+	boolean affects(CmsItemId item);
 	
 	/**
 	 * Services that don't analyze changes may not return

@@ -31,6 +31,8 @@ import se.simonsoft.cms.item.RepoRevision;
  * Listeners are registered by binding to a set of this interface
  * using the multibinder feature.
  * Hooks are executed in the order they are bound.
+ * 
+ * @deprecated A hook script framework should do this, services should listen to changeset events using {@link ChangesetEventListener}.
  */
 public interface PostCommitEventListener {
 
