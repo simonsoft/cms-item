@@ -192,4 +192,17 @@ public class CmsRepositoryTest {
 		assertFalse(new CmsRepository("/svn", "repoN").equals(r));
 	}
 	
+	@Test
+	public void testGetItemId() {
+		CmsRepository repo1 = new CmsRepository("https://host/svn/repo1");
+		assertTrue("Should preserve the instance", repo1 == repo1.getItemId().getRepository());
+		assertEquals("Relpath has no representation of root", null, repo1.getItemId().getRelPath());
+//		assertEquals(new CmsItemIdArg("x-svn://host/svn/repo^/"), // not sure this is a good syntax, why not omit the inconsistent slash?
+//				repo1.getItemId());
+		CmsItemId dir = repo1.getItemId().withRelPath(new CmsItemPath("/folder"));
+		assertEquals(repo1, dir.getRepository());
+		assertEquals(null, repo1.getItemId().getPegRev());
+		assertEquals(new Long(3), repo1.getItemId().withPegRev(3L).getPegRev());
+	}
+	
 }

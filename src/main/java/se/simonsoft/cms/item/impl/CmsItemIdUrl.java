@@ -65,6 +65,9 @@ public class CmsItemIdUrl extends CmsItemIdBase {
 	
 	@Override
 	public String getUrl() {
+		if (path == null) {
+			return getRepositoryUrl();
+		}
 		return getRepositoryUrl() + urlencode(path);
 	}
 
@@ -104,6 +107,9 @@ public class CmsItemIdUrl extends CmsItemIdBase {
 
 	@Override
 	public String toString() {
+		if (getRelPath() == null) {
+			return repository.toString();
+		}
 		return repository.toString() + getRelPath();
 	}
 	

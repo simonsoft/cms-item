@@ -146,6 +146,17 @@ public class CmsItemIdUrlTest {
 		assertEquals("/svn/repo1/v/ab/c.xml", new CmsItemIdUrl(repo1, new CmsItemPath("/v/ab/c.xml")).getUrlAtHost());
 		assertEquals("/svn/repo1/v/a%20b/c.xml", new CmsItemIdUrl(repo1, new CmsItemPath("/v/a b/c.xml")).getUrlAtHost());
 		assertEquals("/svn/repo1/v/a%20b/c%20d.xml", new CmsItemIdUrl(repo1, new CmsItemPath("/v/a b/c d.xml")).getUrlAtHost());
-	}	
+	}
+	
+	@Test
+	public void testRoot() {
+		CmsItemId root = new CmsItemIdUrl(repo1, (CmsItemPath) null);
+		assertEquals("support representatino of repository root", null, root.getRelPath());
+		assertEquals(repo1.getUrl(), root.getUrl());
+		assertEquals(repo1.getUrl(), root.toString());
+		// trailing slash is by convention from SvnLogicalId, should maybe be reconsidered
+		//assertEquals("x-svn://localhost:1234/svn/repo^/", root.getLogicalIdFull());
+		//assertEquals("x-svn:///svn/repo^/", root.getLogicalId());
+	}
 	
 }

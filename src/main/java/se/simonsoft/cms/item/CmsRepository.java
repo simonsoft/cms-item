@@ -18,6 +18,8 @@ package se.simonsoft.cms.item;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import se.simonsoft.cms.item.impl.CmsItemIdUrl;
+
 /**
  * Represents repository URL information.
  * 
@@ -112,6 +114,13 @@ public class CmsRepository {
 				host = getHostname();
 			}
 		}
+	}
+	
+	/**
+	 * @return item id for use in path based operations, with relpath null, not valid as logical id
+	 */
+	public CmsItemId getItemId() {
+		return new CmsItemIdUrl(this, (CmsItemPath) null);
 	}
 	
 	/**
