@@ -39,4 +39,12 @@ public interface CmsItemList extends Iterable<CmsItem> {
 	 */
 	public String getMeta(CmsItemListMeta.Key known);
 	
+	/**
+	 * For the item list to be a useful query/reporting response type for extensible data
+	 * it has to be able to return arbitrary fields, something CmsItem can't.
+	 * @param item an item from the list
+	 * @return arbitrary key-value properties of the item, possibly including data that backs the CmsItem fields
+	 */
+	public Map<String, Object> getItemFields(CmsItem item);
+	
 }
