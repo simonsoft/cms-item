@@ -15,6 +15,9 @@
  */
 package se.simonsoft.cms.item.events.change;
 
+// TODO provide access to item or separately to contents and properties
+import se.simonsoft.cms.item.CmsItem;
+
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 

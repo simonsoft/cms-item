@@ -54,7 +54,7 @@ public interface CmsChangeset {
 	List<CmsChangesetItem> getItems();
 	
 	/**
-	 * TODO Requires replace operations to be returned
+	 * TODO This is a draft/suggestion. Requires replace operations to be returned
 	 * as a single change instead of add+delete.
 	 * 
 	 * @return all changes indexed on path
