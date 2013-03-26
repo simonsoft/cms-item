@@ -39,6 +39,7 @@ public interface CmsContentsReader {
 	CmsItemProperties getProperties(CmsRepositoryInspection repository, RepoRevision revision, CmsItemPath path);
 	
 	/**
+	 * TODO draft, support changeset diff? support item diff? support revision range item diff?
 	 * Can this be done with svnlook or do we need to parse the full changeset diff?
 	 * Maybe diff is better suited for inclusion in the Changeset API,
 	 * supporting a changeset viewer like the one in Trac.
