@@ -49,6 +49,12 @@ public interface CmsChangeset {
 	boolean isDeriveEnabled();
 	
 	/**
+	 * 
+	 * @return true if the changeset is aware of a later HEAD revision
+	 */
+	//boolean isHeadKnown();
+	
+	/**
 	 * @return all changes, explicit and derived
 	 */
 	List<CmsChangesetItem> getItems();

@@ -15,9 +15,6 @@
  */
 package se.simonsoft.cms.item.events.change;
 
-// TODO provide access to item or separately to contents and properties
-import se.simonsoft.cms.item.CmsItem;
-
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 
@@ -35,6 +32,12 @@ public interface CmsChangesetItem {
 	 * @return true if the item change was derived, for example as unchanged content of a copied folder
 	 */
 	boolean isDerived();
+	
+	/**
+	 * See {@link CmsChangeset#isHeadKnown()}
+	 * @return true if the item 
+	 */
+	//boolean isHead();
 	
 	CmsItemPath getPath();
 	
