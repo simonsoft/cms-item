@@ -34,10 +34,11 @@ public interface CmsChangesetItem {
 	boolean isDerived();
 	
 	/**
-	 * See {@link CmsChangeset#isHeadKnown()}
-	 * @return true if the item 
+	 * If the changeset is loaded with knowledge of later revisions this method
+	 * can tell if the item will for sure be reported as modified or deleted in a later revision.
+	 * @return true if the item will be modified or deleted in a later known revision
 	 */
-	//boolean isHead();
+	boolean isOverwritten();
 	
 	CmsItemPath getPath();
 	
