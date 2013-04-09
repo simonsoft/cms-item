@@ -27,6 +27,10 @@ public class CmsLockQuery {
 	public CmsItemId getParent() {
 		return parent;
 	}
+	/**
+	 * @param parent only get locks on or (if a folder) under this item
+	 * @return for chaining
+	 */
 	public CmsLockQuery setParent(CmsItemId parent) {
 		this.parent = parent;
 		return this;
@@ -51,6 +55,7 @@ public class CmsLockQuery {
 	public String getMessageGlob() {
 		return messageGlob;
 	}
+	
 	/**
 	 * currently only wildcard (asterisk) meaning 0+ arbitrary chars at beginnning OR end of string, wildcard can not be escaped so meaningful strings should not contain wildcard
 	 * @param messageGlob 

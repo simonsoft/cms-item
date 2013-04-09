@@ -84,7 +84,7 @@ public interface CmsItem {
 	void getContents(OutputStream receiver) throws UnsupportedOperationException;
 	
 	/**
-	 * Does <em>not</em> aquire lock, only gets lock info.
+	 * Does <em>not</em> acquire lock, only gets lock info.
 	 * Note that lock id (i.e. token) should be handled per user so that unlock can not be done by others.
 	 * 
 	 * Pending decision: Just like {@link #getContents(OutputStream)} this gets the current state, not the state when the item was initially read

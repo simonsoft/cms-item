@@ -26,6 +26,8 @@ import se.simonsoft.cms.item.commit.CmsCommit;
  * TODO Evaluate lock information directly from CmsItemLookup
  * 
  * TODO How to pass own locks to {@link CmsCommit}
+ * 
+ * @deprecated I think we'll use CmsCommit for this instead
  */
 public interface CmsLocking {
 

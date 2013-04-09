@@ -36,14 +36,14 @@ public interface CmsCommit {
 	 * @return identical Lock for all items (TODO is this the same token?)
 	 * @throws CmsItemLockedException If a path is already locked
 	 */
-	public CmsItemLock lock(String message, CmsItemPath item) throws CmsItemLockedException;
+	public CmsItemLock lock(String message, CmsItemPath... item) throws CmsItemLockedException;
 	
 	/**
 	 * Release lock on item without making a commit.
-	 * Assumes that the application guards agains unitentional lock breaking.
+	 * Assumes that the application guards against unintentional lock breaking.
 	 * @param item to be unlocked
 	 * @param lock with the token for unlock, breaks lock if different user than authenticated
 	 */
-	public void unlock(CmsItemPath item, CmsItemLock lock);
+	public void unlock(CmsItemLock lock, CmsItemPath... item);
 	
 }
