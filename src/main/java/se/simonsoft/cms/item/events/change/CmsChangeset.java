@@ -20,21 +20,40 @@ import java.util.Map;
 
 import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
+import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
+import se.simonsoft.cms.item.inspection.CmsRepositoryInspection;
 
 /**
  * Backend neutral representation of all changes in a commit or transaction.
  */
 public interface CmsChangeset {
 
+	/**
+	 * Note to implementer: don't return a {@link CmsRepositoryInspection}
+	 * @return repository
+	 */
+	CmsRepository getRepository();
+	
+	/**
+	 * @return the changeset's revision
+	 */
 	RepoRevision getRevision();
 	
 	/**
 	 * Supports the most common use case - services listening for changes to a specific item.
-	 * @param item
-	 * @return
+	 * @param item 
+	 * @return true if the item is affected directly
 	 */
 	boolean affects(CmsItemId item);
+	
+	/**
+	 * Tells if modified date on the item should be considered touched,
+	 * on most file systems a folder would be if a file somewhere under it is modified.
+	 * @param item
+	 * @return true if for example the item is a parent/ancestor folder of an affected file or folder
+	 */
+	boolean affectsIndirectly(CmsItemId item);
 	
 	/**
 	 * Services that don't analyze changes may not return
@@ -56,6 +75,12 @@ public interface CmsChangeset {
 	/**
 	 * TODO This is a draft/suggestion. Requires replace operations to be returned
 	 * as a single change instead of add+delete.
+	 * 
+	 * This is probably a good idea as it simplifies the data model,
+	 * and svn on the client side represents replace properly.
+	 * 
+	 * Note that a move would still be represented as a delete on one path and an add on a different one,
+	 * with copy-from pointing to the former.
 	 * 
 	 * @return all changes indexed on path
 	 */

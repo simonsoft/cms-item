@@ -21,6 +21,8 @@ import java.io.File;
 
 import org.junit.Test;
 
+import se.simonsoft.cms.item.CmsRepository;
+
 public class CmsRepositoryInspectionTest {
 
 	@Test
@@ -28,6 +30,22 @@ public class CmsRepositoryInspectionTest {
 		File p = new File("/tmp/repo");
 		CmsRepositoryInspection repo = new CmsRepositoryInspection("/svn", "repo", p);
 		assertEquals(p, repo.getAdminPath());
+	}
+	
+	@Test
+	public void testGetPublic() {
+		File p = new File("/tmp/repo");
+		CmsRepositoryInspection r1 = new CmsRepositoryInspection("http://host:1234/svn/repo", p);
+		CmsRepository r1p = r1.getPublic();
+		assertFalse(r1p instanceof CmsRepositoryInspection);
+		assertEquals(new CmsRepository("http://host:1234/svn/repo"), r1p);
+		
+		CmsRepositoryInspection repo = new CmsRepositoryInspection("/svn", "repo", p);
+		try {
+			repo.getPublic();
+		} catch (IllegalStateException e) {
+			// expected
+		}
 	}
 
 }

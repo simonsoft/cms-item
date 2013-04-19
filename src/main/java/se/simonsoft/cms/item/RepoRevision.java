@@ -30,7 +30,15 @@ import java.util.TimeZone;
  * 
  * The timestamp also provides the most human readable form of identification,
  * formatted either as a date and time or as "X [unit] ago"
- * (arguably after small svn revision numbers).
+ * (ok, small svn revision numbers might also be easy to read).
+ * 
+ * Note that Subversion allows arbitrary timestamps on revisions.
+ * Repoisitories can for example be combined from different dump files,
+ * so newer revisions have older dates. Thus the revision number will be the baseline,
+ * but the date on a revision shows when the commit was made.
+ * 
+ * File systems also allow abitrary modification of time stamps.
+ * It should be assumed that the underlying storage is well managed. 
  */
 public class RepoRevision {
 

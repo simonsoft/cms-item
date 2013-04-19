@@ -48,6 +48,13 @@ public class CmsRepositoryInspection extends CmsRepository {
 	}
 
 	/**
+	 * @return the publicly safe information for this repo, i.e. a normal {@link CmsRepository}
+	 */
+	public CmsRepository getPublic() {
+		return new CmsRepository(this.getUrl());
+	}
+	
+	/**
 	 * @return local path to repository root
 	 */
 	public File getAdminPath() {
