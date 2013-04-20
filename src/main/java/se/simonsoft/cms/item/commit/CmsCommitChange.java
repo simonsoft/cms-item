@@ -36,7 +36,7 @@ public interface CmsCommitChange {
 	
 	// TODO getProperties(); though not for Delete?
 	
-	// TODO maybe optional, how to handle the difference between unlock or keep lock att commit?
+	// TODO maybe optional, how to handle the difference between unlock or keep lock at commit?
 	//CmsItemLock getLock();
 	
 }

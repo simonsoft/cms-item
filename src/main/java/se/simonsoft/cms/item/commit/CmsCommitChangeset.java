@@ -22,6 +22,7 @@ import java.util.Map;
 
 import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.CmsItemPath;
+import se.simonsoft.cms.item.RepoRevision;
 
 /**
  * Item modifications, never two of them at the same path.
@@ -31,10 +32,34 @@ public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
 	
 	private static final long serialVersionUID = 1L;
 
+	private static final RepoRevision BASE_OVERWRITE = new RepoRevision(-1, null);
+	
+	private RepoRevision base;
+	
 	private String historyMessage = null;
 	private boolean keepLocks = false;
 	private Map<CmsItemPath, CmsCommitChange> map = new HashMap<CmsItemPath, CmsCommitChange>(); // to simplify validation, may waste a bit of memory but probably negligible
 	private Map<String, String> locks = new HashMap<String, String>();
+	
+	public CmsCommitChangeset() {
+		this(BASE_OVERWRITE);
+	}
+	
+	public CmsCommitChangeset(RepoRevision baseRevision) {
+		if (baseRevision == null) {
+			throw new IllegalArgumentException("Base revision is required for commit operations");
+		}
+		this.base = baseRevision;
+	}
+
+	/**
+	 * Used to check for concurrent modifications,
+	 * so that uses don't overwrite each other's changes.
+	 * @return the revision where the user decided to do these changes
+	 */
+	public RepoRevision getBaseRevision() {
+		return this.base;
+	}
 	
 	@Override
 	public boolean add(CmsCommitChange change) {

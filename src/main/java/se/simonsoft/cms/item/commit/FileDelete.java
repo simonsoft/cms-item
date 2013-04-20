@@ -23,6 +23,7 @@ public class FileDelete implements CmsCommitChange {
 	private CmsItemPath path;
 	private RepoRevision base;
 
+	@Deprecated //"base revision should be set in Changeset"
 	public FileDelete(CmsItemPath path, RepoRevision base) {
 		this.path = path;
 		this.base = base;
