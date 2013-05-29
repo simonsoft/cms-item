@@ -42,6 +42,19 @@ public interface CmsChangesetItem {
 	
 	CmsItemPath getPath();
 	
+	/**
+	 * Note that this revision survives copy/move 
+	 * (when there is a {@link #getCopyFromPath()}) unchanged,
+	 * unless there are actually modifications to content or properties.
+	 * At this revision the item might not have existed at its current path.
+	 * 
+	 * To get the "path" revision, use {@link CmsChangeset#getRevision()}.
+	 * 
+	 * Note also for indexing purposes that other attributes that are actually
+	 * from the commit, such as last author, will change at move.
+	 * 
+	 * @return the <em>commit</em> revision, i.e. 
+	 */
 	RepoRevision getRevision();
 	
 	boolean isFile();
@@ -106,6 +119,10 @@ public interface CmsChangesetItem {
 	 * 
 	 * A changeset list at the revision for this previous change
 	 * would include the same information.
+	 * 
+	 * TODO specify how this handles move:
+	 *  - if current operation is a move indexing should mark previous commit as non-head
+	 *  - if previous operation was a move indexing should mark that as non-head, although commit revision never changed
 	 * 
 	 * @return Previous change for this item, including derived.
 	 */
