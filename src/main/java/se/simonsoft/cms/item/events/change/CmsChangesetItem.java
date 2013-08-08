@@ -127,12 +127,13 @@ public interface CmsChangesetItem {
 	 * 
 	 * @return Previous change for this item, including derived.
 	 */
+	@Deprecated // returning a revision is less of a distraction for the indexing case
 	CmsChangesetItem getPreviousChange();
 	
 	/**
 	 * TODO API design depends on if we handle atomic moves or not
 	 * @return the revision at the same path that 
 	 */
-	//RepoRevision getRevisionObsoleted();
+	RepoRevision getRevisionObsoleted();
 	
 }
