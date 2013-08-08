@@ -62,6 +62,7 @@ public interface CmsChangesetItem {
 	boolean isFolder();
 	
 	/**
+	 * TODO handle move, is the source also in the change list?
 	 * @return true if the entry is a copy to a new location
 	 */
 	boolean isCopy();
@@ -74,7 +75,7 @@ public interface CmsChangesetItem {
 	/**
 	 * @return the revision if {@link #isCopy()}, null otherwise
 	 */
-	Long getCopyFromRevision();
+	RepoRevision getCopyFromRevision();
 	
 	/**
 	 * @return true if the item was added, excluding replace
@@ -104,7 +105,7 @@ public interface CmsChangesetItem {
 	
 	/**
 	 * @return true if the property set was actually modified,
-	 *  true for copies if destination props differ from source
+	 *  true for copies only if destination props differ from source
 	 */
 	boolean isPropertiesModified();
 	
@@ -127,5 +128,11 @@ public interface CmsChangesetItem {
 	 * @return Previous change for this item, including derived.
 	 */
 	CmsChangesetItem getPreviousChange();
+	
+	/**
+	 * TODO API design depends on if we handle atomic moves or not
+	 * @return the revision at the same path that 
+	 */
+	//RepoRevision getRevisionObsoleted();
 	
 }
