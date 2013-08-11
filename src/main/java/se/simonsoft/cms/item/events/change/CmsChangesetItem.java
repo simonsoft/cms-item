@@ -132,6 +132,7 @@ public interface CmsChangesetItem {
 	
 	/**
 	 * TODO API design depends on if we handle atomic moves or not
+	 * Finds previous revision when the same path was affected by a a commit, including copies (explicit and derived) that did not affect contents or properties.
 	 * @return the revision at the same path that 
 	 */
 	RepoRevision getRevisionObsoleted();
