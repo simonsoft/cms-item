@@ -72,7 +72,6 @@ public interface CmsChangesetItemFlags {
 
 	/**
 	 * @return true on anything that might mean a different set of properties at the path
-	 *  
 	 */
 	boolean isProperties();
 
