@@ -21,7 +21,7 @@ import se.simonsoft.cms.item.RepoRevision;
 /**
  * Represents a file or folder affected in a changeset.
  */
-public interface CmsChangesetItem {
+public interface CmsChangesetItem extends CmsChangesetItemFlags {
 
 	/**
 	 * @return true if the item change was reported explicitly by the CMS backend
@@ -53,19 +53,10 @@ public interface CmsChangesetItem {
 	 * Note also for indexing purposes that other attributes that are actually
 	 * from the commit, such as last author, will change at move.
 	 * 
-	 * @return the <em>commit</em> revision, i.e. 
+	 * @return the <em>commit</em> revision,
+	 * 	i.e. different than current revision if neither content nor properties changed
 	 */
 	RepoRevision getRevision();
-	
-	boolean isFile();
-	
-	boolean isFolder();
-	
-	/**
-	 * TODO handle move, is the source also in the change list?
-	 * @return true if the entry is a copy to a new location
-	 */
-	boolean isCopy();
 	
 	/**
 	 * @return "copy from" data, including derived, if {@link #isCopy()}, null otherwise
@@ -76,44 +67,6 @@ public interface CmsChangesetItem {
 	 * @return the revision if {@link #isCopy()}, null otherwise
 	 */
 	RepoRevision getCopyFromRevision();
-	
-	/**
-	 * @return true if the item was added, excluding replace
-	 */
-	boolean isAdd();
-
-	/**
-	 * @return true if the item was replaced, i.e. not a diff but completely changed
-	 */
-	boolean isReplace();
-	
-	/**
-	 * @return true if the item was deleted, excluding replace
-	 */
-	boolean isDelete();
-	
-	/**
-	 * @return true if content was actually modified,
-	 *  true for copies if destination is not identical to source
-	 */
-	boolean isContentModified();
-	
-	/**
-	 * @return true if content was added, copied, replaced, modified or deleted
-	 */
-	boolean isContent();
-	
-	/**
-	 * @return true if the property set was actually modified,
-	 *  true for copies only if destination props differ from source
-	 */
-	boolean isPropertiesModified();
-	
-	/**
-	 * @return true on anything that might mean a different set of properties at the path
-	 *  
-	 */
-	boolean isProperties();
 	
 	/**
 	 * Can probably be implemented using svnlook history.
