@@ -68,8 +68,13 @@ public class RepoRevision {
 	}
 	
 	/**
-	 * The API allows this number to be the timestamp,
-	 * which in practice is the case when number > 
+	 * Returns the ordinal of the commit, with a later commit always having a higher number.
+	 * 
+	 * Note that in subversion the {@link #getDate()} could actually be out of sequence,
+	 * because of revprop changes or repositories combined through multiple dump files.
+	 * 
+	 * For backends with no native ordinal this method can return the timestamp's milliseconds value. 
+	 * 
 	 * @return The commit revision number
 	 */
 	public long getNumber() {
