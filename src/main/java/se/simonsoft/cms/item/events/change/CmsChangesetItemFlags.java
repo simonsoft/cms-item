@@ -20,8 +20,13 @@ public interface CmsChangesetItemFlags {
 	/**
 	 * Replacements should be a single change entry.
 	 * Moves ({@link #isMove()} can also be replacements.
+	 * 
 	 * A replace is never an {@link #isDelete()} or {@link #isAdd()}
 	 * because that could be surprising for an item that exists both before and after.
+	 * 
+	 * For derived items the replace status is uncertain, unless we implement comparison of trees,
+	 * so the method should always return false for derived.
+	 * 
 	 * @return true if the item was replaced, i.e. not a diff but completely changed
 	 */
 	boolean isReplace();
