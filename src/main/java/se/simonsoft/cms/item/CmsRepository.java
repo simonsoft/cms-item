@@ -99,7 +99,6 @@ public class CmsRepository {
 	 */
 	public CmsRepository(String parentPath, String name) {
 		this(null, null, parentPath, name);
-		normalize();
 	}
 	
 	/**

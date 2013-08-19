@@ -33,6 +33,8 @@ import se.simonsoft.cms.item.RepoRevision;
  * Hooks are executed in the order they are bound.
  * 
  * @deprecated A hook script framework should do this, services should listen to changeset events using {@link ChangesetEventListener}.
+ * This interface is now internal to webapp, and quite possible an absraction layer we no longer need,
+ * although it is quite clear that indexing and other hook processing has different needs.
  */
 public interface PostCommitEventListener {
 

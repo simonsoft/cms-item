@@ -38,7 +38,7 @@ public class CmsRepositoryInspection extends CmsRepository {
 	}
 	
 	/**
-	 * @param parentPath With leading but not traling slash
+	 * @param parentPath With leading but not trailing slash
 	 * @param name Repository name, no slashes
 	 * @param localAdminPath The path to the repository locally, for admin tasks, sensitive information
 	 */
@@ -47,6 +47,16 @@ public class CmsRepositoryInspection extends CmsRepository {
 		this.adminPath = localAdminPath;
 	}
 
+	/**
+	 * @param parentPath With leading but not trailing slash
+	 * @param name Repository name, no slashes
+	 * @param localAdminPath The path to the repository locally, for admin tasks, sensitive information
+	 */
+	public CmsRepositoryInspection(String hostname, String parentPath, String name, File localAdminPath) {
+		super(null, hostname, parentPath, name);
+		this.adminPath = localAdminPath;
+	}	
+	
 	/**
 	 * @return the publicly safe information for this repo, i.e. a normal {@link CmsRepository}
 	 */
