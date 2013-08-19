@@ -20,6 +20,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Represents a single repository-wide revision identifier that can be used to identify a baseline.
  * In the Subversion world this is a number that is increased for every commit.
@@ -42,6 +45,8 @@ import java.util.TimeZone;
  */
 public class RepoRevision {
 
+	private static final Logger logger = LoggerFactory.getLogger(RepoRevision.class);
+	
 	private static final DateFormat ISO_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	static {
 		ISO_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -115,7 +120,15 @@ public class RepoRevision {
 		if (!(obj instanceof RepoRevision)) return false;
 		RepoRevision r = (RepoRevision) obj;
 		if (number != r.getNumber()) return false;
-		if (!date.equals(r.getDate())) return false;
+		if (date == null) {
+			logger.warn("Comparing revision {} that lacks timestamp with {}", getNumber(), r);
+			if (r.getDate() != null) return false;
+		} else if (r.getDate() == null) {
+			logger.warn("Comparing {} with revision that lacks timestamp {}", this, r.getNumber());
+			return false;
+		} else {
+			if (!date.equals(r.getDate())) return false;
+		}
 		return true;
 	}
 	

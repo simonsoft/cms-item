@@ -58,4 +58,11 @@ public class RepoRevisionTest {
 		assertFalse(new RepoRevision(1L, new Date(1)).equals(new RepoRevision(1L, new Date(2))));
 	}
 	
+	@Test
+	public void testEqualsNullDate() {
+		assertFalse(new RepoRevision(1L, new Date(1)).equals(new RepoRevision(1L, null)));
+		assertFalse(new RepoRevision(1L, null).equals(new RepoRevision(1L, new Date(1))));
+		assertTrue(new RepoRevision(1L, null).equals(new RepoRevision(1L, null)));
+	}
+	
 }
