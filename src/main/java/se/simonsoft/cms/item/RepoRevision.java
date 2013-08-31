@@ -103,6 +103,30 @@ public class RepoRevision {
 		return ISO_FORMAT.format(getDate());
 	}
 
+	boolean isNumberTimestamp() {
+		return numberIsTimestamp;
+	}
+	
+	public boolean isNewer(RepoRevision than) {
+		if (than.isNumberTimestamp()) {
+			if (getDate() == null) {
+				throw new IllegalArgumentException("Can not compare revisions " + this + " and " + than + " because one lacks timestamp and the other is only a timestamp");
+			}
+			return getDate().after(than.getDate());
+		}
+		if (isNumberTimestamp()) {
+			if (than.getDate() == null) {
+				throw new IllegalArgumentException("Can not compare revisions " + than + " and " + this + " because one lacks timestamp and the other is only a timestamp");
+			}
+			return getDate().after(than.getDate());
+		}
+		return number > than.getNumber();
+	}
+	
+	public boolean isNewerOrEqual(RepoRevision than) {
+		return equals(than) || isNewer(than);
+	}
+	
 	/**
 	 * @return Revision in backend's native format
 	 */

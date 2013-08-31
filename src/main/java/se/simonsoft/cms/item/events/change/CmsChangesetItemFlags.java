@@ -23,10 +23,20 @@ public interface CmsChangesetItemFlags {
 
 	/**
 	 * This is true for {@link #isMove()}s too.
+	 * Only true for the new item, not the source, see {@link #isCopySource()}.
 	 * @return true if the entry is a copy to a new location
 	 */
 	boolean isCopy();
 
+	/**
+	 * For some copy operations, notably all moves, the source is also modified in the changeset.
+	 * For copies with untouched source there might be no copy source in the same changeset.
+	 * There might be multiple copy targets of the same source so this method can not return a path,
+	 * and even if we returned all paths the information is a bit useless when some sources are never reported.
+	 * @return true if there is, in the same commit, an copy with this item as {@link #getCopyFromPath()}
+	 */
+	boolean isCopySource();	
+	
 	/**
 	 * @return true if the item was added, excluding replace
 	 */
@@ -50,6 +60,9 @@ public interface CmsChangesetItemFlags {
 	 * Flags true for deletions if there is one or more additions in the same commit
 	 * with the path AND revision as copy-from. Odd case with historical copy-from revision
 	 * should return false but may not be handled.
+	 * 
+	 * (relaxation: it is ok for backend to not match copy-from revision because
+	 *              it requires complex lookup and is unlikely to mismatch for moves)
 	 * 
 	 * Obviously flags true for move targets. Those have {@link #getCopyFromPath()}.
 	 * 

@@ -65,4 +65,42 @@ public class RepoRevisionTest {
 		assertTrue(new RepoRevision(1L, null).equals(new RepoRevision(1L, null)));
 	}
 	
+	@Test
+	public void testIsNewer() {
+		assertTrue(new RepoRevision(2L, new Date(2)).isNewer(new RepoRevision(1L, new Date(1))));
+		assertFalse(new RepoRevision(2L, new Date(2)).isNewer(new RepoRevision(2L, new Date(2))));
+		assertFalse(new RepoRevision(2L, new Date(2)).isNewer(new RepoRevision(3L, new Date(3))));
+		
+		assertTrue(new RepoRevision(2L, null).isNewer(new RepoRevision(1L, null)));
+		assertFalse(new RepoRevision(2L, null).isNewer(new RepoRevision(2L, null)));
+		
+		Date now = new Date();
+		Date old = new Date(now.getTime() - 9);
+		assertTrue(new RepoRevision(now).isNewer(new RepoRevision(old)));
+		assertFalse(new RepoRevision(now).isNewer(new RepoRevision(now)));
+		
+		assertTrue("Revision number should have precedence because revision timestamp is, in svn, only a revprop and might be out of sync in for example merged repositories",
+				new RepoRevision(2L, new Date(2L)).isNewer(new RepoRevision(1L, new Date(3))));
+		assertFalse(new RepoRevision(1L, new Date(3)).isNewer(new RepoRevision(2L, new Date(2))));
+		
+		assertTrue(new RepoRevision(2L, now).isNewer(new RepoRevision(old)));
+		assertFalse(new RepoRevision(2L, now).isNewer(new RepoRevision(now)));
+		assertFalse(new RepoRevision(old).isNewer(new RepoRevision(2L, now)));
+		assertTrue(new RepoRevision(now).isNewer(new RepoRevision(2L, old)));
+		
+		try {
+			new RepoRevision(1, null).isNewer(new RepoRevision(now));
+			fail("can't be comparable");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+		
+		try {
+			new RepoRevision(now).isNewer(new RepoRevision(1, null));
+			fail("can't be comparable");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+	}
+	
 }
