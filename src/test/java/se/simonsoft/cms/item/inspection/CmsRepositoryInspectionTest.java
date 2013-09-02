@@ -47,5 +47,12 @@ public class CmsRepositoryInspectionTest {
 			// expected
 		}
 	}
+	
+	@Test
+	public void testFromHostname() {
+		File p = new File("/tmp/repo2");
+		CmsRepositoryInspection r1 = new CmsRepositoryInspection("https", "a.host:222", "/parent", "reponame", p);
+		assertEquals("https://a.host:222/parent/reponame", r1.getUrl());
+	}
 
 }
