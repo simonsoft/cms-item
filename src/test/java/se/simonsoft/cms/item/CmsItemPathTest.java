@@ -458,5 +458,23 @@ public class CmsItemPathTest {
 		assertEquals("/ab/f", "" + p.get(5));
 	}
 
+	@Test
+	public void testRoot() {
+		assertNotNull(CmsItemPath.ROOT);
+		assertNull("For backwards compatibility getParent of root sub-item must still return null", new CmsItemPath("/dir").getParent());
+		assertEquals("Root path is undefined as string", null, CmsItemPath.ROOT.getPath());
+		assertEquals(0, CmsItemPath.ROOT.getPathSegmentsCount());
+		assertNotNull(CmsItemPath.ROOT.getPathSegments());
+		assertEquals(0, CmsItemPath.ROOT.getPathSegments().size());
+		try {
+			CmsItemPath.ROOT.getParent();
+		} catch (IllegalStateException e) {
+			assertEquals("Attempt to get parent for root path", e.getMessage());
+		}
+		assertEquals(new CmsItemPath("/dir"), CmsItemPath.ROOT.append("dir"));
+		assertEquals("", CmsItemPath.ROOT.toString());
+		assertTrue(CmsItemPath.ROOT.equals(CmsItemPath.ROOT));
+		assertEquals(CmsItemPath.ROOT, CmsItemPath.ROOT);
+	}
 
 }

@@ -56,12 +56,21 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 	private static final Pattern VALID_SEGMENT_PATTERN = Pattern.compile('^' + VALID_SEGMENT + '$');
 	private static final String VALID_PATH = "(/" + VALID_SEGMENT + ")+";
 	private static final Pattern VALID_PATH_PATTERN = Pattern.compile('^' + VALID_PATH + '$');
+
+	public static CmsItemPath ROOT = new CmsItemPath();
 	
 	private String path;
 	
 	// simple performance improvement for repeated list operations
 	private transient List<String> pathList = null;
 
+	/**
+	 * Creates root path.
+	 */
+	private CmsItemPath() {
+		this.path = "";
+	}
+	
 	/**
 	 * @param path with leading slash, trailing slash will be trimmed
 	 * @throws IllegalArgumentException for invalid path such as containing double slashes
@@ -77,6 +86,9 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 	}
 	
 	public String getPath() {
+		if (this == CmsItemPath.ROOT) {
+			return null;
+		}
 		return path;
 	}
 	
@@ -151,13 +163,16 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 	 * @return the number of parth segments, 1 or more
 	 */
 	public int getPathSegmentsCount() {
-		return getPathSegmentsArray().length; // could be made more efficent when someone has time to spend on that
+		return getPathSegments().size();
 	}
 	
 	/** Provides the whole path as an array of path segments.
 	 * @return
 	 */
 	private String[] getPathSegmentsArray() {
+		if (this == CmsItemPath.ROOT) {
+			return new String[]{};
+		}
 		return getPathTrimmed().split("/");
 	}
 	
@@ -242,6 +257,9 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 	 * @return parent path or null if the path has only one segment (root is undefined)
 	 */
 	public CmsItemPath getParent() {
+		if (this == CmsItemPath.ROOT) {
+			throw new IllegalStateException("Attempt to get parent for root path");
+		}
 		// BrowseEntry.getPathParent
 		String noslashPath = getPathTrimmed();
 		int lastIdx = noslashPath.lastIndexOf('/');
@@ -257,6 +275,9 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 	 * @return all paths in order from top level to immediate parent
 	 */
 	public List<CmsItemPath> getAncestors() {
+		if (this == CmsItemPath.ROOT) {
+			throw new IllegalStateException("Attempt to get ancestors for root path");
+		}
 		List<CmsItemPath> list = new LinkedList<CmsItemPath>();
 		CmsItemPath p = this.getParent();
 		while (p != null) {
@@ -361,6 +382,7 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 	
 	@Override
 	public boolean equals(Object obj) {
+		if (this == CmsItemPath.ROOT) return obj == CmsItemPath.ROOT;
 		return obj instanceof CmsItemPath && path.equals(((CmsItemPath) obj).getPath());
 	}
 
