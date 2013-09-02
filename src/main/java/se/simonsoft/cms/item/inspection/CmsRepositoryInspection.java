@@ -52,7 +52,7 @@ public class CmsRepositoryInspection extends CmsRepository {
 	 * @param name Repository name, no slashes
 	 * @param localAdminPath The path to the repository locally, for admin tasks, sensitive information
 	 */
-	public CmsRepositoryInspection(String hostname, String parentPath, String name, File localAdminPath) {
+	public CmsRepositoryInspection(String protocol, String hostname, String parentPath, String name, File localAdminPath) {
 		super(null, hostname, parentPath, name);
 		this.adminPath = localAdminPath;
 	}	
