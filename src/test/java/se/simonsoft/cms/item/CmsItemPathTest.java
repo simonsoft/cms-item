@@ -460,6 +460,7 @@ public class CmsItemPathTest {
 
 	@Test
 	public void testRoot() {
+		// important: No method should return the ROOT instance.
 		assertNotNull(CmsItemPath.ROOT);
 		assertNull("For backwards compatibility getParent of root sub-item must still return null", new CmsItemPath("/dir").getParent());
 		assertEquals("Root path is undefined as string", null, CmsItemPath.ROOT.getPath());
@@ -475,6 +476,7 @@ public class CmsItemPathTest {
 		assertEquals("", CmsItemPath.ROOT.toString());
 		assertTrue(CmsItemPath.ROOT.equals(CmsItemPath.ROOT));
 		assertEquals(CmsItemPath.ROOT, CmsItemPath.ROOT);
+		assertFalse("equals method should give the same result in both directions", CmsItemPath.ROOT.equals(null));
 	}
 
 }

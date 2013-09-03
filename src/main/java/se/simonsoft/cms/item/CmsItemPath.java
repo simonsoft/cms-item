@@ -57,6 +57,11 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 	private static final String VALID_PATH = "(/" + VALID_SEGMENT + ")+";
 	private static final Pattern VALID_PATH_PATTERN = Pattern.compile('^' + VALID_PATH + '$');
 
+	/**
+	 * For use only when CmsItemPath is the key in maps, where null is not useful.
+	 * No methods should return ROOT, for example {@link #getParent()} returns null for items inside root.
+	 * Note that ROOT.equals(null) is false because it is not reversible.
+	 */
 	public static CmsItemPath ROOT = new CmsItemPath();
 	
 	private String path;
