@@ -39,6 +39,9 @@ public class CmsItemIdUrl extends CmsItemIdBase {
 	}
 	
 	public CmsItemIdUrl(CmsRepository repository, CmsItemPath targetPath, Long pegRev) {
+		if (targetPath == CmsItemPath.ROOT) {
+			throw new IllegalArgumentException("Root path should be represented with null value in CmsItemId");
+		}
 		this.repository = repository;
 		this.path = targetPath;
 		this.pegRev = pegRev;
