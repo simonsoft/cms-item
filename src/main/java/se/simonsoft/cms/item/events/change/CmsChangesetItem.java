@@ -43,6 +43,12 @@ public interface CmsChangesetItem extends CmsChangesetItemFlags {
 	CmsItemPath getPath();
 	
 	/**
+	 * @return 0 for folders, size in bytes for files
+	 * @throws IllegalArgumentException if the item is a folder
+	 */
+	long getFilesize();
+	
+	/**
 	 * Note that this revision survives copy/move 
 	 * (when there is a {@link #getCopyFromPath()}) unchanged,
 	 * unless there are actually modifications to content or properties.
