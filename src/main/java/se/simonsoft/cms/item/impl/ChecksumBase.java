@@ -44,11 +44,23 @@ public abstract class ChecksumBase implements Checksum {
 	 */
 	@Override
 	public boolean equals(Object obj) {
+		boolean gotone = false;
+		boolean gotmd5 = false;
+		boolean gotsha1 = false;
 		if (obj instanceof Checksum) {
-			String t = concat(this);
-			if (t.length() > 0) return t.equals(concat((Checksum) obj));
+			Checksum o = (Checksum) obj;
+			for (Algorithm a : Algorithm.values()) {
+				if (this.has(a) && o.has(a)) {
+					if (!this.getHex(a).equals(o.getHex(a))) {
+						return false;
+					}
+					gotone = true;
+					if (a == Algorithm.MD5) gotmd5 = true;
+					if (a == Algorithm.SHA1) gotsha1 = true;
+				}
+			}
 		}
-		return false;
+		return gotone && gotmd5 && gotsha1;
 	}
 
 	@Override

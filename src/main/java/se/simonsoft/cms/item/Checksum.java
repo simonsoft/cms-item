@@ -24,9 +24,22 @@ public interface Checksum {
 	 * Digest algorithm names.
 	 */
 	public enum Algorithm {
+		MD5,
 		SHA1,
-		MD5
+		SHA256;
+		/**
+		 * @return name used in {@link java.security.MessageDigest}
+		 */
+		public String getJavaName() {
+			if (this == SHA256) return "SHA-256";
+			return super.toString();
+		}
 	}
+	
+	/**
+	 * Default algorithm set if nothig else is specified.
+	 */
+	public static final Algorithm[] DEFAULT = new Algorithm[]{ Algorithm.MD5, Algorithm.SHA1 };
 
 	/**
 	 * @param algorithm a digest method

@@ -56,14 +56,14 @@ public class ChecksumRead extends ChecksumBase implements Checksum {
 	 * The list might grow in the future, if performance is critical use {@link #ChecksumRead(Algorithm...)}.
 	 */
 	public ChecksumRead() {
-		this(Algorithm.values());
+		this(DEFAULT);
 	}
 	
 	public ChecksumRead(Algorithm... algorithms) {
 		d = new TreeMap<Algorithm, MessageDigest>();
 		for (Algorithm a : algorithms) {
 			try {
-				d.put(a, MessageDigest.getInstance(a.toString()));
+				d.put(a, MessageDigest.getInstance(a.getJavaName()));
 			} catch (NoSuchAlgorithmException e) {
 				throw new RuntimeException("Failed to initialize checksum algorithm " + a, e);
 			}

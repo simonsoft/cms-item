@@ -96,4 +96,26 @@ public class ChecksumBaseTest {
 		assertTrue("got: " + c1, c1.toString().contains("SHA1=da39a3ee5e6b4b0d3255bfef95601890afd80709"));
 	}
 	
+	@Test
+	public void testEqualsThird() throws IOException {
+		InputStream source = new ByteArrayInputStream("testing\n".getBytes());
+		Checksum c1 = new ChecksumRead(Algorithm.MD5, Algorithm.SHA1, Algorithm.SHA256).add(source);
+		Checksum c2 = mock(Checksum.class);
+		when(c2.has(Algorithm.MD5)).thenReturn(true);
+		when(c2.has(Algorithm.SHA1)).thenReturn(true);
+		when(c2.getHex(Algorithm.MD5)).thenReturn(c1.getMd5());
+		when(c2.getHex(Algorithm.SHA1)).thenReturn(c1.getSha1());
+		// this is for backwards compatibility, but also reasonable with respect to the low risk of collitions when two algorithms are used		
+		assertTrue("Should be equals even though the algorithm set differs because the default set of algorithms are same", c1.equals(c2));
+		assertTrue(c1.equalsKnown(c2));
+		Checksum c3 = mock(Checksum.class);
+		when(c3.has(Algorithm.MD5)).thenReturn(true);
+		when(c3.has(Algorithm.SHA1)).thenReturn(true);
+		when(c3.getHex(Algorithm.MD5)).thenReturn(c1.getMd5());
+		when(c3.getHex(Algorithm.SHA1)).thenReturn(c1.getSha1());
+		when(c3.has(Algorithm.SHA256)).thenReturn(true);
+		when(c3.getHex(Algorithm.SHA256)).thenReturn("someothercheksum");
+		assertFalse("Should not be equal because there is an algorithm with different checksums", c1.equals(c3));
+	}
+	
 }
