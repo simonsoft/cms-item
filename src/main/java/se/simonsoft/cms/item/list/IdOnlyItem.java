@@ -72,9 +72,4 @@ public class IdOnlyItem implements CmsItem {
 		throw new UnsupportedOperationException("Only the ID is available for " + id);
 	}
 
-	@Override
-	public CmsItemLock getLock() {
-		throw new UnsupportedOperationException("Only the ID is available for " + id);
-	}
-
 }
