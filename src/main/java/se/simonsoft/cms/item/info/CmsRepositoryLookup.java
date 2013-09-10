@@ -17,6 +17,7 @@ package se.simonsoft.cms.item.info;
 
 import java.util.Date;
 
+import se.simonsoft.cms.item.CmsItemLockCollection;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
 
@@ -46,5 +47,12 @@ public interface CmsRepositoryLookup {
 	 */
 	Date getRevisionTimestamp(CmsRepository repository, Object nativeRevisionId) 
 			throws IllegalArgumentException, CmsConnectionException, CmsItemNotFoundException;
+	
+	
+	/**
+	 * Returns items that are currently locked in the repository.
+	 * @param repository the repository to check
+	 */
+	CmsItemLockCollection getLocked(CmsRepository repository);
 	
 }

@@ -39,7 +39,7 @@ public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
 	private String historyMessage = null;
 	private boolean keepLocks = false;
 	private Map<CmsItemPath, CmsCommitChange> map = new HashMap<CmsItemPath, CmsCommitChange>(); // to simplify validation, may waste a bit of memory but probably negligible
-	private Map<String, String> locks = new HashMap<String, String>();
+	private Map<CmsItemPath, CmsItemLock> locks = new HashMap<CmsItemPath, CmsItemLock>();
 	
 	public CmsCommitChangeset() {
 		this(BASE_OVERWRITE);
@@ -83,7 +83,7 @@ public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
 	 */
 	public void add(CmsCommitChange change, CmsItemLock lock) {
 		add(change);
-		addLock(change.getPath(), lock);
+		addLock(lock);
 	}
 	
 	public String getHistoryMessage() {
@@ -113,28 +113,13 @@ public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
 	/**
 	 * @return paths mapped to lock tokens, for backend operations
 	 */
-	public Map<String, String> getLocks() {
+	public Map<CmsItemPath, CmsItemLock> getLocks() {
 		return locks;
 	}
 	
-	/**
-	 * Get all locks under a folder
-	 * @param ancestor
-	 * @return
-	 */
-	//public Map<String, CmsItemLock> getLocks(CmsItemPath ancestor) {
-	//	return locks;
-	//}
-
-	public void setLocks(Map<CmsItemPath, CmsItemLock> locks) {
-		locks.clear();
-		for (CmsItemPath p : locks.keySet()) {
-			addLock(p, locks.get(p));
-		}
-	}
 	
-	public void addLock(CmsItemPath path, CmsItemLock lock) {
-		locks.put(path.getPath(), lock.getID());
+	public void addLock(CmsItemLock lock) {
+		locks.put(lock.getItemId().getRelPath(), lock);
 	}
 
 }

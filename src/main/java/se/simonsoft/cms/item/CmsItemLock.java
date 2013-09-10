@@ -34,12 +34,17 @@ public interface CmsItemLock {
 	/**
 	 * @return the lock token
 	 */
-	String getID();
+	String getToken();
 	
 
 	/**
 	 * @return username
 	 */
-	String getOwner(); 
+	String getOwner();
+
+	/**
+	 * @return itemId
+	 */
+	CmsItemId getItemId(); 
 	
 }
