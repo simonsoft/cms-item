@@ -19,6 +19,7 @@ import java.util.Set;
 
 import se.simonsoft.cms.item.CmsItem;
 import se.simonsoft.cms.item.CmsItemId;
+import se.simonsoft.cms.item.CmsItemLockCollection;
 
 /**
  * Provides access to CMS contents using repository, indexing, working copy, caching or a combination.
@@ -92,8 +93,9 @@ public interface CmsItemLookup extends se.simonsoft.cms.item.CmsItemLookup {
 	
 	/**
 	 * Returns items that are currently locked.
-	 * @param query Filtering
+	 * Currently doing filtering in result. 
+	 * Could do simple path filtering with an alternate method, if required for performance.
 	 */
-	Set<CmsItemId> getLocked(CmsLockQuery query);
+	CmsItemLockCollection getLocked();
 	
 }

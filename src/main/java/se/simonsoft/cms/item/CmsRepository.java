@@ -15,6 +15,7 @@
  */
 package se.simonsoft.cms.item;
 
+import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,8 +27,10 @@ import se.simonsoft.cms.item.impl.CmsItemIdUrl;
  * We recommend against using non-ascii characters in hostname, parent path or repository name,
  * but this class does not care if path elements are encoded or not, it returns them as given.
  */
-public class CmsRepository {
+public class CmsRepository implements Serializable {
 
+
+	private static final long serialVersionUID = 1L;
 	private static final Pattern P_ROOT = Pattern.compile("(https?)://([^/]+)");
 	private static final Pattern P_URL = Pattern.compile("(https?)://([^/]+)(.*)/([^/]+)");
 	private String protocol;

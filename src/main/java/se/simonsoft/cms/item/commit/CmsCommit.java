@@ -16,6 +16,7 @@
 package se.simonsoft.cms.item.commit;
 
 import se.simonsoft.cms.item.CmsItemLock;
+import se.simonsoft.cms.item.CmsItemLockCollection;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 
@@ -37,7 +38,7 @@ public interface CmsCommit {
 	 * @return identical Lock for all items (TODO is this the same token?)
 	 * @throws CmsItemLockedException If a path is already locked
 	 */
-	public CmsItemLock lock(String message, RepoRevision base, CmsItemPath... item) throws CmsItemLockedException;
+	public CmsItemLockCollection lock(String message, RepoRevision base, CmsItemPath... item) throws CmsItemLockedException;
 	
 	/**
 	 * Release lock on item without making a commit.

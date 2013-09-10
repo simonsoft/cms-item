@@ -18,9 +18,7 @@ package se.simonsoft.cms.item;
 import java.util.Date;
 
 /**
- * Ideas on locking, from CmsItem#getLock.
- * API mimics svn_lock_t struct but does not have a path because to us the relation is from item to lock,
- * and abstractions may allow many items to share the same lock.
+ * API mimics svn_lock_t struct but does not have a path because to us the relation is from item/path to lock.
  */
 public interface CmsItemLock {
 
@@ -38,18 +36,6 @@ public interface CmsItemLock {
 	 */
 	String getID();
 	
-	/**
-	 * Allows backend to have different lock tokens per path
-	 * but lock multiple items in a single operation.
-	 * Single item instances should return same as {@link #getID()}
-	 * but ideally validate that the item matches.
-	 * If multi-path lock is supported only within a repository
-	 * it is ok to use only the path from the item and not vaidate repository.
-	 * @param item The item to get lock token for
-	 * @return the lock token
-	 * @throws IllegalArgumentException if the item was not part of the lock
-	 */
-	String getID(CmsItemId item);
 
 	/**
 	 * @return username
