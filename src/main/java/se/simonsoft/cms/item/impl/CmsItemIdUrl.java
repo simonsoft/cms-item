@@ -34,6 +34,14 @@ public class CmsItemIdUrl extends CmsItemIdBase {
 	private CmsRepository repository;
 	private Long pegRev;
 
+	/**
+	 * The repository root id.
+	 * @param repository
+	 */
+	public CmsItemIdUrl(CmsRepository repository) {
+		this(repository, null, null);
+	}	
+	
 	public CmsItemIdUrl(CmsRepository repository, CmsItemPath targetPath) {
 		this(repository, targetPath, null);
 	}

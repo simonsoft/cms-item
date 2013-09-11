@@ -150,7 +150,7 @@ public class CmsItemIdUrlTest {
 	
 	@Test
 	public void testRoot() {
-		CmsItemId root = new CmsItemIdUrl(repo1, (CmsItemPath) null);
+		CmsItemId root = new CmsItemIdUrl(repo1);
 		assertEquals("support representatino of repository root", null, root.getRelPath());
 		assertEquals(repo1.getUrl(), root.getUrl());
 		assertEquals(repo1.getUrl(), root.toString());

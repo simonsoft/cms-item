@@ -42,7 +42,7 @@ public class CmsItemLockImpl implements CmsItemLock, Serializable {
 		this.expires = expires;
 				
 	}
-	
+
 	@Override
 	public CmsItemId getItemId() {
 		return itemId;
@@ -76,6 +76,63 @@ public class CmsItemLockImpl implements CmsItemLock, Serializable {
 	public String getOwner() {
 
 		return owner;
+	}
+	
+	// generated, trusting that CmsItemId hashCode is implemented
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((comment == null) ? 0 : comment.hashCode());
+		result = prime * result + ((created == null) ? 0 : created.hashCode());
+		result = prime * result + ((expires == null) ? 0 : expires.hashCode());
+		result = prime * result + ((itemId == null) ? 0 : itemId.hashCode());
+		result = prime * result + ((owner == null) ? 0 : owner.hashCode());
+		result = prime * result + ((token == null) ? 0 : token.hashCode());
+		return result;
+	}
+
+	// generated, trusting that CmsItemId hashCode is implemented
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		CmsItemLockImpl other = (CmsItemLockImpl) obj;
+		if (comment == null) {
+			if (other.comment != null)
+				return false;
+		} else if (!comment.equals(other.comment))
+			return false;
+		if (created == null) {
+			if (other.created != null)
+				return false;
+		} else if (!created.equals(other.created))
+			return false;
+		if (expires == null) {
+			if (other.expires != null)
+				return false;
+		} else if (!expires.equals(other.expires))
+			return false;
+		if (itemId == null) {
+			if (other.itemId != null)
+				return false;
+		} else if (!itemId.equals(other.itemId))
+			return false;
+		if (owner == null) {
+			if (other.owner != null)
+				return false;
+		} else if (!owner.equals(other.owner))
+			return false;
+		if (token == null) {
+			if (other.token != null)
+				return false;
+		} else if (!token.equals(other.token))
+			return false;
+		return true;
 	}
 
 }

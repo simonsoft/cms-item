@@ -15,7 +15,6 @@
  */
 package se.simonsoft.cms.item.commit;
 
-import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 

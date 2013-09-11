@@ -21,7 +21,9 @@ import java.util.List;
 import java.util.Map;
 
 import se.simonsoft.cms.item.CmsItemLock;
+import se.simonsoft.cms.item.CmsItemLockCollection;
 import se.simonsoft.cms.item.CmsItemPath;
+import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
 
 /**
@@ -39,7 +41,7 @@ public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
 	private String historyMessage = null;
 	private boolean keepLocks = false;
 	private Map<CmsItemPath, CmsCommitChange> map = new HashMap<CmsItemPath, CmsCommitChange>(); // to simplify validation, may waste a bit of memory but probably negligible
-	private Map<CmsItemPath, CmsItemLock> locks = new HashMap<CmsItemPath, CmsItemLock>();
+	private Locks locks = new Locks();
 	
 	public CmsCommitChangeset() {
 		this(BASE_OVERWRITE);
@@ -107,19 +109,28 @@ public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
 	}
 	
 	public boolean isLockSet(CmsItemPath cmsItemPath) {
-		return getLocks().containsKey(cmsItemPath.getPath());
+		return getLocks().containsPath(cmsItemPath);
 	}
 	
 	/**
 	 * @return paths mapped to lock tokens, for backend operations
 	 */
-	public Map<CmsItemPath, CmsItemLock> getLocks() {
+	public CmsItemLockCollection getLocks() {
 		return locks;
 	}
 	
-	
 	public void addLock(CmsItemLock lock) {
-		locks.put(lock.getItemId().getRelPath(), lock);
+		locks.add(lock);
 	}
 
+	private class Locks extends CmsItemLockCollection {
+		public Locks() {
+			super(null); // TODO require repository for changeset or accept null for lock collection
+		}
+		private static final long serialVersionUID = 1L;
+		public void add(CmsItemLock lock) {
+			super.add(lock);
+		}
+	}
+	
 }

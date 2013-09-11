@@ -42,10 +42,10 @@ public interface CmsCommit {
 	
 	/**
 	 * Release lock on item without making a commit.
-	 * Assumes that the application guards against unintentional lock breaking.
+	 * Assumes that the caller guards against unintentional lock breaking.
 	 * @param item to be unlocked
 	 * @param lock with the token for unlock, breaks lock if different user than authenticated
 	 */
-	public void unlock(CmsItemLock lock, CmsItemPath... item);
+	public void unlock(CmsItemLock... lock);
 	
 }
