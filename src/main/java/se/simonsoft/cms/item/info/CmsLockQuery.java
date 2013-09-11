@@ -27,7 +27,10 @@ public class CmsLockQuery {
 	public CmsItemId getParent() {
 		return parent;
 	}
+	
 	/**
+	 * 
+	 * Revision information in the id is ignored.
 	 * @param parent only get locks on or (if a folder) under this item
 	 * @return for chaining
 	 */
