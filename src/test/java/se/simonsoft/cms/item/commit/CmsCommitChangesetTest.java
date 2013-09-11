@@ -23,9 +23,12 @@ import java.util.Date;
 
 import org.junit.Test;
 
+import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
+import se.simonsoft.cms.item.impl.CmsItemIdArg;
+import se.simonsoft.cms.item.impl.CmsItemLockImpl;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
 public class CmsCommitChangesetTest {
@@ -76,12 +79,12 @@ public class CmsCommitChangesetTest {
 		CmsCommitChangeset c = new CmsCommitChangeset();
 		RepoRevision r = new RepoRevision(3, new Date(3));
 		assertFalse(c.isLocksSet());
-		CmsItemLock lock1 = mock(CmsItemLock.class);
+		CmsItemLock lock1 = new CmsItemLockImpl(new CmsItemIdArg("x-svn:///svn/r^/p2"), "t", "", "", new Date(), null);
 		c.add(new FileDelete(new CmsItemPath("/p2"), r), lock1);
 		assertTrue(c.isLocksSet());
 		assertTrue(c.isLockSet(new CmsItemPath("/p2")));
 		assertEquals(1, c.getLocks().size());
-		CmsItemLock lock2 = mock(CmsItemLock.class);
+		CmsItemLock lock2 = new CmsItemLockImpl(new CmsItemIdArg("x-svn:///svn/r^/p3"), "t", "", "", new Date(), null);
 		c.add(new FileDelete(new CmsItemPath("/p3"), r), lock2);
 		assertEquals(2, c.getLocks().size());
 		

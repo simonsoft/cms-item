@@ -52,7 +52,17 @@ public abstract class CmsItemLockCollection implements Serializable, Iterable<Cm
 			throw new IllegalArgumentException("requested itemId does not match CmsRepository");
 		}
 		
-		map.put(itemLock.getItemId().getRelPath(), itemLock);
+		if (contains(itemLock)) {
+			throw new IllegalArgumentException("Duplicate lock information at " + itemLock.getItemId());
+		}
+		
+		CmsItemPath path = itemLock.getItemId().getRelPath();
+		
+		if (repository != null && containsPath(path)) {
+			throw new IllegalArgumentException("Duplicate lock path " + path + " in the same repository");
+		}
+		
+		map.put(path, itemLock);
 	}
 	
 	protected CmsRepository getRepository() {
