@@ -32,6 +32,18 @@ public enum CmsItemKind {
 	Symlink;
 	
 	/**
+	 * Like {@link #valueOf(String)} but fixes case and supports svn's "dir"
+	 * @param kind recognizable string
+	 * @return cms kind
+	 */
+	public static CmsItemKind fromString(String kind) {
+		if ("dir".equals(kind)) {
+			return Folder;
+		}
+		return valueOf(kind.substring(0, 1).toUpperCase() + kind.substring(1).toLowerCase());
+	}
+	
+	/**
 	 * @return subversion's "kind" string (but maybe not for symlink)
 	 */
 	public String getKind() {

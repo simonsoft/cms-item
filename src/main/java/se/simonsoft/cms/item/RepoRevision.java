@@ -16,6 +16,7 @@
 package se.simonsoft.cms.item;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
@@ -159,6 +160,43 @@ public class RepoRevision {
 	@Override
 	public int hashCode() {
 		return (int) (getNumber() % Integer.MAX_VALUE);
+	}
+
+	/**
+	 * 
+	 * @param isoDateString
+	 * @return
+	 * @throws IllegalArgumentException if parse failed
+	 */
+	public static Date parse(String isoDateString) {
+		if (isoDateString == null) {
+			throw new IllegalArgumentException("Can't parse date null");
+		}
+		if (isoDateString.length() < 20) {
+			throw new IllegalArgumentException("Date '" + isoDateString + "' is too short to be an ISO timestamp");
+		}
+		long n = 0L;
+		String nanos = isoDateString.substring(20);
+		if (nanos.length() > 0) {
+			if (!nanos.endsWith("Z")) {
+				throw new IllegalArgumentException("ISO timestamp string expected to end with Z (i.e. be UTC), got " + isoDateString);
+			}
+			nanos = nanos.substring(0, nanos.length() - 1);
+			if (nanos.length() == 3) {
+				n = 1000 * Long.parseLong(nanos);
+			} else if (nanos.length() == 6) {
+				n = Long.parseLong(nanos);
+			} else if (nanos.length() != 0) {
+				throw new IllegalArgumentException("Unexpected milli/nanosecond part of iso timestamp " + isoDateString + ", " + nanos);
+			}
+		}
+		Date parsed = null;
+		try {
+			parsed = ISO_FORMAT.parse(isoDateString.substring(0, 20) + "Z");
+		} catch (ParseException e) {
+			throw new IllegalArgumentException("Date '" + isoDateString + "' not parseable using " + ISO_FORMAT);
+		}
+		return new Date(parsed.getTime() + n/1000);
 	}
 	
 }

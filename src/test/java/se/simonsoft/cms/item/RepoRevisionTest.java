@@ -103,4 +103,12 @@ public class RepoRevisionTest {
 		}
 	}
 	
+	@Test
+	public void testParseISO() {
+		RepoRevision.parse("2012-10-03T03:53:54.616837Z");
+		assertEquals(1000L, RepoRevision.parse("1970-01-01T00:00:01Z").getTime());
+		assertEquals(1002L, RepoRevision.parse("1970-01-01T00:00:01.002Z").getTime());
+		assertEquals(1003L, RepoRevision.parse("1970-01-01T00:00:01.003000Z").getTime());
+	}
+	
 }

@@ -23,7 +23,8 @@ public class CmsItemKindTest {
 
 	@Test
 	public void testGetKind() {
-		assertEquals("toString should have uppercase first because there's always toLowerCase",
+		assertEquals(
+				"toString should have uppercase first because there's always toLowerCase",
 				"File", CmsItemKind.File.toString());
 		assertEquals("file", CmsItemKind.File.getKind());
 		assertEquals("dir", CmsItemKind.Folder.getKind());
@@ -38,6 +39,14 @@ public class CmsItemKindTest {
 		assertFalse(CmsItemKind.File.isFolder());
 		assertTrue(CmsItemKind.Folder.isFolder());
 		assertTrue(CmsItemKind.Repository.isFolder());
+	}
+
+	@Test
+	public void testFromString() {
+		assertEquals(CmsItemKind.File, CmsItemKind.fromString("File"));
+		assertEquals(CmsItemKind.File, CmsItemKind.fromString("file"));
+		assertEquals(CmsItemKind.Folder, CmsItemKind.fromString("folder"));
+		assertEquals(CmsItemKind.Folder, CmsItemKind.fromString("dir"));
 	}
 
 }
