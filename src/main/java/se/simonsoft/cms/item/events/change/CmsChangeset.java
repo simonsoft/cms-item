@@ -66,7 +66,8 @@ public interface CmsChangeset {
 	 * Only derived mode is required to behave similar in all impls.
 	 * 
 	 * @return true if the service derives all changes (even if there are none),
-	 *  false if it returns only those reported by the backend
+	 *  false if it returns only those reported by the backend,
+	 *  true if derive is not applicable with the running backend (i.e. all items are by design included)
 	 */
 	boolean isDeriveEnabled();
 	
