@@ -134,7 +134,7 @@ public class RepoRevision {
 	@Override
 	public String toString() {
 		if (numberIsTimestamp) {
-			return getDateIso();
+			return getDateIso() + "Z";
 		}
 		return Long.toString(number); 
 	}

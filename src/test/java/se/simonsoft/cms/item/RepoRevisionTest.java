@@ -38,7 +38,7 @@ public class RepoRevisionTest {
 		DateFormat parse = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 		// In practice no svn repository used by humans will get this many revisions
 		RepoRevision r = new RepoRevision(parse.parse("1990-01-01T00:00:00.000+0000"));
-		assertEquals("1990-01-01T00:00:00", r.toString());
+		assertEquals("1990-01-01T00:00:00Z", r.toString());
 		assertEquals("Must always provide a number, instead of changing API to return Long with null possible",
 				631152000000L, r.getNumber());
 		try {
