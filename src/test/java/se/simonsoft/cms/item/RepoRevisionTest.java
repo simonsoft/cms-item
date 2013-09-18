@@ -21,6 +21,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TreeSet;
 
 import org.junit.Test;
 
@@ -109,6 +110,18 @@ public class RepoRevisionTest {
 		assertEquals(1000L, RepoRevision.parse("1970-01-01T00:00:01Z").getTime());
 		assertEquals(1002L, RepoRevision.parse("1970-01-01T00:00:01.002Z").getTime());
 		assertEquals(1003L, RepoRevision.parse("1970-01-01T00:00:01.003000Z").getTime());
+	}
+	
+	@Test
+	public void testCompare() {
+		TreeSet<RepoRevision> s = new TreeSet<RepoRevision>();
+		s.add(new RepoRevision(5L, null));
+		s.add(new RepoRevision(4L, null));
+		assertEquals(4, s.first().getNumber());
+		assertEquals(5, s.last().getNumber());
+		s.add(new RepoRevision(7L, new Date(107)));
+		s.add(new RepoRevision(6L, new Date(108)));
+		assertEquals("As for isNewer, revision number should have precedence", 7, s.last().getNumber());
 	}
 	
 }

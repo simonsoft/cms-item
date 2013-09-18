@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
  * File systems also allow abitrary modification of time stamps.
  * It should be assumed that the underlying storage is well managed. 
  */
-public class RepoRevision {
+public class RepoRevision implements Comparable<RepoRevision> {
 
 	private static final Logger logger = LoggerFactory.getLogger(RepoRevision.class);
 	
@@ -162,6 +162,18 @@ public class RepoRevision {
 		return (int) (getNumber() % Integer.MAX_VALUE);
 	}
 
+	@Override
+	public int compareTo(RepoRevision o) {
+		if (equals(o)) {
+			return 0;
+		}
+		if (isNewer(o)) {
+			return 1;
+		} else {
+			return -1;
+		}
+	}	
+	
 	/**
 	 * 
 	 * @param isoDateString
@@ -198,5 +210,5 @@ public class RepoRevision {
 		}
 		return new Date(parsed.getTime() + n/1000);
 	}
-	
+
 }
