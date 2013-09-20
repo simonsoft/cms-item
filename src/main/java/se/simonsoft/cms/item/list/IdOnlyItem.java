@@ -21,7 +21,6 @@ import se.simonsoft.cms.item.Checksum;
 import se.simonsoft.cms.item.CmsItem;
 import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemKind;
-import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
@@ -47,6 +46,11 @@ public class IdOnlyItem implements CmsItem {
 	}
 
 	@Override
+	public String getRevisionChangedAuthor() {
+		throw new UnsupportedOperationException("Only the ID is available for " + id);
+	}
+	
+	@Override
 	public CmsItemKind getKind() {
 		throw new UnsupportedOperationException("Only the ID is available for " + id);
 	}
@@ -66,6 +70,12 @@ public class IdOnlyItem implements CmsItem {
 		throw new UnsupportedOperationException("Only the ID is available for " + id);
 	}
 
+	@Override
+	public long getFilesize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
 	@Override
 	public void getContents(OutputStream receiver)
 			throws UnsupportedOperationException {

@@ -31,6 +31,8 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
  * 
  * In particular we must support reading of {@link CmsChangesetItem}
  * followed by the item from {@link CmsChangesetItem#getPreviousChange()}.
+ * 
+ * TODO this service should be per-repository instead, avoiding the need for passing around inspection and allowing different impls per repository
  */
 public interface CmsContentsReader {
 
@@ -41,9 +43,15 @@ public interface CmsContentsReader {
 	/**
 	 * TODO draft, support changeset diff? support item diff? support revision range item diff?
 	 * Can this be done with svnlook or do we need to parse the full changeset diff?
+	 * 
 	 * Maybe diff is better suited for inclusion in the Changeset API,
 	 * supporting a changeset viewer like the one in Trac.
+	 * 
+	 * Diff might be a Map&lt;CmsItemPath, Iterable&lt;? extends DiffLine&gt;&gt;.
+	 * 
+	 * @deprecated Pending design, can not return anything
 	 */
+	//void getDiff(CmsRepositoryInspection repository, RepoRevision revision, OutputStream out);
 	void getDiff();
 	
 }

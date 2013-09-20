@@ -19,6 +19,10 @@ import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.events.change.CmsChangeset;
 import se.simonsoft.cms.item.events.change.CmsChangesetItem;
 
+/**
+ * 
+ * TODO this service should be per-repository instead, avoiding the need for passing around inspection and allowing different impls per repository
+ */
 public interface CmsChangesetReader {
 
 	/**

@@ -46,6 +46,11 @@ public interface CmsItem {
 	RepoRevision getRevisionChanged();
 	
 	/**
+	 * @return the username that produced {@link #getRevisionChanged()}
+	 */
+	String getRevisionChangedAuthor();
+	
+	/**
 	 * Should we complement getRevisionChanged()?
 	 * @return first revision when this item was available at its current path with its current contents
 	 */
@@ -71,6 +76,11 @@ public interface CmsItem {
 	 * @return all versioned properties on this item
 	 */
 	CmsItemProperties getProperties();
+	
+	/**
+	 * @return 0 for folders, size in bytes for files
+	 */
+	long getFilesize();
 	
 	/**
 	 * Opens a connection to a file and writes its content to a stream.
