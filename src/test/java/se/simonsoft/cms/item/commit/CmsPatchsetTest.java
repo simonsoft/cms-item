@@ -37,9 +37,9 @@ public class CmsPatchsetTest {
 	public void testAddDuplicate() {
 		RepoRevision r = new RepoRevision(1, new Date(1));
 		CmsPatchset c = new CmsPatchset(mock(CmsRepository.class), r);
-		c.add(new FileModification(new CmsItemPath("/p3"), r, mock(InputStream.class), mock(InputStream.class)));
+		c.add(new FileModification(new CmsItemPath("/p3"), mock(InputStream.class), mock(InputStream.class)));
 		try {
-			c.add(new FilePropertyChange(new CmsItemPath("/p3"), r, mock(CmsItemProperties.class)));
+			c.add(new FilePropertyChange(new CmsItemPath("/p3"), mock(CmsItemProperties.class)));
 			fail("modify+propset should be same operation");
 		} catch (IllegalStateException e) { // likely not a user error so avoiding IllegalArgumentException
 			//assertEquals("Modify and propset attempted at /p3@1 - shoule be modify with propset", e.getMessage());
@@ -52,7 +52,7 @@ public class CmsPatchsetTest {
 	public void testAddDuplicateCopy() {
 		RepoRevision r = new RepoRevision(3, new Date(3));
 		CmsPatchset c = new CmsPatchset(mock(CmsRepository.class), r);
-		c.add(new FileDelete(new CmsItemPath("/p1"), r));
+		c.add(new FileDelete(new CmsItemPath("/p1")));
 		// should be ok because this is an earlier revision,
 		// but it is unlikely that we'll need this any time soon
 		// TODO c.add(new FileCopy(new CmsItemPath("/p1"), new RepoRevision(2, new Date(2)), new CmsItemPath("/p2")));
@@ -80,12 +80,12 @@ public class CmsPatchsetTest {
 		CmsPatchset c = new CmsPatchset(new CmsItemIdArg("x-svn:///svn/r^/").getRepository(), r);
 		assertFalse(c.isLocksSet());
 		CmsItemLock lock1 = new CmsItemLockImpl(new CmsItemIdArg("x-svn:///svn/r^/p2"), "t", "", "", new Date(), null);
-		c.add(new FileDelete(new CmsItemPath("/p2"), r), lock1);
+		c.add(new FileDelete(new CmsItemPath("/p2")), lock1);
 		assertTrue(c.isLocksSet());
 		assertTrue(c.isLockSet(new CmsItemPath("/p2")));
 		assertEquals(1, c.getLocks().size());
 		CmsItemLock lock2 = new CmsItemLockImpl(new CmsItemIdArg("x-svn:///svn/r^/p3"), "t", "", "", new Date(), null);
-		c.add(new FileDelete(new CmsItemPath("/p3"), r), lock2);
+		c.add(new FileDelete(new CmsItemPath("/p3")), lock2);
 		assertEquals(2, c.getLocks().size());
 		
 		assertFalse(c.isKeepLocks());
