@@ -27,8 +27,11 @@ import se.simonsoft.cms.item.CmsRepository;
  * information which impls should be unaware of at initialization.
  * Requiring the path to be provided with each service call in a way
  * regulates that the caller is authorized.
+ * 
+ * @deprecated Belongs to cms-backend-svnkit, possibly also cms-testing, and should not be used in cms-item APIs
  */
-public class CmsRepositoryInspection extends CmsRepository {
+@SuppressWarnings("serial") // deprecated and abstract
+public abstract class CmsRepositoryInspection extends CmsRepository {
 
 	private File adminPath;
 

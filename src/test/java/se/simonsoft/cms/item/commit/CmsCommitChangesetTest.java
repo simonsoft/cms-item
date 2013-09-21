@@ -23,7 +23,6 @@ import java.util.Date;
 
 import org.junit.Test;
 
-import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;

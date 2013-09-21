@@ -23,7 +23,6 @@ import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.events.ItemEventListener;
-import se.simonsoft.cms.item.inspection.CmsRepositoryInspection;
 
 /**
  * Backend neutral representation of all changes in a commit or transaction.
