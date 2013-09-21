@@ -46,6 +46,8 @@ public class CmsPatchset extends LinkedList<CmsPatchItem>
 	
 	/**
 	 * Produces a changeset without base revision - not recommended.
+	 *
+	 * Can still be safe if all items are CmsPatchItem.SupportsIndividualBase.
 	 * 
 	 * @param repository Commits apply to a single repository
 	 * 

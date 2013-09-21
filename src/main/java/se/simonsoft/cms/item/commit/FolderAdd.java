@@ -18,7 +18,7 @@ package se.simonsoft.cms.item.commit;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 
-public class FolderAdd implements CmsPatchItem {
+public class FolderAdd implements CmsPatchItem.TargetIsFolder, CmsPatchItem.SupportsIndividualBase {
 
 	private CmsItemPath path;
 	private RepoRevision baseRevision;

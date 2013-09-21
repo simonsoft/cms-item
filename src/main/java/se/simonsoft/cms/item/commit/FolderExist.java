@@ -22,7 +22,7 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
 /**
  * Create folder and parent folders only if they didn't exist already.
  */
-public class FolderExist implements CmsPatchItem {
+public class FolderExist implements CmsPatchItem.TargetIsFolder, CmsPatchItem.SupportsIndividualBase {
 
 	private CmsItemPath path;
 

@@ -19,7 +19,7 @@ import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
-public class FileCopy implements CmsPatchItem {
+public class FileCopy implements CmsPatchItem, CmsPatchItem.SupportsProp, CmsPatchItem.SupportsIndividualBase {
 
 	private CmsItemPath fromPath;
 	private RepoRevision baseRevision;
@@ -97,6 +97,7 @@ public class FileCopy implements CmsPatchItem {
 	/**
 	 * @return null if no property changes
 	 */
+	@Override
 	public CmsItemProperties getPropertyChange() {
 		return properties;
 	}

@@ -22,16 +22,16 @@ import se.simonsoft.cms.item.RepoRevision;
  * Wraps an actual change with an instruction that there should be
  * an existing folder at the target path, which should be replaced.
  */
-public class FolderReplace implements CmsPatchItem {
+public class FolderReplace implements CmsPatchItem.TargetIsFolder, CmsPatchItem.SupportsIndividualBase {
 
-	private CmsPatchItem replacement;
+	private CmsPatchItem.SupportsIndividualBase replacement;
 
-	protected FolderReplace(CmsPatchItem replacement) {
+	protected FolderReplace(CmsPatchItem.SupportsIndividualBase replacement) {
 		this.replacement = replacement;
 	}
 	
 	public FolderReplace(FolderAdd add) {
-		this((CmsPatchItem) add);
+		this((CmsPatchItem.SupportsIndividualBase) add);
 	}
 	
 	//public FolderReplace(FolderCopy add) {

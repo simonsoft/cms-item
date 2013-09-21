@@ -15,8 +15,11 @@
  */
 package se.simonsoft.cms.item.commit;
 
+import java.io.InputStream;
+
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
+import se.simonsoft.cms.item.properties.CmsItemProperties;
 
 /**
  * A modification of contents and/or properties at a {@link CmsItemPath}
@@ -24,18 +27,66 @@ import se.simonsoft.cms.item.RepoRevision;
  */
 public interface CmsPatchItem {
 
+	/**
+	 * @return the affected path, i.e. the target where the change will happen
+	 */
 	CmsItemPath getPath();
 
-	/**
-	 * Important because all operations assume that they know the current state of the repository,
-	 * but that state is always from a certain point in time (or actually a time range unless there is an exact revision number).
-	 * @return the revision that changes are based on, used to check for conflicts with other changes
-	 */
-	RepoRevision getBaseRevision();
+
 	
 	// TODO getProperties(); though not for Delete?
 	
 	// TODO maybe optional, how to handle the difference between unlock or keep lock at commit?
 	//CmsItemLock getLock();
+	
+	/**
+	 *  
+	 */
+	interface TargetIsFolder extends CmsPatchItem {
+	}
+	
+	/**
+	 * (maybe @)deprecated we should not impose this complexity on backends unless absolutely necessary
+	 */
+	interface SupportsIndividualBase extends CmsPatchItem {
+		
+		/**
+		 * Important because all operations assume that they know the current state of the repository,
+		 * but that state is always from a certain point in time (or actually a time range unless there is an exact revision number).
+		 * @return the revision that changes are based on, used to check for conflicts with other changes
+		 */
+		RepoRevision getBaseRevision();		
+		
+	}
+	
+	/**
+	 * 
+	 */
+	interface SupportsProp extends CmsPatchItem {
+		
+		/**
+		 * @return null if no property changes
+		 */
+		public CmsItemProperties getPropertyChange();
+		
+	}
+
+	/**
+	 * 
+	 */
+	interface SupportsContent extends CmsPatchItem {
+		
+		public InputStream getWorkingFile();
+		
+	}	
+	
+	/**
+	 * 
+	 */
+	interface SupportsContentModification extends SupportsContent {
+		
+		public InputStream getBaseFile();
+		
+	}
 	
 }

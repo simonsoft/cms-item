@@ -21,7 +21,7 @@ import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
-public class FileAdd implements CmsPatchItem {
+public class FileAdd implements CmsPatchItem, CmsPatchItem.SupportsProp, CmsPatchItem.SupportsContent, CmsPatchItem.SupportsIndividualBase {
 
 	private CmsItemPath path;
 	private RepoRevision baseRevision;
@@ -63,6 +63,11 @@ public class FileAdd implements CmsPatchItem {
 		return baseRevision;
 	}
 
+	@Override
+	public InputStream getWorkingFile() {
+		return getContents();
+	}
+	
 	/**
 	 * @return Not yet opened stream
 	 */
@@ -73,6 +78,7 @@ public class FileAdd implements CmsPatchItem {
 	/**
 	 * @return null if no property changes
 	 */
+	@Override
 	public CmsItemProperties getPropertyChange() {
 		return properties;
 	}

@@ -25,7 +25,7 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
  * 
  * Svnkit SVNEditor differentiates between file property change and folder property change.
  */
-public class FilePropertyChange implements CmsPatchItem {
+public class FilePropertyChange implements CmsPatchItem, CmsPatchItem.SupportsProp, CmsPatchItem.SupportsIndividualBase {
 
 	private CmsItemPath path;
 	private RepoRevision base;
@@ -55,9 +55,10 @@ public class FilePropertyChange implements CmsPatchItem {
 	 * @return property changes as returned by {@link CmsItemProperties#getKeySet()} to be executed on the item, while other properties are left unchanged,
 	 *  null value means delete the property, empty value means set or keep it but make it empty
 	 */
+	@Override
 	public CmsItemProperties getPropertyChange() {
 		return properties;
-	}	
+	}
 	
 	@Override
 	public CmsItemPath getPath() {
