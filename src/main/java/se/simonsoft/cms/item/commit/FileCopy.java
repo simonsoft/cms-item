@@ -19,7 +19,7 @@ import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
-public class FileCopy implements CmsItemPatch {
+public class FileCopy implements CmsPatchItem {
 
 	private CmsItemPath fromPath;
 	private RepoRevision baseRevision;
@@ -63,7 +63,7 @@ public class FileCopy implements CmsItemPatch {
 	 *  null value means delete the property, empty value means set or keep it but make it empty
 	 * @return this instance for chaining
 	 */
-	public CmsItemPatch setPropertyChange(CmsItemProperties properties) {
+	public CmsPatchItem setPropertyChange(CmsItemProperties properties) {
 		this.properties = properties;
 		return this;
 	}

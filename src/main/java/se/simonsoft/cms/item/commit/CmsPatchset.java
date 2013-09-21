@@ -29,8 +29,8 @@ import se.simonsoft.cms.item.RepoRevision;
 /**
  * Item modifications, never two of them at the same path.
  */
-public class CmsPatchset extends LinkedList<CmsItemPatch>
-		implements List<CmsItemPatch> {
+public class CmsPatchset extends LinkedList<CmsPatchItem>
+		implements List<CmsPatchItem> {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -41,7 +41,7 @@ public class CmsPatchset extends LinkedList<CmsItemPatch>
 	
 	private String historyMessage = null;
 	private boolean keepLocks = false;
-	private Map<CmsItemPath, CmsItemPatch> map = new HashMap<CmsItemPath, CmsItemPatch>(); // to simplify validation, may waste a bit of memory but probably negligible
+	private Map<CmsItemPath, CmsPatchItem> map = new HashMap<CmsItemPath, CmsPatchItem>(); // to simplify validation, may waste a bit of memory but probably negligible
 	private Locks locks = new Locks();
 	
 	/**
@@ -91,7 +91,7 @@ public class CmsPatchset extends LinkedList<CmsItemPatch>
 	}
 	
 	@Override
-	public boolean add(CmsItemPatch change) {
+	public boolean add(CmsPatchItem change) {
 		CmsItemPath path = change.getPath();
 		if (map.containsKey(path)) {
 			throw new IllegalStateException("Duplicate changeset entries recorded for " + path);
@@ -105,12 +105,12 @@ public class CmsPatchset extends LinkedList<CmsItemPatch>
 	 * releasing the lock after commit or keeping all locks if {@link #isKeepLocks()}.
 	 * 
 	 * For folder move/delete when there are multiple locks under the folder,
-	 * use {@link #add(CmsItemPatch)} follwed by multiple {@link #addLock(CmsItemPath, CmsItemLock)}.
+	 * use {@link #add(CmsPatchItem)} follwed by multiple {@link #addLock(CmsItemPath, CmsItemLock)}.
 	 * 
-	 * @param change like in {@link #add(CmsItemPatch)}
+	 * @param change like in {@link #add(CmsPatchItem)}
 	 * @param lock Lock matching the item's current lock, lock ID being the token needed by backend
 	 */
-	public void add(CmsItemPatch change, CmsItemLock lock) {
+	public void add(CmsPatchItem change, CmsItemLock lock) {
 		add(change);
 		addLock(lock);
 	}

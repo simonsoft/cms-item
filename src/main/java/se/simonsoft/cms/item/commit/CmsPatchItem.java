@@ -22,7 +22,7 @@ import se.simonsoft.cms.item.RepoRevision;
  * A modification of contents and/or properties at a {@link CmsItemPath}
  * in a repository given by execution context.
  */
-public interface CmsItemPatch {
+public interface CmsPatchItem {
 
 	CmsItemPath getPath();
 
