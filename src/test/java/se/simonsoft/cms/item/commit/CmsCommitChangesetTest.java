@@ -26,6 +26,7 @@ import org.junit.Test;
 import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.CmsItemPath;
+import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.impl.CmsItemIdArg;
 import se.simonsoft.cms.item.impl.CmsItemLockImpl;
@@ -35,8 +36,8 @@ public class CmsCommitChangesetTest {
 
 	@Test
 	public void testAddDuplicate() {
-		CmsCommitChangeset c = new CmsCommitChangeset();
 		RepoRevision r = new RepoRevision(1, new Date(1));
+		CmsCommitChangeset c = new CmsCommitChangeset(mock(CmsRepository.class), r);
 		c.add(new FileModification(new CmsItemPath("/p3"), r, mock(InputStream.class), mock(InputStream.class)));
 		try {
 			c.add(new FilePropertyChange(new CmsItemPath("/p3"), r, mock(CmsItemProperties.class)));
@@ -50,8 +51,8 @@ public class CmsCommitChangesetTest {
 
 	@Test
 	public void testAddDuplicateCopy() {
-		CmsCommitChangeset c = new CmsCommitChangeset();
 		RepoRevision r = new RepoRevision(3, new Date(3));
+		CmsCommitChangeset c = new CmsCommitChangeset(mock(CmsRepository.class), r);
 		c.add(new FileDelete(new CmsItemPath("/p1"), r));
 		// should be ok because this is an earlier revision,
 		// but it is unlikely that we'll need this any time soon
@@ -76,8 +77,8 @@ public class CmsCommitChangesetTest {
 	
 	@Test
 	public void testLockInfo() {
-		CmsCommitChangeset c = new CmsCommitChangeset();
 		RepoRevision r = new RepoRevision(3, new Date(3));
+		CmsCommitChangeset c = new CmsCommitChangeset(mock(CmsRepository.class), r);
 		assertFalse(c.isLocksSet());
 		CmsItemLock lock1 = new CmsItemLockImpl(new CmsItemIdArg("x-svn:///svn/r^/p2"), "t", "", "", new Date(), null);
 		c.add(new FileDelete(new CmsItemPath("/p2"), r), lock1);

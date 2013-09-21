@@ -36,6 +36,7 @@ public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
 
 	private static final RepoRevision BASE_OVERWRITE = new RepoRevision(-1, null);
 	
+	private CmsRepository repository;	
 	private RepoRevision base;
 	
 	private String historyMessage = null;
@@ -43,21 +44,47 @@ public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
 	private Map<CmsItemPath, CmsCommitChange> map = new HashMap<CmsItemPath, CmsCommitChange>(); // to simplify validation, may waste a bit of memory but probably negligible
 	private Locks locks = new Locks();
 	
-	public CmsCommitChangeset() {
-		this(BASE_OVERWRITE);
+	/**
+	 * Produces a changeset without base revision - not recommended.
+	 * 
+	 * @param repository Commits apply to a single repository
+	 * 
+	 * @deprecated With no base revision results from other users may be overwritten unknowingly
+	 */
+	public CmsCommitChangeset(CmsRepository repository) {
+		this(repository, BASE_OVERWRITE);
 	}
 	
-	public CmsCommitChangeset(RepoRevision baseRevision) {
+	/**
+	 * Changeset with a base revision, enables detection of conflicts and race conditions.
+	 * 
+	 * Also some implementations need to traverse the structure, and should do so at a base revision,
+	 * because someone else might just now have deleted one of the folders that existed when this user invoked the operation.
+	 * 
+	 * @param repository Commits apply to a single repository
+	 * @param baseRevision Used to check for conflicts
+	 */
+	public CmsCommitChangeset(CmsRepository repository, RepoRevision baseRevision) {
+		this.repository = repository;
 		if (baseRevision == null) {
 			throw new IllegalArgumentException("Base revision is required for commit operations");
 		}
 		this.base = baseRevision;
 	}
 
+	public CmsRepository getRepository() {
+		return repository;
+	}
+	
 	/**
 	 * Used to check for concurrent modifications,
 	 * so that uses don't overwrite each other's changes.
-	 * @return the revision where the user decided to do these changes
+	 * 
+	 * Important because all operations assume that they know the current state of the repository,
+	 * but that state is always from a certain point in time (or actually a time range unless there is an exact revision number).
+	 * 
+	 * @return the revision that changes are based on, used to check for conflicts with other changes
+	 *  = the revision that the user saw when deciding to do these changes
 	 */
 	public RepoRevision getBaseRevision() {
 		return this.base;

@@ -80,7 +80,7 @@ public class FileAdd implements CmsCommitChange {
 	@Override
 	public String toString() {
 		// add, no prop support yet, no copy support yet
-		return "A___" + getPath().getPath();
+		return "A" + (getPropertyChange() == null ? '_' : 'M') + "__" + getPath().getPath();
 	}
 
 }

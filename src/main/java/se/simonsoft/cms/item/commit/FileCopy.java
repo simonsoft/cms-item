@@ -101,4 +101,10 @@ public class FileCopy implements CmsCommitChange {
 		return properties;
 	}
 
+	@Override
+	public String toString() {
+		// add, no prop support yet, no copy support yet
+		return "A" + (getPropertyChange() == null ? '_' : 'M') + "+_" + getPath().getPath();
+	}	
+	
 }
