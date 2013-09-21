@@ -60,6 +60,6 @@ public interface CmsContentsReader {
 	 * Diff might be a Map&lt;CmsItemPath, Iterable&lt;? extends DiffLine&gt;&gt; with context, added, removed.
 	 */
 	//void getDiff(CmsRepositoryInspection repository, RepoRevision revision, OutputStream out);
-	void getDiff(RepoRevision from, RepoRevision revision, OutputStream out);
+	void getDiff(RepoRevision revision, OutputStream out);
 	
 }
