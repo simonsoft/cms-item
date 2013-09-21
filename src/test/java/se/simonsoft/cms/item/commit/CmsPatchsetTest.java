@@ -31,7 +31,7 @@ import se.simonsoft.cms.item.impl.CmsItemIdArg;
 import se.simonsoft.cms.item.impl.CmsItemLockImpl;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
-public class CmsCommitChangesetTest {
+public class CmsPatchsetTest {
 
 	@Test
 	public void testAddDuplicate() {
@@ -77,7 +77,7 @@ public class CmsCommitChangesetTest {
 	@Test
 	public void testLockInfo() {
 		RepoRevision r = new RepoRevision(3, new Date(3));
-		CmsPatchset c = new CmsPatchset(mock(CmsRepository.class), r);
+		CmsPatchset c = new CmsPatchset(new CmsItemIdArg("x-svn:///svn/r^/").getRepository(), r);
 		assertFalse(c.isLocksSet());
 		CmsItemLock lock1 = new CmsItemLockImpl(new CmsItemIdArg("x-svn:///svn/r^/p2"), "t", "", "", new Date(), null);
 		c.add(new FileDelete(new CmsItemPath("/p2"), r), lock1);

@@ -35,7 +35,7 @@ public abstract class CmsItemLockCollection implements Serializable, Iterable<Cm
 	 */
 	public CmsItemLockCollection(CmsRepository repository) {
 		if (repository == null) {
-			throw new IllegalArgumentException("Lock collections should always contain locks from the same repository");
+			throw new IllegalArgumentException("Lock collection must be defined for a single repository");
 		}
 		this.repository = repository;
 	}

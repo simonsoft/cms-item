@@ -42,7 +42,7 @@ public class CmsPatchset extends LinkedList<CmsPatchItem>
 	private String historyMessage = null;
 	private boolean keepLocks = false;
 	private Map<CmsItemPath, CmsPatchItem> map = new HashMap<CmsItemPath, CmsPatchItem>(); // to simplify validation, may waste a bit of memory but probably negligible
-	private Locks locks = new Locks();
+	private Locks locks;
 	
 	/**
 	 * Produces a changeset without base revision - not recommended.
@@ -72,6 +72,7 @@ public class CmsPatchset extends LinkedList<CmsPatchItem>
 			throw new IllegalArgumentException("Base revision is required for commit operations");
 		}
 		this.base = baseRevision;
+		locks = new Locks();
 	}
 
 	public CmsRepository getRepository() {
@@ -154,7 +155,7 @@ public class CmsPatchset extends LinkedList<CmsPatchItem>
 
 	private class Locks extends CmsItemLockCollection {
 		public Locks() {
-			super(null); // TODO require repository for changeset or accept null for lock collection
+			super(repository);
 		}
 		private static final long serialVersionUID = 1L;
 		public void add(CmsItemLock lock) {
