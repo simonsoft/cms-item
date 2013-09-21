@@ -21,7 +21,7 @@ import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
-public class FileAdd implements CmsCommitChange {
+public class FileAdd implements CmsItemPatch {
 
 	private CmsItemPath path;
 	private RepoRevision baseRevision;
@@ -48,7 +48,7 @@ public class FileAdd implements CmsCommitChange {
 	 *  null value means delete the property, empty value means set or keep it but make it empty
 	 * @return this instance for chaining
 	 */
-	public CmsCommitChange setPropertyChange(CmsItemProperties properties) {
+	public CmsItemPatch setPropertyChange(CmsItemProperties properties) {
 		this.properties  = properties;
 		return this;
 	}

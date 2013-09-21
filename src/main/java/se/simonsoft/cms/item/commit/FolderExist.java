@@ -22,7 +22,7 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
 /**
  * Create folder and parent folders only if they didn't exist already.
  */
-public class FolderExist implements CmsCommitChange {
+public class FolderExist implements CmsItemPatch {
 
 	private CmsItemPath path;
 
@@ -40,7 +40,7 @@ public class FolderExist implements CmsCommitChange {
 	 * @param properties property change to do on items that are created, but not existing items
 	 * @return this instance for chaining
 	 */
-	public CmsCommitChange setPropertyChange(CmsItemProperties properties) {
+	public CmsItemPatch setPropertyChange(CmsItemProperties properties) {
 		throw new UnsupportedOperationException("not implemented"); // should we have an onCreate callback, and what sync issues would that introduce?
 	}
 	

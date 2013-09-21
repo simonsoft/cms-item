@@ -26,7 +26,7 @@ import se.simonsoft.cms.item.RepoRevision;
  */
 public interface CmsCommit {
 	
-	public RepoRevision run(CmsCommitChangeset fileModifications) throws CmsItemLockedException;
+	public RepoRevision run(CmsPatchset fileModifications) throws CmsItemLockedException;
 	
 	/**
 	 * Locks an item.

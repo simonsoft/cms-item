@@ -29,8 +29,8 @@ import se.simonsoft.cms.item.RepoRevision;
 /**
  * Item modifications, never two of them at the same path.
  */
-public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
-		implements List<CmsCommitChange> {
+public class CmsPatchset extends LinkedList<CmsItemPatch>
+		implements List<CmsItemPatch> {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -41,7 +41,7 @@ public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
 	
 	private String historyMessage = null;
 	private boolean keepLocks = false;
-	private Map<CmsItemPath, CmsCommitChange> map = new HashMap<CmsItemPath, CmsCommitChange>(); // to simplify validation, may waste a bit of memory but probably negligible
+	private Map<CmsItemPath, CmsItemPatch> map = new HashMap<CmsItemPath, CmsItemPatch>(); // to simplify validation, may waste a bit of memory but probably negligible
 	private Locks locks = new Locks();
 	
 	/**
@@ -51,7 +51,7 @@ public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
 	 * 
 	 * @deprecated With no base revision results from other users may be overwritten unknowingly
 	 */
-	public CmsCommitChangeset(CmsRepository repository) {
+	public CmsPatchset(CmsRepository repository) {
 		this(repository, BASE_OVERWRITE);
 	}
 	
@@ -64,7 +64,7 @@ public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
 	 * @param repository Commits apply to a single repository
 	 * @param baseRevision Used to check for conflicts
 	 */
-	public CmsCommitChangeset(CmsRepository repository, RepoRevision baseRevision) {
+	public CmsPatchset(CmsRepository repository, RepoRevision baseRevision) {
 		this.repository = repository;
 		if (baseRevision == null) {
 			throw new IllegalArgumentException("Base revision is required for commit operations");
@@ -91,7 +91,7 @@ public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
 	}
 	
 	@Override
-	public boolean add(CmsCommitChange change) {
+	public boolean add(CmsItemPatch change) {
 		CmsItemPath path = change.getPath();
 		if (map.containsKey(path)) {
 			throw new IllegalStateException("Duplicate changeset entries recorded for " + path);
@@ -105,12 +105,12 @@ public class CmsCommitChangeset extends LinkedList<CmsCommitChange>
 	 * releasing the lock after commit or keeping all locks if {@link #isKeepLocks()}.
 	 * 
 	 * For folder move/delete when there are multiple locks under the folder,
-	 * use {@link #add(CmsCommitChange)} follwed by multiple {@link #addLock(CmsItemPath, CmsItemLock)}.
+	 * use {@link #add(CmsItemPatch)} follwed by multiple {@link #addLock(CmsItemPath, CmsItemLock)}.
 	 * 
-	 * @param change like in {@link #add(CmsCommitChange)}
+	 * @param change like in {@link #add(CmsItemPatch)}
 	 * @param lock Lock matching the item's current lock, lock ID being the token needed by backend
 	 */
-	public void add(CmsCommitChange change, CmsItemLock lock) {
+	public void add(CmsItemPatch change, CmsItemLock lock) {
 		add(change);
 		addLock(lock);
 	}

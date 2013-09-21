@@ -22,20 +22,20 @@ import se.simonsoft.cms.item.RepoRevision;
  * Wraps an actual change with an instruction that there should be
  * an existing file at the target path, which should be replaced.
  */
-public class FileReplace implements CmsCommitChange {
+public class FileReplace implements CmsItemPatch {
 
-	private CmsCommitChange replacement;
+	private CmsItemPatch replacement;
 
-	protected FileReplace(CmsCommitChange replacement) {
+	protected FileReplace(CmsItemPatch replacement) {
 		this.replacement = replacement;
 	}
 	
 	public FileReplace(FileAdd add) {
-		this((CmsCommitChange) add);
+		this((CmsItemPatch) add);
 	}
 	
 	public FileReplace(FileCopy add) {
-		this((CmsCommitChange) add);
+		this((CmsItemPatch) add);
 	}
 	
 	@Override

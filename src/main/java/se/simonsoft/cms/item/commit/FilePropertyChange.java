@@ -25,7 +25,7 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
  * 
  * Svnkit SVNEditor differentiates between file property change and folder property change.
  */
-public class FilePropertyChange implements CmsCommitChange {
+public class FilePropertyChange implements CmsItemPatch {
 
 	private CmsItemPath path;
 	private RepoRevision base;

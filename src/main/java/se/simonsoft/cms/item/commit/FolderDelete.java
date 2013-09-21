@@ -18,7 +18,7 @@ package se.simonsoft.cms.item.commit;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 
-public class FolderDelete implements CmsCommitChange {
+public class FolderDelete implements CmsItemPatch {
 
 	private CmsItemPath path;
 	private RepoRevision base;

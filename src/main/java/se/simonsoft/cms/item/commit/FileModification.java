@@ -21,7 +21,7 @@ import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
-public class FileModification implements CmsCommitChange {
+public class FileModification implements CmsItemPatch {
 
 	private CmsItemPath path;
 	private RepoRevision baseRevision;
@@ -30,7 +30,7 @@ public class FileModification implements CmsCommitChange {
 	private CmsItemProperties properties;
 
 	/**
-	 * @param pathInRepository see {@link CmsCommitChange#getPath()}
+	 * @param pathInRepository see {@link CmsItemPatch#getPath()}
 	 * @param baseRevision the revision that changes are based on, used to check for conflicts with other changes
 	 * @param baseFile, the original file that changes are based on, stream will be opened when item processing starts and closed afterwards
 	 * @param workingFile, current contents, stream will be opened when item processing starts and closed afterwards
