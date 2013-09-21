@@ -30,8 +30,11 @@ public interface CmsChangesetReader {
 	 * @param repository The repository to read
 	 * @param revision The changeset to produce
 	 * @return changeset at the revision, isOverwritten always set to false
+	 * @deprecated the service is per-repository, use {@link #read(RepoRevision)}
 	 */
 	CmsChangeset read(CmsRepositoryInspection repository, RepoRevision revision);
+	
+	CmsChangeset read(RepoRevision revision);
 	
 	/**
 	 * Useful when batch processing revisions to set a later revision, typically current HEAD,
@@ -40,7 +43,10 @@ public interface CmsChangesetReader {
 	 * @param revision The changeset to produce
 	 * @param referenceRevision Larger than or equal to revision, normally identical in subsequent calls in the same batch
 	 * @return changeset at the revision, with isOverwritten set to true if referenceRevision contains a newer version of same item
+	 * @deprecated the service is per-repository, use {@link #read(RepoRevision, RepoRevision)}
 	 */
 	CmsChangeset read(CmsRepositoryInspection repository, RepoRevision revision, RepoRevision referenceRevision);	
+	
+	CmsChangeset read(RepoRevision revision, RepoRevision referenceRevision);	
 	
 }
