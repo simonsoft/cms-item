@@ -31,9 +31,13 @@ public class FileAdd implements CmsPatchItem, CmsPatchItem.SupportsProp, CmsPatc
 	/**
 	 * 
 	 * @param path
-	 * @param baseRevisionForParent
 	 * @param contents Will be opened and closed when the item is processed
-	 */
+	 */	
+	public FileAdd(CmsItemPath path, InputStream contents) {
+		this(path, null, contents);
+	}	
+	
+	@Deprecated //"base revision should be set in Changeset"	
 	public FileAdd(CmsItemPath path,
 			RepoRevision parentFolderBaseRevision,
 			InputStream contents) {

@@ -31,10 +31,15 @@ public class FileModification implements CmsPatchItem, CmsPatchItem.SupportsProp
 
 	/**
 	 * @param pathInRepository see {@link CmsPatchItem#getPath()}
-	 * @param baseRevision the revision that changes are based on, used to check for conflicts with other changes
 	 * @param baseFile, the original file that changes are based on, stream will be opened when item processing starts and closed afterwards
 	 * @param workingFile, current contents, stream will be opened when item processing starts and closed afterwards
 	 */
+	public FileModification(CmsItemPath pathInRepository,
+			InputStream baseFile, InputStream workingFile) {
+		this(pathInRepository, null, baseFile, workingFile);
+	}
+	
+	@Deprecated // base revision should be set in changeset
 	public FileModification(CmsItemPath pathInRepository,
 			RepoRevision baseRevision, InputStream baseFile, InputStream workingFile) {
 		this.path = pathInRepository;

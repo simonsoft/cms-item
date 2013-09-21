@@ -23,6 +23,10 @@ public class FileDelete implements CmsPatchItem, CmsPatchItem.SupportsIndividual
 	private CmsItemPath path;
 	private RepoRevision base;
 
+	public FileDelete(CmsItemPath path) {
+		this(path, null);
+	}	
+	
 	@Deprecated //"base revision should be set in Changeset"
 	public FileDelete(CmsItemPath path, RepoRevision base) {
 		this.path = path;

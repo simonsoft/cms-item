@@ -23,6 +23,11 @@ public class FolderAdd implements CmsPatchItem.TargetIsFolder, CmsPatchItem.Supp
 	private CmsItemPath path;
 	private RepoRevision baseRevision;
 
+	public FolderAdd(CmsItemPath path) {
+		this(path, null);
+	}
+	
+	@Deprecated // use patchset base revisions
 	public FolderAdd(CmsItemPath path, RepoRevision baseRevisionForParent) {
 		this.path = path;
 		this.baseRevision = baseRevisionForParent;

@@ -33,10 +33,14 @@ public class FilePropertyChange implements CmsPatchItem, CmsPatchItem.SupportsPr
 
 	/**
 	 * @param path
-	 * @param base properties are overwritten rather than diffed, for now at least, so this is not very important
 	 * @param properties property changes as returned by {@link CmsItemProperties#getKeySet()} to be executed on the item, while other properties are left unchanged,
 	 *  null value means delete the property, empty value means set or keep it but make it empty
 	 */
+	public FilePropertyChange(CmsItemPath path, CmsItemProperties properties) {
+		this(path, null, properties);
+	}
+
+	@Deprecated // use changeset base
 	public FilePropertyChange(CmsItemPath path, RepoRevision base, CmsItemProperties properties) {
 		this.path = path;
 		this.base = base;

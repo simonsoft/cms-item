@@ -60,8 +60,11 @@ public class CmsPatchset extends LinkedList<CmsPatchItem>
 	/**
 	 * Changeset with a base revision, enables detection of conflicts and race conditions.
 	 * 
-	 * Also some implementations need to traverse the structure, and should do so at a base revision,
-	 * because someone else might just now have deleted one of the folders that existed when this user invoked the operation.
+	 * The most simple form of conflict detection is for backends to bail out on baseRevision != HEAD.
+	 * In a multi-user environment this would be very annoying, so backends should verify only the affected paths.
+	 * Other ways to verify is to use base content or checksums.
+	 * 
+	 * The API does not support per-item base revisions, because of its low usefulness-to-complexity ratio.
 	 * 
 	 * @param repository Commits apply to a single repository
 	 * @param baseRevision Used to check for conflicts

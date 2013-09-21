@@ -23,6 +23,11 @@ public class FolderDelete implements CmsPatchItem.TargetIsFolder, CmsPatchItem.S
 	private CmsItemPath path;
 	private RepoRevision base;
 
+	public FolderDelete(CmsItemPath path) {
+		this(path, null);
+	}
+	
+	@Deprecated // use patchset base revision
 	public FolderDelete(CmsItemPath path, RepoRevision base) {
 		this.path = path;
 		this.base = base;
