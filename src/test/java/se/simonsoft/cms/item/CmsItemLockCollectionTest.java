@@ -55,21 +55,6 @@ public class CmsItemLockCollectionTest {
 				new CmsItemLockImpl(new CmsItemIdUrl(repo2, new CmsItemPath("/2")), "t2", "", "", new Date(), null)) {};
 	}
 	
-	/**
-	 * CmsItemLockCollection has stronger requirement on single-repository than CmsCommitChangeset. Change constructor for changeset?
-	 * Isn't optional repository validation a feature anyway?
-	 */
-	public void testRepositoryNull() {
-		CmsRepository repo1 = mock(CmsRepository.class);
-		CmsRepository repo2 = mock(CmsRepository.class);
-		@SuppressWarnings("serial")
-		CmsItemLockCollection anyrepo = new CmsItemLockCollection(null) {};
-		anyrepo.add(new CmsItemLockImpl(new CmsItemIdUrl(repo1, new CmsItemPath("/1")), "t1", "", "", new Date(), null));
-		anyrepo.add(new CmsItemLockImpl(new CmsItemIdUrl(repo2, new CmsItemPath("/2")), "t2", "", "", new Date(), null));
-		anyrepo.getLocked(new CmsItemIdUrl(repo1, new CmsItemPath("/1")));
-		anyrepo.getLocked(new CmsItemIdUrl(repo2, new CmsItemPath("/2")));
-	}
-	
 	@Test
 	public void testIteration() {
 		CmsRepository repo = mock(CmsRepository.class);
@@ -131,7 +116,6 @@ public class CmsItemLockCollectionTest {
 		assertFalse("not same token", locks.contains(lock2other));
 	}
 
-	@SuppressWarnings("serial")
 	@Test
 	public void testAddEquals() {
 		CmsRepository repo = mock(CmsRepository.class);
@@ -139,27 +123,14 @@ public class CmsItemLockCollectionTest {
 		CmsItemLock lock1a = new CmsItemLockImpl(new CmsItemIdUrl(repo, new CmsItemPath("/1")), "token1", "", "", now, null);
 		CmsItemLock lock1b = new CmsItemLockImpl(new CmsItemIdUrl(repo, new CmsItemPath("/1")), "token1", "", "", now, null);
 		assertTrue(lock1a.equals(lock1b));
-		CmsItemLockCollection c = new CmsItemLockCollection(null) {}; // any repository
-		c.add(lock1a);
-		try {
-			c.add(lock1b);
-			fail("Adding an equal lock indicates code error, should cause exception");
-		} catch (IllegalArgumentException e) {
-			assertTrue("Got " + e, e.getMessage().startsWith("Duplicate lock information"));
-		}
 	}	
 	
 	@SuppressWarnings("serial")
 	@Test
 	public void testAddSamePath() {
 		CmsRepository repo = mock(CmsRepository.class);
-		CmsRepository repx = mock(CmsRepository.class);
 		CmsItemLock lock1a = new CmsItemLockImpl(new CmsItemIdUrl(repo, new CmsItemPath("/1")), "token1", "", "", new Date(), null);
 		CmsItemLock lock1b = new CmsItemLockImpl(new CmsItemIdUrl(repo, new CmsItemPath("/1")), "token2", "", "", new Date(), null);
-		CmsItemLock lock1x = new CmsItemLockImpl(new CmsItemIdUrl(repx, new CmsItemPath("/1")), "token1", "", "", new Date(), null);
-		CmsItemLockCollection cAny = new CmsItemLockCollection(null) {};
-		cAny.add(lock1a);
-		cAny.add(lock1x);
 		CmsItemLockCollection cSingle = new CmsItemLockCollection(repo) {};
 		cSingle.add(lock1a);
 		try {

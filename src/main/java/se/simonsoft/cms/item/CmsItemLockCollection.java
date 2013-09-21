@@ -34,6 +34,9 @@ public abstract class CmsItemLockCollection implements Serializable, Iterable<Cm
 	 * @param repository non-null to validate that all locks are for the same repository
 	 */
 	public CmsItemLockCollection(CmsRepository repository) {
+		if (repository == null) {
+			throw new IllegalArgumentException("Lock collections should always contain locks from the same repository");
+		}
 		this.repository = repository;
 	}
 	
@@ -48,7 +51,7 @@ public abstract class CmsItemLockCollection implements Serializable, Iterable<Cm
 
 	protected void add(CmsItemLock itemLock) {
 		
-		if (repository != null && !repository.equals(itemLock.getItemId().getRepository())) {
+		if (!repository.equals(itemLock.getItemId().getRepository())) {
 			throw new IllegalArgumentException("requested itemId does not match CmsRepository");
 		}
 		
@@ -58,7 +61,7 @@ public abstract class CmsItemLockCollection implements Serializable, Iterable<Cm
 		
 		CmsItemPath path = itemLock.getItemId().getRelPath();
 		
-		if (repository != null && containsPath(path)) {
+		if (containsPath(path)) {
 			throw new IllegalArgumentException("Duplicate lock path " + path + " in the same repository");
 		}
 		
@@ -76,7 +79,7 @@ public abstract class CmsItemLockCollection implements Serializable, Iterable<Cm
 	 */
 	public CmsItemLock getLocked(CmsItemId itemId) {
 		
-		if (repository != null && !repository.equals(itemId.getRepository())) {
+		if (!repository.equals(itemId.getRepository())) {
 			throw new IllegalArgumentException("requested itemId does not match CmsRepository");
 		}
 
