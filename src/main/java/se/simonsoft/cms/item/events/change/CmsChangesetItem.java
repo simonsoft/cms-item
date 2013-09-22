@@ -62,7 +62,12 @@ public interface CmsChangesetItem extends CmsChangesetItemFlags {
 	 * @return the <em>commit</em> revision,
 	 * 	i.e. different than current revision if neither content nor properties changed
 	 */
-	RepoRevision getRevision();
+	RepoRevision getRevisionChanged();
+	
+	/**
+	 * @return the username that produced {@link #getRevisionChanged()}
+	 */
+	// not available through svnlook+svnkit //String getRevisionChangedAuthor();	
 	
 	/**
 	 * @return "copy from" data, including derived, if {@link #isCopy()}, null otherwise
