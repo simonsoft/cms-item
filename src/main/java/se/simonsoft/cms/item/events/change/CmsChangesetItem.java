@@ -20,9 +20,24 @@ import se.simonsoft.cms.item.RepoRevision;
 
 /**
  * Represents a file or folder affected in a changeset.
+ * 
+ * For access to contents and properties use 
+ * {@link se.simonsoft.cms.item.inspection.CmsContentsReader}.
+ * This is inconsistent with CmsItem, and the idea here was to represent only changeset information.
+ * Diffs might be more relevant than contents in changesets, and they are read for the full change list.
  */
 public interface CmsChangesetItem extends CmsChangesetItemFlags {
 
+	/**
+	 * Isolated in {@link se.simonsoft.cms.item.inspection.CmsContentsReader}, though inconsistent with CmsItem, because it is not part of changeset info.
+	 */
+	//CmsItemProperties getProperties();
+	
+	/**
+	 * Isolated in {@link se.simonsoft.cms.item.inspection.CmsContentsReader}, though inconsistent with CmsItem, because it is not part of changeset info.
+	 */
+	//void getContents(OutputStream receiver) throws UnsupportedOperationException;
+	
 	/**
 	 * @return true if the item change was reported explicitly by the CMS backend
 	 */
