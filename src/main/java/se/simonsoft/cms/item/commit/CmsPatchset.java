@@ -75,7 +75,7 @@ public class CmsPatchset extends LinkedList<CmsPatchItem>
 			throw new IllegalArgumentException("Base revision is required for commit operations");
 		}
 		this.base = baseRevision;
-		locks = new Locks();
+		locks = new Locks(repository);
 	}
 
 	public CmsRepository getRepository() {
@@ -157,7 +157,7 @@ public class CmsPatchset extends LinkedList<CmsPatchItem>
 	}
 
 	private class Locks extends CmsItemLockCollection {
-		public Locks() {
+		public Locks(CmsRepository repository) {
 			super(repository);
 		}
 		private static final long serialVersionUID = 1L;
