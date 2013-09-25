@@ -27,7 +27,7 @@ public abstract class CmsItemLockCollection implements Serializable, Iterable<Cm
 
 	private static final long serialVersionUID = 1L;
 	
-	private CmsRepository repository;
+	protected CmsRepository repository;
 	private Map<CmsItemPath, CmsItemLock> map = new LinkedHashMap<CmsItemPath, CmsItemLock>();
 	
 	/**
