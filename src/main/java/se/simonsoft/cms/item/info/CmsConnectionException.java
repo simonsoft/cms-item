@@ -23,8 +23,7 @@ package se.simonsoft.cms.item.info;
  * it it safe to assume that the underlying implementation has attempted
  * retries and that the error is persistent.
  */
-@SuppressWarnings("deprecation") // used for backwards compatibility
-public class CmsConnectionException extends se.simonsoft.cms.item.CmsConnectionException {
+public class CmsConnectionException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 

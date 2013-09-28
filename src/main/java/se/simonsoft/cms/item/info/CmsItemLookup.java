@@ -27,8 +27,7 @@ import se.simonsoft.cms.item.CmsItemLock;
  * Implementations can be either cross-repository, requiring paths/URLs/logicalIds with repo specified,
  * or single-repo throwing exceptions if repo is specified and not identical to the connected repo.
  */
-@SuppressWarnings("deprecation") // remove original CmsItemLookup in for 2.2
-public interface CmsItemLookup extends se.simonsoft.cms.item.CmsItemLookup {
+public interface CmsItemLookup {
 	
 	/**
 	 * @param parent folder, optional peg rev

@@ -30,8 +30,7 @@ import se.simonsoft.cms.item.CmsRepository;
  * Services that rely on indexed data might want to retry a few times before
  * throwing this error as it may occur because of indexing delays.
  */
-@SuppressWarnings("deprecation") // for backwards compatibility
-public class CmsItemNotFoundException extends se.simonsoft.cms.item.CmsItemNotFoundException {
+public class CmsItemNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -53,7 +52,7 @@ public class CmsItemNotFoundException extends se.simonsoft.cms.item.CmsItemNotFo
 	 * @param atRevision the revision at which the path was tried, toString should produce user readable representation
 	 */
 	public CmsItemNotFoundException(CmsRepository repository, CmsItemPath atPath, Object atRevision) {
-		super(null, "Not found: " + repository + atPath + (atRevision == null ? "" : "@" + atRevision));
+		super("Not found: " + repository + atPath + (atRevision == null ? "" : "@" + atRevision));
 		this.repository = repository;
 		this.path = atPath;
 		this.revision = atRevision;
