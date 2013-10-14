@@ -62,4 +62,7 @@ public interface CmsContentsReader {
 	//void getDiff(CmsRepositoryInspection repository, RepoRevision revision, OutputStream out);
 	void getDiff(RepoRevision revision, OutputStream out);
 	
+	
+	CmsItemProperties getRevisionProperties(RepoRevision revision);
+	
 }

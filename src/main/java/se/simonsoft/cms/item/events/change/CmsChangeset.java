@@ -23,9 +23,12 @@ import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.events.ItemEventListener;
+import se.simonsoft.cms.item.inspection.CmsContentsReader;
 
 /**
  * Backend neutral representation of all changes in a commit or transaction.
+ * 
+ * For revision properties use {@link CmsContentsReader#getRevisionProperties(RepoRevision)}.
  */
 public interface CmsChangeset {
 
@@ -39,6 +42,8 @@ public interface CmsChangeset {
 	 * @return the changeset's revision
 	 */
 	RepoRevision getRevision();
+	
+	//CmsItemProperties getRevisionProperties(); // unlike changeset items revision properties can be updated after the commit and should be accessed through CmsContentsReader 
 	
 	/**
 	 * Supports the most common use case - services listening for changes to a specific item.
@@ -88,5 +93,15 @@ public interface CmsChangeset {
 	 * @return all changes indexed on path
 	 */
 	Map<CmsItemPath, CmsChangesetItem> getItemsPath();
+	
+	/**
+	 * @return the number of changeset items
+	 */
+	int size();
+	
+	/**
+	 * @return true if there are no item changes in this changeset
+	 */
+	boolean isEmpty();
 	
 }

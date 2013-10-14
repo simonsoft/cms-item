@@ -47,6 +47,6 @@ public interface CmsChangesetReader {
 	 */
 	CmsChangeset read(CmsRepositoryInspection repository, RepoRevision revision, RepoRevision referenceRevision);	
 	
-	CmsChangeset read(RepoRevision revision, RepoRevision referenceRevision);	
+	CmsChangeset read(RepoRevision revision, RepoRevision referenceRevision);
 	
 }
