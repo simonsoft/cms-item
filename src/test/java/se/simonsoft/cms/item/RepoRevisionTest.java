@@ -31,7 +31,7 @@ public class RepoRevisionTest {
 	public void testDateIso() {
 		RepoRevision r = new RepoRevision(3333, new Date(0));
 		assertEquals("1970-01-01T00:00:00", r.getDateIso());
-		assertEquals("3333", r.toString());
+		assertEquals("3333/1970-01-01T00:00:00Z", r.toString());
 	}
 
 	@Test
@@ -106,11 +106,25 @@ public class RepoRevisionTest {
 	
 	@Test
 	public void testParseISO() {
-		RepoRevision.parse("2012-10-03T03:53:54.616837Z");
-		assertEquals(1000L, RepoRevision.parse("1970-01-01T00:00:01Z").getTime());
-		assertEquals(1002L, RepoRevision.parse("1970-01-01T00:00:01.002Z").getTime());
-		assertEquals(1003L, RepoRevision.parse("1970-01-01T00:00:01.003000Z").getTime());
+		RepoRevision.parseDate("2012-10-03T03:53:54.616837Z");
+		assertEquals(1000L, RepoRevision.parseDate("1970-01-01T00:00:01Z").getTime());
+		assertEquals(1002L, RepoRevision.parseDate("1970-01-01T00:00:01.002Z").getTime());
+		assertEquals(1003L, RepoRevision.parseDate("1970-01-01T00:00:01.003000Z").getTime());
 	}
+	
+	@Test
+	public void testParseComplete() {
+		RepoRevision revision = RepoRevision.parse("987/1970-01-01T00:00:59Z");
+		assertEquals(987, revision.getNumber());
+		assertEquals(59000, revision.getDate().getTime());
+	}
+
+	@Test
+	public void testParseNumber() {
+		RepoRevision revision = RepoRevision.parse("999987");
+		assertEquals(999987, revision.getNumber());
+		assertEquals(null, revision.getDate());
+	}	
 	
 	@Test
 	public void testCompare() {

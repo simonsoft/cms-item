@@ -48,6 +48,8 @@ public class RepoRevision implements Comparable<RepoRevision> {
 
 	private static final Logger logger = LoggerFactory.getLogger(RepoRevision.class);
 	
+	private static final char TOSTRING_SEPARATOR = '/';
+	
 	private static final DateFormat ISO_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	static {
 		ISO_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -135,8 +137,10 @@ public class RepoRevision implements Comparable<RepoRevision> {
 	public String toString() {
 		if (numberIsTimestamp) {
 			return getDateIso() + "Z";
+		} else if (date == null) {
+			return Long.toString(number);
 		}
-		return Long.toString(number); 
+		return Long.toString(number) + TOSTRING_SEPARATOR + getDateIso() + "Z";
 	}
 	
 	@Override
@@ -175,12 +179,39 @@ public class RepoRevision implements Comparable<RepoRevision> {
 	}	
 	
 	/**
+	 * Parses the formats from {@link #toString()}, i.e. [number][separator][date] 
+	 * @param string
+	 * @return
+	 */
+	public static RepoRevision parse(String string) {
+		int sep = string.indexOf(TOSTRING_SEPARATOR);
+		if (sep < 1) {
+			RepoRevision r;
+			try {
+				r = new RepoRevision(Long.parseLong(string), null);
+			} catch (NumberFormatException e) {
+				throw new IllegalArgumentException("Failed to parse revision identifier " + string, e);
+			}
+			logger.warn("Revision {} lacks timestamp", r);
+			return r;
+		}
+		// don't accept date only for now because the parse method was until 2.1.0 used to parse dates
+		try {
+			long num = Long.parseLong(string.substring(0, sep));
+			Date date = parseDate(string.substring(sep + 1));
+			return new RepoRevision(num, date);
+		} catch (RuntimeException e) {
+			throw new IllegalArgumentException("Failed to parse revision string " + string, e);
+		}
+	}
+	
+	/**
 	 * 
 	 * @param isoDateString
 	 * @return
 	 * @throws IllegalArgumentException if parse failed
 	 */
-	public static Date parse(String isoDateString) {
+	public static Date parseDate(String isoDateString) {
 		if (isoDateString == null) {
 			throw new IllegalArgumentException("Can't parse date null");
 		}
