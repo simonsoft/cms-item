@@ -95,11 +95,6 @@ public interface CmsChangeset {
 	Map<CmsItemPath, CmsChangesetItem> getItemsPath();
 	
 	/**
-	 * @return the number of changeset items
-	 */
-	int size();
-	
-	/**
 	 * @return true if there are no item changes in this changeset
 	 */
 	boolean isEmpty();
