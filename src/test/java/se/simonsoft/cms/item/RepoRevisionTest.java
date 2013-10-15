@@ -138,4 +138,11 @@ public class RepoRevisionTest {
 		assertEquals("As for isNewer, revision number should have precedence", 7, s.last().getNumber());
 	}
 	
+	@Test
+	public void testGetTimeIso() {
+		assertEquals("1970-01-01T00:00:01.123", new RepoRevision(1, new Date(1123)).getTimeIso());
+		assertEquals("1970-01-01T00:00:01.023", new RepoRevision(1, new Date(1023)).getTimeIso());
+		assertEquals("1970-01-01T00:00:01.000", new RepoRevision(1, new Date(1000)).getTimeIso());
+	}
+	
 }

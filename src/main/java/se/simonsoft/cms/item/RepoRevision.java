@@ -105,6 +105,13 @@ public class RepoRevision implements Comparable<RepoRevision> {
 	public String getDateIso() {
 		return ISO_FORMAT.format(getDate());
 	}
+	
+	/**
+	 * @return like {@link #getDateIso()} but with millis appended
+	 */
+	public String getTimeIso() {
+		return getDateIso() + "." + String.format("%03d", date.getTime() % 1000);
+	}
 
 	boolean isNumberTimestamp() {
 		return numberIsTimestamp;
@@ -157,7 +164,7 @@ public class RepoRevision implements Comparable<RepoRevision> {
 			return false;
 		} else {
 			if (!date.equals(r.getDate())) {
-				logger.warn("Revision {} instances unequal due to different timestamp, had {} got {}", getNumber(), getDateIso(), r.getDateIso());
+				logger.warn("Revision {} instances unequal due to different timestamp, had {} got {}", getNumber(), getTimeIso(), r.getTimeIso());
 				return false;
 			}
 		}
