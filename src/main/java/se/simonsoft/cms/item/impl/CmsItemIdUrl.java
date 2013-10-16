@@ -28,7 +28,7 @@ import se.simonsoft.cms.item.CmsRepository;
  * For operations having access to a logical ID,
  * use {@link CmsItemIdArg} instead.
  */
-public class CmsItemIdUrl extends CmsItemIdBase {
+public class CmsItemIdUrl extends CmsItemIdEncoderBase {
 	
 	private CmsItemPath path;
 	private CmsRepository repository;
@@ -47,10 +47,11 @@ public class CmsItemIdUrl extends CmsItemIdBase {
 	}
 	
 	public CmsItemIdUrl(CmsRepository repository, CmsItemPath targetPath, Long pegRev) {
+		super(repository);
+		this.repository = repository;
 		if (targetPath == CmsItemPath.ROOT) {
 			throw new IllegalArgumentException("Root path should be represented with null value in CmsItemId");
 		}
-		this.repository = repository;
 		this.path = targetPath;
 		this.pegRev = pegRev;
 	}

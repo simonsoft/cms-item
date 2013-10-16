@@ -135,9 +135,8 @@ public class CmsItemIdUrlTest {
 	public void testUrlencode() {
 		assertEquals("" + repo1 + "/a%26b", new CmsItemIdUrl(repo1, new CmsItemPath("/a&b")).getUrl());
 		assertEquals("" + repo1 + "/a%2Bb", new CmsItemIdUrl(repo1, new CmsItemPath("/a+b")).getUrl());
-		CmsRepository renc = mock(CmsRepository.class);
-		when(renc.getUrl()).thenReturn("http://+&%/r1");
-		assertEquals("Don't touch repository, was given a URL at creation",
+		CmsRepository renc = new CmsRepository("http://+&%/r1");
+		assertEquals("Don't touch repository, was given an encoded URL at creation",
 				"http://+&%/r1/p1", new CmsItemIdUrl(renc, p1).getUrl());
 	}
 	

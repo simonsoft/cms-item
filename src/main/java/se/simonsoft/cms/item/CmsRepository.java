@@ -16,6 +16,9 @@
 package se.simonsoft.cms.item;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,11 +29,17 @@ import se.simonsoft.cms.item.impl.CmsItemIdUrl;
  * 
  * We recommend against using non-ascii characters in hostname, parent path or repository name,
  * but this class does not care if path elements are encoded or not, it returns them as given.
+ * 
+ * However, we would only enforce that if this class was made abstract so that a configured repository is the only instance.
+ * Or if only {@link #CmsRepository(String)} was visible.
+ * We currently use new repository instances in for example {@link se.simonsoft.cms.item.impl.CmsItemIdArg#CmsItemIdArg(String)}.
  */
 public class CmsRepository implements Serializable {
 
-
 	private static final long serialVersionUID = 1L;
+	
+	protected static final String URLENCODE_ENCODING = "UTF-8";
+	
 	private static final Pattern P_ROOT = Pattern.compile("(https?)://([^/]+)");
 	private static final Pattern P_URL = Pattern.compile("(https?)://([^/]+)(.*)/([^/]+)");
 	private String protocol;
@@ -50,6 +59,13 @@ public class CmsRepository implements Serializable {
 		normalize();
 	}
 	
+	/**
+	 * @param rootUrl without trailing slash
+	 * @param parentPath with leading but not trailing slash,
+	 *  can not be urlencoded or require urlencoding because encoding behaviour is undefined
+	 * @param name repository name, no slashes,
+	 *  can not be urlencoded or require urlencoding because encoding behaviour is undefined
+	 */
 	public CmsRepository(String rootUrl, String parentPath, String name) {
 		Matcher m = P_ROOT.matcher(rootUrl);
 		if (!m.matches()) {
@@ -57,14 +73,21 @@ public class CmsRepository implements Serializable {
 		}
 		this.protocol = m.group(1);
 		this.host = m.group(2);
-		this.parent = parentPath;
-		this.name = name;
+		this.parent = parentPath; // ? maybe urlencode
+		this.name = name;         // ? maybe urlencode
 		if (parent == null || parent.endsWith("/") || !parent.startsWith("/")) {
 			throw new IllegalArgumentException("Parent path must have leading but no trailing slash, got " + parent);
 		}
 		normalize();
 	}
 	
+	/**
+	 * @param protocol
+	 * @param parentPath with leading but not trailing slash,
+	 *  can not be urlencoded or require urlencoding because encoding behaviour is undefined
+	 * @param name repository name, no slashes,
+	 *  can not be urlencoded or require urlencoding because encoding behaviour is undefined
+	 */
 	public CmsRepository(String protocol, String hostWithOptionalPort, String parentPath, String name) {
 		if (protocol != null && protocol.length() == 0) {
 			throw new IllegalArgumentException("Protocol can be null but not empty");
@@ -206,6 +229,23 @@ public class CmsRepository implements Serializable {
 		return getParentPath() + "/" + getName();
 	}
 
+	protected String urlencodeSegment(String pathSegment) {
+		try {
+			return URLEncoder.encode(pathSegment, URLENCODE_ENCODING).replace("+", "%20");
+		} catch (UnsupportedEncodingException e) {
+			// encoding is not from user input so this is clearly a fatal error
+			throw new RuntimeException("Failed to urlencode using encoding " + URLENCODE_ENCODING + ", value: " + pathSegment);
+		}
+	}
+	
+	public String urldecode(String encodedPath) {
+		try {
+			return URLDecoder.decode(encodedPath, CmsRepository.URLENCODE_ENCODING);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException("Failed to urldecode using encoding " + URLENCODE_ENCODING + ", value: " + encodedPath);
+		}
+	}
+	
 	/**
 	 * Verifies that parent path and repository name is identical.
      * Verifies host equality on the two instances only if host is known on both.

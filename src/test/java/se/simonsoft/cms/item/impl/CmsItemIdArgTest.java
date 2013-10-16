@@ -296,4 +296,38 @@ public class CmsItemIdArgTest {
 		}
 	}
 	
+	@Test
+	public void testRelPathInstanceReuse() {
+		CmsItemId id = new CmsItemIdArg("x-svn:///svn/demo1^/v/ab/c.xml");
+		assertTrue("there's quite some string manipulation in conversion to path so this should be done only once",
+				id.getRelPath() == id.getRelPath());
+	}
+	
+	@Test
+	public void testValidateRelPathAtCreation() {
+		try {
+			new CmsItemIdArg("x-svn:///svn/demo1^whot");
+		} catch (IllegalArgumentException e) {
+			assertEquals("Invalid path: whot", e.getMessage());
+		}
+	}
+	
+	@Test
+	public void testRepositoryNameNeedsEncoding() {
+		// It is reasonable to not support this in repo part of logical IDs, but should we maybe warn or bail out?
+		CmsItemId id1 = new CmsItemIdArg("x-svn:///svn/de%20mo1^/ab.xml");
+		CmsItemId id2 = new CmsItemIdArg("x-svn:///s%20vn/demo1^/ab.xml");
+		CmsItemId id3a = new CmsItemIdArg("x-svn:///s%20vn/de%20mo1^/a%20b.xml");
+		CmsItemId id3b = new CmsItemIdArg("x-svn://host.a:987/s%20vn/de%20mo1^/a%20b.xml");
+		assertEquals("x-svn:///svn/de%20mo1^/ab.xml", id1.getLogicalId());
+		assertEquals("/svn", id1.getRepository().getParentPath());
+		//assertEquals("de mo1", id1.getRepository().getName());
+		assertEquals("/svn/de%20mo1", id1.getRepository().getUrlAtHost());
+		//assertEquals("/s vn", id2.getRepository().getParentPath());
+		assertEquals("/s%20vn/demo1", id2.getRepository().getUrlAtHost());
+		assertEquals("/s%20vn/de%20mo1", id3a.getRepository().getUrlAtHost());
+		assertEquals("http://host.a:987/s%20vn/de%20mo1", id3b.getRepository().getUrl());
+		assertEquals("http://host.a:987/s%20vn/de%20mo1/a%20b.xml", id3b.getUrl());
+	}
+	
 }
