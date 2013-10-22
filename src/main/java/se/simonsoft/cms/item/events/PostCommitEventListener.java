@@ -17,6 +17,8 @@ package se.simonsoft.cms.item.events;
 
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
+import se.simonsoft.cms.item.events.change.CmsChangesetItem;
+import se.simonsoft.cms.item.inspection.CmsChangesetReader;
 
 /**
  * Gets notified when a commit is done to the CMS.
@@ -32,9 +34,10 @@ import se.simonsoft.cms.item.RepoRevision;
  * using the multibinder feature.
  * Hooks are executed in the order they are bound.
  * 
- * @deprecated A hook script framework should do this, services should listen to changeset events using {@link ChangesetEventListener}.
- * This interface is now internal to webapp, and quite possible an absraction layer we no longer need,
- * although it is quite clear that indexing and other hook processing has different needs.
+ * Note that this should not be used for changeset access or
+ * access to content of the committed files (no {@link CmsChangesetReader} calls).
+ * A framework that publishes {@link CmsChangesetItem} must be used to avoid
+ * multiple reads of the same content. Such a framework exists in indexing.
  */
 public interface PostCommitEventListener {
 
