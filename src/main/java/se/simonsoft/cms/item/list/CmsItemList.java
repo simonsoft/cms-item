@@ -19,6 +19,12 @@ import java.util.Map;
 
 import se.simonsoft.cms.item.CmsItem;
 
+/**
+ * Represents a list of items, or at the very least a list of IDs resulting from some query.
+ * 
+ * What you can get out of the list depends on the service used to retrieve it
+ * and the parameters given to the call.
+ */
 public interface CmsItemList extends Iterable<CmsItem> {
 
 	public static final int SIZE_UNKNOWN = -1;
