@@ -157,10 +157,10 @@ public class RepoRevision implements Comparable<RepoRevision> {
 		RepoRevision r = (RepoRevision) obj;
 		if (number != r.getNumber()) return false;
 		if (date == null) {
-			logger.warn("Comparing revision {} that lacks timestamp with {}", getNumber(), r);
+			logger.debug("Comparing revision {} that lacks timestamp with {}", getNumber(), r);
 			if (r.getDate() != null) return false;
 		} else if (r.getDate() == null) {
-			logger.warn("Comparing {} with revision that lacks timestamp {}", this, r.getNumber());
+			logger.debug("Comparing {} with revision that lacks timestamp {}", this, r.getNumber());
 			return false;
 		} else {
 			if (!date.equals(r.getDate())) {
