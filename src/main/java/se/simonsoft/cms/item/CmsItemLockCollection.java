@@ -145,9 +145,14 @@ public abstract class CmsItemLockCollection implements Serializable, Iterable<Cm
 		return map.values().iterator();
 	}
 	
+	/**
+	 * @return lock tokens mapped to path, suitable for commit editor
+	 */
 	public Map<String, String> getPathTokens() {
 		Map<String, String> pt = new LinkedHashMap<String, String>();
 		for (CmsItemPath path : map.keySet()) {
+			// Should we remove the leading slash since editor expects a relative path?
+			// Resolved lock issues (encoding of paths) without removing the leading slash.
 			pt.put(path.getPath(), map.get(path).getToken());
 		}
 		return pt;
