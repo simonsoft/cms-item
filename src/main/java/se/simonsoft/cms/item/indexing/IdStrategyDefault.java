@@ -52,13 +52,18 @@ public class IdStrategyDefault implements IdStrategy {
 		return new RepoRevision(itemId.getPegRev(), null);
 	}
 	
+	@Override
+	public long getRevisionMax() {
+		return 9999999999L;
+	}
+	
 	/**
 	 * @param revision
 	 * @return how to represent a revision in id
 	 */
 	@Override
 	public String getIdRevision(RepoRevision revision) {
-		return Long.toString(revision.getNumber());
+		return String.format("%010d", revision.getNumber());
 	}
 	
 	protected String getIdHost(CmsRepository repository) {

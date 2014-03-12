@@ -65,5 +65,10 @@ public interface IdStrategy {
 	 * @return the format of a revision
 	 */
 	public String getIdRevision(RepoRevision revision);
+
+	/**
+	 * @return the maximum revision
+	 */
+	public long getRevisionMax();
 	
 }
