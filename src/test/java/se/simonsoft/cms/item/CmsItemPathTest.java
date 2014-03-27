@@ -198,6 +198,20 @@ public class CmsItemPathTest {
 	}
 	
 	@Test
+	public void testGetNameBaseAndExtensionNoExtension() {
+		CmsItemPath p = new CmsItemPath("/noextension");
+		assertEquals("", p.getExtension());
+		assertEquals("noextension", p.getNameBase());
+	}
+	
+	@Test
+	public void testGetNameBaseAndExtensionSingleChar() {
+		CmsItemPath p = new CmsItemPath("/a");
+		assertEquals("", p.getExtension());
+		assertEquals("a", p.getNameBase());
+	}
+	
+	@Test
 	public void testGetNameBaseAndExtensionDotFirstOnly() {
 		CmsItemPath p = new CmsItemPath("/.hiddenfile");
 		assertEquals("", p.getExtension());

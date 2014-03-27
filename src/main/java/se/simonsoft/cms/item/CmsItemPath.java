@@ -252,7 +252,7 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 	public String getExtension() {
 		String n = getName();
 		int d = n.lastIndexOf('.');
-		if (d == 0) {
+		if (d == 0 || d == -1) {
 			return "";
 		}
 		return n.substring(d+1);
