@@ -84,16 +84,37 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		}
 	}
 	
-	protected CmsItemIdArg(CmsRepository repository, String relpathEncoded, Long pegRev) {
+	public CmsItemIdArg(CmsRepository repository, String url, Long pegRev) {
 		this.repository = repository;
 		this.orgfull = repository.isHostKnown();
-		setRelPathEncoded(relpathEncoded, repository);
-		if (relpathEncoded == null) {
-			throw new IllegalArgumentException("relpath can be " + REPO_ROOT_PATH + " but not null");
+		
+		String repoUrl = repository.getUrl();
+		if (!url.startsWith(repoUrl)) {
+			throw new IllegalArgumentException("url must be within repository: " + url);
 		}
+		
+		int repoLen = repoUrl.length();
+		String relpathEncoded = url.substring(repoLen);
+		if (relpathEncoded.equals("")) {
+			relpathEncoded = REPO_ROOT_PATH;
+		}
+		setRelPathEncoded(relpathEncoded, repository);
 		this.pegRev = pegRev;
 		this.orgpeg = pegRev != null;
 	}
+	
+
+	protected CmsItemIdArg(CmsRepository repository, CmsItemIdRelpathEncoded relpathEncoded, Long pegRev) {
+		this.repository = repository;
+		this.orgfull = repository.isHostKnown();
+		if (relpathEncoded == null) {
+			throw new IllegalArgumentException("relpath can be " + REPO_ROOT_PATH + " but not null");
+		}
+		setRelPathEncoded(relpathEncoded.getRelpathEncoded(), repository);
+		this.pegRev = pegRev;
+		this.orgpeg = pegRev != null;
+	}
+
 
 	private void setRelPathEncoded(String relpathEncoded, CmsRepository repository) {
 		if (this.relpathEncoded != null) {
@@ -255,14 +276,14 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	@Override
 	public CmsItemId withRelPath(CmsItemPath newRelPath) {
 		if (newRelPath == null) {
-			return new CmsItemIdArg(repository, REPO_ROOT_PATH, pegRev);
+			return new CmsItemIdArg(repository, new CmsItemIdRelpathEncoded(REPO_ROOT_PATH), pegRev);
 		}
 		if (!newRelPath.isAncestorOf(getRelPath())) {
 			throw new IllegalArgumentException("New path based on this CmsItemIdArg must be parent of '" + getRelPath() + "'");
 		}
 		for (String p = relpathEncoded; p.length() > 0; p = p.replaceFirst("/[^/]+$", "")) {
 			if (getRelPath(p, repository).equals(newRelPath)) { // double check
-				return new CmsItemIdArg(repository, p, pegRev);
+				return new CmsItemIdArg(repository, new CmsItemIdRelpathEncoded(p), pegRev);
 			}
 		}
 		throw new RuntimeException("Failed to get encoded parent " + newRelPath + " from " + this);
@@ -270,7 +291,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 
 	@Override
 	public CmsItemId withPegRev(Long newPegRev) {
-		return new CmsItemIdArg(repository, relpathEncoded, newPegRev);
+		return new CmsItemIdArg(repository, new CmsItemIdRelpathEncoded(relpathEncoded), newPegRev);
 	}
 
 	@Override
@@ -280,6 +301,25 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		} else {
 			return getLogicalId();
 		}
+	}
+	
+	protected class CmsItemIdRelpathEncoded {
+		
+		private String relpathEncoded;
+		
+		CmsItemIdRelpathEncoded(String relpathEncoded) {
+			
+			if (relpathEncoded == null) {
+				throw new IllegalArgumentException("relpath can be " + REPO_ROOT_PATH + " but not null");
+			}
+			this.relpathEncoded = relpathEncoded;
+		}
+
+		public String getRelpathEncoded() {
+			return relpathEncoded;
+		}
+			
+		
 	}
 
 }
