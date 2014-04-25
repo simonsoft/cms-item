@@ -18,6 +18,9 @@ package se.simonsoft.cms.item;
 /**
  * Used instead of String to identify CMS items (a.k.a. objects/entries/files or folders).
  * <p>
+ * Preferred instantiation is through {@link CmsRepository#getItemId()}
+ * followed by {@link #withRelPath(CmsItemPath)} and {@link #withPegRev(Long)}.
+ * <p>
  * The interface methods should return the <em>persistent</em> form of id,
  * typically location and revision -- never parameters for transformation etc.
  * <p>
@@ -35,7 +38,7 @@ package se.simonsoft.cms.item;
 public interface CmsItemId {
 	
 	/**
-	 * Shared across implementations.
+	 * Default {@link #getLogicalId()} protocol, unless a backend impl specifies otherwise (which we don't have the architecture for now).
 	 */
 	static final String PROTO = "x-svn";
 	/**
