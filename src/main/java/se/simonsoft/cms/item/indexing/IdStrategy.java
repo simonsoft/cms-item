@@ -22,6 +22,8 @@ import se.simonsoft.cms.item.RepoRevision;
 
 /**
  * Produces different strings to identify repository contents such as files, folders, repositories and commits.
+ * Identification is cross-backend, unlike {@link CmsItemId#getLogicalId()} (allowing references/joins between items in different backends),
+ * and might support clustered/replicated/merged indexes.
  */
 public interface IdStrategy {
 

@@ -166,4 +166,27 @@ public class CmsItemIdUrlTest {
 		new CmsItemIdUrl(mock(CmsRepository.class), CmsItemPath.ROOT);
 	}
 	
+	/**
+	 * Black box test of {@link CmsItemIdEncoderBase}, depended on for {@link CmsRepository#getItemId()}, {@link CmsItemId#getUrl()}.
+	 */
+	@Test
+	public void testUrlEncodingCustom() {
+		@SuppressWarnings("serial")
+		CmsRepository repoWeirdBackend = new CmsRepository("http://example.net/weird/repo") {
+			@Override
+			protected String urlencodeSegment(String pathSegment) {
+				return pathSegment.replace("x", "ENC");
+			}
+			@Override
+			public String urldecode(String encodedPath) {
+				return encodedPath.replace("ENC", "x");
+			}
+		};
+		CmsItemId idFromRepo = repoWeirdBackend.getItemId().withRelPath(new CmsItemPath("/fax/axt"));
+		assertEquals("Should encode using repository's rules", "/weird/repo/faENC/aENCt", idFromRepo.getUrlAtHost());
+		assertEquals("Should use this encoding in full URLs", "http://example.net/weird/repo/faENC/aENCt", idFromRepo.getUrl());
+		assertEquals("The decode API is of little use externally, but can be used in CmsItemIdArg",
+				"/weird/repo/fax/axt", repoWeirdBackend.urldecode(idFromRepo.getUrlAtHost()));
+	}
+	
 }

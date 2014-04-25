@@ -70,6 +70,7 @@ public interface CmsItemId {
 	
 	/**
 	 * Local id without hostname, unique within the context of a connection to a server.
+	 * Either constructed by backend specific impls, or merely transferred using a generic {@link se.simonsoft.cms.item.impl.CmsItemIdArg} impl.
 	 * Note that the future definition of persistent may include fragment identifiers and transforms.
 	 * @return logical id, including persistent parameters, i.e. peg rev, but not including actions etc.
 	 */

@@ -22,6 +22,7 @@ import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import se.simonsoft.cms.item.impl.CmsItemIdArg;
 import se.simonsoft.cms.item.impl.CmsItemIdUrl;
 
 /**
@@ -142,10 +143,26 @@ public class CmsRepository implements Serializable {
 	}
 	
 	/**
-	 * @return item id for use in path based operations, with relpath null, not valid as logical id
+	 * Returns {@link CmsItemIdEncoderBase}.
+	 * @return item id for use in path based operations, with relpath null,
+	 * 	can encode URLs but default impl has no knowledge of backend's {@link CmsItemId#getLogicalId()}
 	 */
 	public CmsItemId getItemId() {
 		return new CmsItemIdUrl(this, (CmsItemPath) null);
+	}
+	
+	/**
+	 * Returns a "transfer" id, and validates that it belongs to this repository.
+	 * 
+	 * We could also detect non-httml URLs and try {@link CmsItemIdArg#CmsItemIdArg(String)} for logical ID,
+	 * but we still need a single string CmsItemId constructor for REST methods.
+	 * 
+	 * @param url An item URL within the repository
+	 * @return With path based on the given URL, supporting {@link CmsItemId#withPegRev(Long)} but not necessarily {@link CmsItemIdArg#withRelPath(CmsItemPath)}
+	 */
+	@SuppressWarnings("deprecation") // legitimate internal uset
+	public CmsItemId getItemId(String url) {
+		return new CmsItemIdArg(this, url, null);
 	}
 	
 	/**
@@ -229,6 +246,11 @@ public class CmsRepository implements Serializable {
 		return getParentPath() + "/" + getName();
 	}
 
+	/**
+	 * Default URL-encoding without knowledge of the backend's encoding rules, uses {@link URLEncoder} followed by "+" replaced by "%20".
+	 * @param pathSegment File system representation of part, between two slashes, of a path.
+	 * @return Urlencoded representation.
+	 */
 	protected String urlencodeSegment(String pathSegment) {
 		try {
 			return URLEncoder.encode(pathSegment, URLENCODE_ENCODING).replace("+", "%20");
@@ -238,6 +260,11 @@ public class CmsRepository implements Serializable {
 		}
 	}
 	
+	/**
+	 * Default URL decoding, should be able to decode most valid encodings but could need overriding together with {@link #urldecode(String)}.
+	 * @param encodedPath Any urlencoded part of a path
+	 * @return Filesystem equivalent
+	 */
 	public String urldecode(String encodedPath) {
 		try {
 			return URLDecoder.decode(encodedPath, CmsRepository.URLENCODE_ENCODING);

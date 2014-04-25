@@ -17,6 +17,7 @@ package se.simonsoft.cms.item;
 
 import static org.junit.Assert.*;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class CmsRepositoryTest {
@@ -203,6 +204,46 @@ public class CmsRepositoryTest {
 		assertEquals(repo1, dir.getRepository());
 		assertEquals(null, repo1.getItemId().getPegRev());
 		assertEquals(new Long(3), repo1.getItemId().withPegRev(3L).getPegRev());
+	}
+	
+	@Test
+	public void testGetItemIdTransfer() {
+		CmsRepository repo1 = new CmsRepository("https://host/svn/repo1");
+		CmsItemId item1 = repo1.getItemId("https://host/svn/repo1/fo%20a/file.txt");
+		assertEquals(repo1, item1.getRepository());
+		assertEquals("/fo a/file.txt", item1.getRelPath().toString());
+	}
+	
+	@Test
+	@Ignore // what's the spec?
+	public void testGetItemIdTransferSslAgnostic() {
+		CmsRepository repo1 = new CmsRepository("http://host/svn/repo1");
+		CmsItemId item1 = repo1.getItemId("https://host/svn/repo1/fo%20a/file.txt");
+		assertEquals(repo1, item1.getRepository());
+		assertEquals("/fo a/file.txt", item1.getRelPath().toString());
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testGetItemIdDifferentRepo() {
+		new CmsRepository("https://host/svn/repo1").getItemId("https://host/svn/repo2/file.txt");
+	}
+	
+	@Test
+	public void testGetItemIdTransferDefaultBackend() {
+		CmsRepository repo1 = new CmsRepository("https://host/svn/repo1");
+		CmsItemId item1 = repo1.getItemId("https://host/svn/repo1/fo%20a/file.txt");
+		assertEquals(repo1, item1.getRepository());
+		assertEquals("x-svn:///svn/repo1^/fo%20a/file.txt", item1.getLogicalId());
+		assertEquals("x-svn://host/svn/repo1^/fo%20a/file.txt", item1.getLogicalIdFull());
+	}
+	
+	@Test
+	public void testGetItemIdTransferPreservesEncoding() {
+		CmsRepository repo1 = new CmsRepository("https://host/svn/repo1");
+		assertEquals("https://host/svn/repo1/fo%2Ba/file.txt",
+				repo1.getItemId("https://host/svn/repo1/fo%2Ba/file.txt").getUrl());
+		assertEquals("https://host/svn/repo1/fo+a/file.txt",
+				repo1.getItemId("https://host/svn/repo1/fo+a/file.txt").getUrl());		
 	}
 	
 }

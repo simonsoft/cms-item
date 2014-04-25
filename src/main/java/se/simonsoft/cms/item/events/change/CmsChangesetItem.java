@@ -106,7 +106,7 @@ public interface CmsChangesetItem extends CmsChangesetItemFlags {
 	 * 
 	 * @return Previous change for this item, including derived.
 	 */
-	@Deprecated // returning a revision is less of a distraction for the indexing case
+	@Deprecated // returning a revision is less of a distraction for the indexing case, use getRevisionObsoleted
 	CmsChangesetItem getPreviousChange();
 	
 	/**

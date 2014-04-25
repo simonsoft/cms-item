@@ -84,6 +84,9 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		}
 	}
 	
+	/**
+	 * @deprecated use {@link CmsRepository#getItemId(String)} externally
+	 */
 	public CmsItemIdArg(CmsRepository repository, String url, Long pegRev) {
 		this.repository = repository;
 		this.orgfull = repository.isHostKnown();
