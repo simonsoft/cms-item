@@ -283,6 +283,12 @@ public class CmsItemIdArgTest {
 		assertEquals("/s/r2/v/a%20b/c.xml", new CmsItemIdArg("x-svn://host.x/s/r2^/v/a%20b/c.xml?p=123").getUrlAtHost());
 		assertEquals("not expecting parent path or repo name to be encoded, should not be allowed",
 				"/svn/not allowed/v/a%20b/c.xml", new CmsItemIdArg("x-svn:///svn/not allowed^/v/a%20b/c.xml").getUrlAtHost());
+		
+		assertEquals("/svn/repo1/demo/Documents/Presentation%20-%20(B).xml", 
+				new CmsItemIdArg("x-svn://localtesthost/svn/repo1^/demo/Documents/Presentation%20-%20(B).xml").getUrlAtHost());
+		assertEquals("/svn/repo1/demo/Documents/Presentation%20-%20(B).xml", 
+				new CmsItemIdUrl(new CmsRepository("http://localtesthost/svn/repo1"),
+						new CmsItemPath("/demo/Documents/Presentation - (B).xml")).getUrlAtHost());
 	}
 	
 	@Test
