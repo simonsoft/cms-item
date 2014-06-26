@@ -26,14 +26,14 @@ import se.simonsoft.cms.item.CmsRepository;
  * Concrete class for use in the common case when a valid logical id
  * is known from metadata etc and provided as string argument to an operation.
  * 
- * Mutable: allows adding of hostname and peg revision if not already set.
+ * Mutable: allows adding of hostname if not already set.
  * 
  * Provides a String argument constructor for use as JAX-RS parameter.
  * 
- * This class never needs to deal with encoding of logical ID, which is tricky,
- * only decoding of path, which is simple.
  */
-public class CmsItemIdArg extends CmsItemIdBase {
+public class CmsItemIdArg extends CmsItemIdBase { 
+	// Difficult to extend CmsItemIdEncoderBase due to constructor CmsItemIdArg(String logicalId).
+	// Could move the pattern matching to CmsItemIdBase
 
 	// TODO before adding more validation here make sure it can be shared
 	// between SvnLogicalId and other implementations.
@@ -84,29 +84,29 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		}
 	}
 	
-	/**
-	 * @deprecated use {@link CmsRepository#getItemId(String)} externally
-	 */
-	public CmsItemIdArg(CmsRepository repository, String url, Long pegRev) {
-		this.repository = repository;
-		this.orgfull = repository.isHostKnown();
-		
-		String repoUrl = repository.getUrl();
-		if (!url.startsWith(repoUrl)) {
-			throw new IllegalArgumentException("url must be within repository: " + url);
-		}
-		
-		int repoLen = repoUrl.length();
-		String relpathEncoded = url.substring(repoLen);
-		if (relpathEncoded.equals("")) {
-			relpathEncoded = REPO_ROOT_PATH;
-		}
-		setRelPathEncoded(relpathEncoded, repository);
-		this.pegRev = pegRev;
-		this.orgpeg = pegRev != null;
+	public CmsItemIdArg(CmsRepository repository) {
+		this(repository, CmsItemPath.ROOT, null);
+	}	
+	
+	public CmsItemIdArg(CmsRepository repository, CmsItemPath itemPath) {
+		this(repository, itemPath, null);
 	}
 	
+	public CmsItemIdArg(CmsRepository repository, CmsItemPath itemPath, Long pegRev) {
+		this.repository = repository;
+		if (itemPath == null || itemPath == CmsItemPath.ROOT) {
+			this.relpathDecoded = null; //Root path should be represented with null value in CmsItemId
+			this.relpathEncoded = REPO_ROOT_PATH;
+		} else {
+			this.relpathDecoded = itemPath;
+			this.relpathEncoded = repository.urlencode(relpathDecoded);
+		}
+		this.pegRev = pegRev;
+	}
 
+
+	
+/*
 	protected CmsItemIdArg(CmsRepository repository, CmsItemIdRelpathEncoded relpathEncoded, Long pegRev) {
 		this.repository = repository;
 		this.orgfull = repository.isHostKnown();
@@ -117,14 +117,16 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		this.pegRev = pegRev;
 		this.orgpeg = pegRev != null;
 	}
-
+*/
 
 	private void setRelPathEncoded(String relpathEncoded, CmsRepository repository) {
 		if (this.relpathEncoded != null) {
 			throw new IllegalStateException("Instance should not be mutable");
+			// does not guard against making a repository id point to an item in the repo.
 		}
-		this.relpathEncoded = relpathEncoded;
+		this.relpathEncoded = relpathEncoded; // REMOVE after testing
 		this.relpathDecoded = getRelPath(relpathEncoded, repository);
+		//this.relpathEncoded = repository.urlencode(relpathDecoded);
 	}
 	
 	public boolean isFullyQualifiedOriginally() {
@@ -139,6 +141,10 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		return pegRev != null;
 	}
 	
+	/**
+	 * 
+	 * @deprecated class is no longer mutable with respect to pegRev
+	 */
 	public boolean isPeggedOriginally() {
 		return orgpeg;
 	}
@@ -278,23 +284,13 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	 */
 	@Override
 	public CmsItemId withRelPath(CmsItemPath newRelPath) {
-		if (newRelPath == null) {
-			return new CmsItemIdArg(repository, new CmsItemIdRelpathEncoded(REPO_ROOT_PATH), pegRev);
-		}
-		if (!newRelPath.isAncestorOf(getRelPath())) {
-			throw new IllegalArgumentException("New path based on this CmsItemIdArg must be parent of '" + getRelPath() + "'");
-		}
-		for (String p = relpathEncoded; p.length() > 0; p = p.replaceFirst("/[^/]+$", "")) {
-			if (getRelPath(p, repository).equals(newRelPath)) { // double check
-				return new CmsItemIdArg(repository, new CmsItemIdRelpathEncoded(p), pegRev);
-			}
-		}
-		throw new RuntimeException("Failed to get encoded parent " + newRelPath + " from " + this);
+		
+		return new CmsItemIdArg(this.repository, newRelPath, pegRev);
 	}
 
 	@Override
 	public CmsItemId withPegRev(Long newPegRev) {
-		return new CmsItemIdArg(repository, new CmsItemIdRelpathEncoded(relpathEncoded), newPegRev);
+		return new CmsItemIdArg(this.repository, this.relpathDecoded, newPegRev);
 	}
 
 	@Override
@@ -306,7 +302,8 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		}
 	}
 	
-	protected class CmsItemIdRelpathEncoded {
+	// TODO: Remove?
+	class CmsItemIdRelpathEncoded {
 		
 		private String relpathEncoded;
 		

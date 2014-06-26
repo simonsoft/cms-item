@@ -177,9 +177,10 @@ public class CmsItemIdUrlTest {
 	/**
 	 * The root instance must not propagate to parts of the system that are define root as null, or we'll end up having to handle both.
 	 */
-	@Test(expected=IllegalArgumentException.class)
+	@Test
 	public void testProhibitRoot() {
-		new CmsItemIdUrl(mock(CmsRepository.class), CmsItemPath.ROOT);
+		CmsItemIdUrl id = new CmsItemIdUrl(mock(CmsRepository.class), CmsItemPath.ROOT);
+		assertNull(id.getRelPath());
 	}
 	
 	/**

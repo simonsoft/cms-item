@@ -189,14 +189,22 @@ public class CmsItemIdArgTest {
 	@Test
 	public void testWithRelPathEncoding() {
 		CmsItemId i1 = new CmsItemIdArg("x-svn:///svn/demo1^/v/a%20b/c.xml");
-		assertEquals("Should preserve logicalId encoding", 
+		assertEquals("Should preserve logicalId encoding (from constructor)", 
 				"x-svn:///svn/demo1^/v/a%20b", i1.withRelPath(new CmsItemPath("/v/a b")).getLogicalId());
-		try {
-			i1.withRelPath(new CmsItemPath("/v/a b/d.xml"));
-			fail("only parents can be supported, unless we want to introduce encoding logic in CmsItemIdArg");
-		} catch (IllegalArgumentException e) {
-			assertEquals("New path based on this CmsItemIdArg must be parent of '/v/a b/c.xml'", e.getMessage());
-		}
+		
+		assertEquals("Should now be able to do logicalId encoding", 
+				"x-svn:///svn/demo1^/v%20(copy)/a%20b", i1.withRelPath(new CmsItemPath("/v (copy)/a b")).getLogicalId());
+		
+		
+		// The preservation can be discussed. Should it normalize even via constructor? Will impact equals(..)?
+		CmsItemId i2 = new CmsItemIdArg("x-svn:///svn/demo1^/v%20%28copy%29/a%20b/fä.xml");
+		assertEquals("Should preserve logicalId encoding (from constructor)", 
+				"x-svn:///svn/demo1^/v%20%28copy%29/a%20b/fä.xml", i2.getLogicalId());
+		
+		// Important to ensure that new paths are freshly encoded with normalizing code. (new in cms-item 2.3)
+		assertEquals("Should normalize logicalId encoding (when changing relpath)", 
+				"x-svn:///svn/demo1^/v%20(copy)/a%20b/f%C3%A4.xml", i2.withRelPath(new CmsItemPath("/v (copy)/a b/fä.xml")).getLogicalId());
+		
 	}
 	
 	@Test
@@ -347,56 +355,6 @@ public class CmsItemIdArgTest {
 		assertEquals("http://host.a:987/s%20vn/de%20mo1/a%20b.xml", id3b.getUrl());
 	}
 	
-	@Test
-	public void testConstructorUrl() {
-		
-		String url1 = "http://host.n/svn/d1";
-		CmsRepository repo1 = new CmsRepository(url1);
-		
-		CmsItemId id1_0 = new CmsItemIdArg(repo1, "http://host.n/svn/d1", null);
-		assertEquals(repo1, id1_0.getRepository());
-		assertEquals(url1, id1_0.getRepository().getUrl());
-		assertEquals("x-svn:///svn/d1^/", id1_0.getLogicalId());
-		assertEquals("x-svn://host.n/svn/d1^/", id1_0.getLogicalIdFull());
-		assertNull(id1_0.getRelPath());
-		
-		CmsItemId id1_1 = new CmsItemIdArg(repo1, "http://host.n/svn/d1/vv/xml/8.xml", null);
-		assertEquals(repo1, id1_1.getRepository());
-		assertEquals(url1, id1_1.getRepository().getUrl());
-		assertEquals("x-svn:///svn/d1^/vv/xml/8.xml", id1_1.getLogicalId());
-		assertEquals("x-svn://host.n/svn/d1^/vv/xml/8.xml", id1_1.getLogicalIdFull());
-		assertEquals("/vv/xml/8.xml", id1_1.getRelPath().toString());
-		
-		CmsItemId id1_2 = new CmsItemIdArg(repo1, "http://host.n/svn/d1/vv/xml/8.xml", 123L);
-		assertEquals("x-svn:///svn/d1^/vv/xml/8.xml?p=123", id1_2.getLogicalId());
-		assertEquals("x-svn://host.n/svn/d1^/vv/xml/8.xml?p=123", id1_2.getLogicalIdFull());
-		assertEquals("/vv/xml/8.xml", id1_2.getRelPath().toString());
-		
-		CmsItemId id1_3 = new CmsItemIdArg(repo1, "http://host.n/svn/d1/v/a%20b/c.xml", null);
-		assertEquals(repo1, id1_1.getRepository());
-		assertEquals(url1, id1_1.getRepository().getUrl());
-		assertEquals("x-svn:///svn/d1^/v/a%20b/c.xml", id1_3.getLogicalId());
-		assertEquals("x-svn://host.n/svn/d1^/v/a%20b/c.xml", id1_3.getLogicalIdFull());
-		assertEquals("/v/a b/c.xml", id1_3.getRelPath().toString());
-		
-		
-		String url2 = "http://host.n/svn/svnparent/d1";
-		CmsRepository repo2 = new CmsRepository(url2);
-		
-		CmsItemId id2_1 = new CmsItemIdArg(repo2, "http://host.n/svn/svnparent/d1/vv/xml/8.xml", null);
-		assertEquals(repo2, id2_1.getRepository());
-		assertEquals(url2, id2_1.getRepository().getUrl());
-		assertEquals("x-svn:///svn/svnparent/d1^/vv/xml/8.xml", id2_1.getLogicalId());
-		assertEquals("x-svn://host.n/svn/svnparent/d1^/vv/xml/8.xml", id2_1.getLogicalIdFull());
-		assertEquals("/vv/xml/8.xml", id2_1.getRelPath().toString());
-		
-		try {
-			@SuppressWarnings("unused")
-			CmsItemId id1_illegal = new CmsItemIdArg(repo1, "http://host.n/svn/", null);
-			fail("should throw IAE");
-		} catch (IllegalArgumentException e) {
-			
-		}
-	}
+
 	
 }

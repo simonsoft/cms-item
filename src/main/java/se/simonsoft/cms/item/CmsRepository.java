@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 import se.simonsoft.cms.item.encoding.CmsItemURLEncoder;
 import se.simonsoft.cms.item.impl.CmsItemIdArg;
 import se.simonsoft.cms.item.impl.CmsItemIdEncoderBase;
-import se.simonsoft.cms.item.impl.CmsItemIdUrl;
 
 /**
  * Represents repository URL information.
@@ -151,21 +150,36 @@ public class CmsRepository implements Serializable {
 	 * 	can encode URLs but default impl has no knowledge of backend's {@link CmsItemId#getLogicalId()}
 	 */
 	public CmsItemId getItemId() {
-		return new CmsItemIdUrl(this, (CmsItemPath) null);
+		return new CmsItemIdArg(this, (CmsItemPath) null);
 	}
 	
 	/**
 	 * Returns a "transfer" id, and validates that it belongs to this repository.
 	 * 
-	 * We could also detect non-httml URLs and try {@link CmsItemIdArg#CmsItemIdArg(String)} for logical ID,
+	 * We could also detect non-http URLs and try {@link CmsItemIdArg#CmsItemIdArg(String)} for logical ID,
 	 * but we still need a single string CmsItemId constructor for REST methods.
 	 * 
 	 * @param url An item URL within the repository
 	 * @return With path based on the given URL, supporting {@link CmsItemId#withPegRev(Long)} but not necessarily {@link CmsItemIdArg#withRelPath(CmsItemPath)}
 	 */
-	@SuppressWarnings("deprecation") // legitimate internal uset
 	public CmsItemId getItemId(String url) {
-		return new CmsItemIdArg(this, url, null);
+		
+		CmsItemPath relpath;
+		
+		String repoUrl = getUrl();
+		if (!url.startsWith(repoUrl)) {
+			throw new IllegalArgumentException("url must be within repository: " + url);
+		}
+		
+		int repoLen = repoUrl.length();
+		String relpathEncoded = url.substring(repoLen);
+		if (relpathEncoded.equals("")) {
+			relpath = null;
+		} else {
+			relpath = new CmsItemPath(urldecode(relpathEncoded));
+		}
+		
+		return new CmsItemIdArg(this, relpath, null);
 	}
 	
 	/**
@@ -261,6 +275,27 @@ public class CmsRepository implements Serializable {
 			// encoding is not from user input so this is clearly a fatal error
 			throw new RuntimeException("Failed to urlencode, value: " + pathSegment, e);
 		}
+	}
+	
+	/**
+	 * Helper for one way conversion. Should now be identical to SvnLogicalId for encoding rules.
+	 * @param path a valid path
+	 * @return urlencoded UTF-8 except slashes
+	 */
+	public String urlencode(CmsItemPath path) {
+		StringBuffer enc = new StringBuffer();
+		try {
+			for (String p : path.getPathSegments()) {
+				String es = urlencodeSegment(p);
+				if (es == null) {
+					throw new AssertionError("urlencoding not implemented for repository " + this); // guard against bad repository impls for example mocked repositories in tests
+				}
+				enc.append('/').append(es);
+			}
+		} catch (Exception e) {
+			throw new RuntimeException("Url encoding failed for path " + path, e);
+		}
+		return enc.toString();
 	}
 	
 	/**

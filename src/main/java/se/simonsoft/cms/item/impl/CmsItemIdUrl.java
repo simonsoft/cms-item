@@ -46,17 +46,17 @@ public class CmsItemIdUrl extends CmsItemIdEncoderBase {
 		this(repository, null, null);
 	}	
 	
-	public CmsItemIdUrl(CmsRepository repository, CmsItemPath targetPath) {
-		this(repository, targetPath, null);
+	public CmsItemIdUrl(CmsRepository repository, CmsItemPath itemPath) {
+		this(repository, itemPath, null);
 	}
 	
-	public CmsItemIdUrl(CmsRepository repository, CmsItemPath targetPath, Long pegRev) {
+	public CmsItemIdUrl(CmsRepository repository, CmsItemPath itemPath, Long pegRev) {
 		super(repository);
 		this.repository = repository;
-		if (targetPath == CmsItemPath.ROOT) {
-			throw new IllegalArgumentException("Root path should be represented with null value in CmsItemId");
+		this.path = itemPath;
+		if (itemPath == CmsItemPath.ROOT) {
+			this.path = null; //Root path should be represented with null value in CmsItemId
 		}
-		this.path = targetPath;
 		this.pegRev = pegRev;
 	}
 
