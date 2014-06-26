@@ -21,6 +21,8 @@ import se.simonsoft.cms.item.RepoRevision;
 /**
  * Wraps an actual change with an instruction that there should be
  * an existing folder at the target path, which should be replaced.
+ * 
+ * Should we REALLY do SupportsIndividualBase here? Use case?
  */
 public class FolderReplace implements CmsPatchItem.TargetIsFolder, CmsPatchItem.SupportsIndividualBase {
 
@@ -41,6 +43,10 @@ public class FolderReplace implements CmsPatchItem.TargetIsFolder, CmsPatchItem.
 	@Override
 	public CmsItemPath getPath() {
 		return replacement.getPath();
+	}
+	
+	public CmsPatchItem getReplacement() {
+		return replacement;
 	}
 
 	@Override

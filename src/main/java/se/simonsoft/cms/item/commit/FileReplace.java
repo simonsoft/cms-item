@@ -41,5 +41,9 @@ public class FileReplace implements CmsPatchItem {
 	public CmsItemPath getPath() {
 		return replacement.getPath();
 	}
+	
+	public CmsPatchItem getReplacement() {
+		return replacement;
+	}
 
 }
