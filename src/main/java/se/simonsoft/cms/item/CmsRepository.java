@@ -18,11 +18,12 @@ package se.simonsoft.cms.item;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import se.simonsoft.cms.item.encoding.CmsItemURLEncoder;
 import se.simonsoft.cms.item.impl.CmsItemIdArg;
+import se.simonsoft.cms.item.impl.CmsItemIdEncoderBase;
 import se.simonsoft.cms.item.impl.CmsItemIdUrl;
 
 /**
@@ -40,6 +41,8 @@ public class CmsRepository implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	protected static final String URLENCODE_ENCODING = "UTF-8";
+	
+	private static final CmsItemURLEncoder urlEncoder = new CmsItemURLEncoder();
 	
 	private static final Pattern P_ROOT = Pattern.compile("(https?)://([^/]+)");
 	private static final Pattern P_URL = Pattern.compile("(https?)://([^/]+)(.*)/([^/]+)");
@@ -247,26 +250,28 @@ public class CmsRepository implements Serializable {
 	}
 
 	/**
-	 * Default URL-encoding without knowledge of the backend's encoding rules, uses {@link URLEncoder} followed by "+" replaced by "%20".
+	 * Default URL-encoding without specific knowledge of the backend's encoding rules. Follows the encoding rules of Subversion/SVNKit".
 	 * @param pathSegment File system representation of part, between two slashes, of a path.
 	 * @return Urlencoded representation.
 	 */
 	protected String urlencodeSegment(String pathSegment) {
 		try {
-			return URLEncoder.encode(pathSegment, URLENCODE_ENCODING).replace("+", "%20");
-		} catch (UnsupportedEncodingException e) {
+			return urlEncoder.encode(pathSegment);
+		} catch (Exception e) {
 			// encoding is not from user input so this is clearly a fatal error
-			throw new RuntimeException("Failed to urlencode using encoding " + URLENCODE_ENCODING + ", value: " + pathSegment);
+			throw new RuntimeException("Failed to urlencode, value: " + pathSegment, e);
 		}
 	}
 	
 	/**
 	 * Default URL decoding, should be able to decode most valid encodings but could need overriding together with {@link #urldecode(String)}.
+	 * NOTE: Incorrectly decodes '+' into ' '.
 	 * @param encodedPath Any urlencoded part of a path
 	 * @return Filesystem equivalent
 	 */
 	public String urldecode(String encodedPath) {
 		try {
+			// TODO: Figure out how to keep + (should not be decoded in path parts of URL, see test).
 			return URLDecoder.decode(encodedPath, CmsRepository.URLENCODE_ENCODING);
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException("Failed to urldecode using encoding " + URLENCODE_ENCODING + ", value: " + encodedPath);

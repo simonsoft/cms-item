@@ -292,6 +292,17 @@ public class CmsItemIdArgTest {
 	}
 	
 	@Test
+	public void testUrldecode() {
+		
+		assertEquals("/a&b", new CmsItemIdArg("x-svn://host.x/s/r2^/a&b").getRelPath().toString());
+		assertEquals("/(a b)", new CmsItemIdArg("x-svn://host.x/s/r2^/(a%20b)").getRelPath().toString());
+		// TODO Support + in decoder (don't decode it).
+		// Plus should NOT be encoded in path of URL. However, it means space in query.
+		// http://stackoverflow.com/questions/1005676/urls-and-plus-signs
+		//assertEquals("/a+b", new CmsItemIdArg("x-svn://host.x/s/r2^/a+b").getRelPath().toString());
+	}
+	
+	@Test
 	public void testHostnameMatchPort() {
 		new CmsItemIdArg("x-svn://host.x:1234/svn/r^/x").setHostnameOrValidate("host.x:1234");
 		try {

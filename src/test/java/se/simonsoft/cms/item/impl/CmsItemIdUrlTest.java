@@ -131,14 +131,29 @@ public class CmsItemIdUrlTest {
 		assertEquals("should be immutable", new CmsItemIdUrl(repo1, p1), id1);
 	}
 	
+	/**
+	 * Subversion encoding can be verified for some characters by doing info on Char-test folder in demo1.
+	 * svn info --depth immediates https://demo.simonsoftcms.se/svn/repo1/qa/Images/Char-test/ 
+	 */
 	@Test
 	public void testUrlencode() {
-		assertEquals("" + repo1 + "/a%26b", new CmsItemIdUrl(repo1, new CmsItemPath("/a&b")).getUrl());
-		assertEquals("" + repo1 + "/a%2Bb", new CmsItemIdUrl(repo1, new CmsItemPath("/a+b")).getUrl());
+		assertEquals("" + repo1 + "/a&b", new CmsItemIdUrl(repo1, new CmsItemPath("/a&b")).getUrl()); // Note: not encoded by svn
+		assertEquals("" + repo1 + "/(a%20b)", new CmsItemIdUrl(repo1, new CmsItemPath("/(a b)")).getUrl());
+		assertEquals("" + repo1 + "/a+b", new CmsItemIdUrl(repo1, new CmsItemPath("/a+b")).getUrl()); // Note: not encoded by svn
 		CmsRepository renc = new CmsRepository("http://+&%/r1");
 		assertEquals("Don't touch repository, was given an encoded URL at creation",
 				"http://+&%/r1/p1", new CmsItemIdUrl(renc, p1).getUrl());
 	}
+	
+	@Test
+	public void testUrldecode() {
+		
+		assertEquals("/a&b", new CmsItemIdUrl(repo1, new CmsItemPath("/a&b")).getRelPath().toString());
+		assertEquals("/(a b)", new CmsItemIdUrl(repo1, new CmsItemPath("/(a b)")).getRelPath().toString());
+		assertEquals("/a+b", new CmsItemIdUrl(repo1, new CmsItemPath("/a+b")).getRelPath().toString());
+		
+	}
+	
 	
 	@Test
 	public void testUris() {

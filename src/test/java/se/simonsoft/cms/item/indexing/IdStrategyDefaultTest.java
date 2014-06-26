@@ -84,7 +84,9 @@ public class IdStrategyDefaultTest {
 		
 		assertEquals("some.host:123/svn/repo1/a/%3F.txt@0000000001", strategy.getId(repo, rev, new CmsItemPath("/a/?.txt"))); // quite possibly not a valid path
 		
-		assertEquals("some.host:123/svn/repo1/a%40b/c.txt@0000000001", strategy.getId(repo, rev, new CmsItemPath("/a@b/c.txt")));
+		assertEquals("some.host:123/svn/repo1/a@b/c.txt@0000000001", strategy.getId(repo, rev, new CmsItemPath("/a@b/c.txt")));
+		
+		assertEquals("some.host:123/svn/repo1/a+b/c.txt@0000000001", strategy.getId(repo, rev, new CmsItemPath("/a+b/c.txt"))); // plus is problematic when decoding
 		
 	}
 	
