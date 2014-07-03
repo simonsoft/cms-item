@@ -110,6 +110,23 @@ public class RepoRevisionTest {
 		assertEquals(1000L, RepoRevision.parseDate("1970-01-01T00:00:01Z").getTime());
 		assertEquals(1002L, RepoRevision.parseDate("1970-01-01T00:00:01.002Z").getTime());
 		assertEquals(1003L, RepoRevision.parseDate("1970-01-01T00:00:01.003000Z").getTime());
+		
+		// Solr does not allow trailing 0 and returns timestamps without them.
+		// Below timestamps are from Solr Javadoc: http://lucene.apache.org/solr/4_8_1/solr-core/org/apache/solr/schema/DateField.html
+		assertEquals("solr no fraction", "1995-12-31T23:59:59.000", new RepoRevision(RepoRevision.parseDate("1995-12-31T23:59:59Z")).getTimeIso());
+		assertEquals("solr  1 fraction", "1995-12-31T23:59:59.900", new RepoRevision(RepoRevision.parseDate("1995-12-31T23:59:59.9Z")).getTimeIso());
+		assertEquals("solr  2 fraction", "1995-12-31T23:59:59.990", new RepoRevision(RepoRevision.parseDate("1995-12-31T23:59:59.99Z")).getTimeIso());
+		assertEquals("solr  3 fraction", "1995-12-31T23:59:59.999", new RepoRevision(RepoRevision.parseDate("1995-12-31T23:59:59.999Z")).getTimeIso());
+		
+		// Solr does not care about more precision than millis, but for completeness illustrating that we (and Solr according to Javadoc) ignores precision beyond millis.
+		assertEquals("solr  4 fraction", "1995-12-31T23:59:59.999", new RepoRevision(RepoRevision.parseDate("1995-12-31T23:59:59.9999Z")).getTimeIso());
+		assertEquals("solr  5 fraction", "1995-12-31T23:59:59.999", new RepoRevision(RepoRevision.parseDate("1995-12-31T23:59:59.99999Z")).getTimeIso());
+		assertEquals("solr  6 fraction", "1995-12-31T23:59:59.999", new RepoRevision(RepoRevision.parseDate("1995-12-31T23:59:59.999999Z")).getTimeIso());
+
+		try {
+			assertEquals("too long fraction part", "...", new RepoRevision(RepoRevision.parseDate("1995-12-31T23:59:59.1234567Z")).getTimeIso());
+			fail("should not allow >6 digits fraction");
+		} catch (IllegalArgumentException e) {}
 	}
 	
 	@Test

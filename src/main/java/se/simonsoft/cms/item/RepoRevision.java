@@ -15,6 +15,7 @@
  */
 package se.simonsoft.cms.item;
 
+import java.math.BigInteger;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -49,6 +50,8 @@ public class RepoRevision implements Comparable<RepoRevision> {
 	private static final Logger logger = LoggerFactory.getLogger(RepoRevision.class);
 	
 	private static final char TOSTRING_SEPARATOR = '/';
+	
+	private static final BigInteger ten = new BigInteger("10");
 	
 	private static final DateFormat ISO_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 	static {
@@ -235,10 +238,9 @@ public class RepoRevision implements Comparable<RepoRevision> {
 				throw new IllegalArgumentException("ISO timestamp string expected to end with Z (i.e. be UTC), got " + isoDateString);
 			}
 			nanos = nanos.substring(0, nanos.length() - 1);
-			if (nanos.length() == 3) {
-				n = 1000 * Long.parseLong(nanos);
-			} else if (nanos.length() == 6) {
-				n = Long.parseLong(nanos);
+			if (nanos.length() >= 1 && nanos.length() <= 6) {
+				int power = 6 - nanos.length();
+				n = ten.pow(power).longValue() * Long.parseLong(nanos);
 			} else if (nanos.length() != 0) {
 				throw new IllegalArgumentException("Unexpected milli/nanosecond part of iso timestamp " + isoDateString + ", " + nanos);
 			}
