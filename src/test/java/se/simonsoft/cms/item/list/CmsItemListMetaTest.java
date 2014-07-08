@@ -24,7 +24,7 @@ import java.util.Map;
 
 import org.junit.Test;
 
-import se.simonsoft.cms.item.list.CmsItemListMeta.Key;
+import se.simonsoft.cms.item.list.CmsItemListMetaMap.Key;
 
 public class CmsItemListMetaTest {
 
@@ -35,7 +35,7 @@ public class CmsItemListMetaTest {
 			put("id", "cms/service/");
 			put("extra", 8);
 		}};
-		CmsItemListMeta meta = new CmsItemListMeta(data);
+		CmsItemListMetaMap meta = new CmsItemListMetaMap(data);
 		meta.put(Key.title, "A Title");
 		
 		assertEquals("A Title", meta.get("title"));

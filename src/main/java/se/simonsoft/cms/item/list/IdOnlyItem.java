@@ -16,6 +16,7 @@
 package se.simonsoft.cms.item.list;
 
 import java.io.OutputStream;
+import java.util.Map;
 
 import se.simonsoft.cms.item.Checksum;
 import se.simonsoft.cms.item.CmsItem;
@@ -25,7 +26,7 @@ import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
 /**
- * To use {@link CmsItemList} when the only information avaiable is {@link CmsItemId}'s.
+ * To use {@link CmsItemList} when the only information available is {@link CmsItemId}'s.
  */
 public class IdOnlyItem implements CmsItem {
 
@@ -67,6 +68,11 @@ public class IdOnlyItem implements CmsItem {
 
 	@Override
 	public CmsItemProperties getProperties() {
+		throw new UnsupportedOperationException("Only the ID is available for " + id);
+	}
+	
+	@Override
+	public Map<String, Object> getMeta() {
 		throw new UnsupportedOperationException("Only the ID is available for " + id);
 	}
 

@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * Arbitrary data about the item list, to make {@link CmsItemList} a useful Data Transfer Object on its own.
  */
-public class CmsItemListMeta implements Map<String, Object> {
+public class CmsItemListMetaMap implements Map<String, Object> {
 	
 	public enum Key {
 		/**
@@ -59,11 +59,11 @@ public class CmsItemListMeta implements Map<String, Object> {
 	
 	private Map<String, Object> meta;
 
-	public CmsItemListMeta() {
+	public CmsItemListMetaMap() {
 		this(new HashMap<String, Object>());
 	}
 	
-	public CmsItemListMeta(Map<String, Object> meta) {
+	public CmsItemListMetaMap(Map<String, Object> meta) {
 		this.meta = meta;
 	}
 	
@@ -83,7 +83,7 @@ public class CmsItemListMeta implements Map<String, Object> {
 	 * @param value to {@link #put(String, Object)}
 	 * @return for chained creation
 	 */
-	public CmsItemListMeta put(Key key, Object value) {
+	public CmsItemListMetaMap put(Key key, Object value) {
 		put(key.toString(), value);
 		return this;
 	}

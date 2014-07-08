@@ -15,8 +15,6 @@
  */
 package se.simonsoft.cms.item.list;
 
-import java.util.Map;
-
 import se.simonsoft.cms.item.CmsItem;
 
 /**
@@ -35,22 +33,15 @@ public interface CmsItemList extends Iterable<CmsItem> {
 	public int size();
 	
 	/**
-	 * @return {@link CmsItemListMeta}
+	 * @return {@link CmsItemListMetaMap}
 	 */
-	public Map<String, Object> getMeta();
+	public CmsItemListMetaMap getMeta();
 
 	/**
 	 * @param known key
 	 * @return convenience access to predefined meta field value.toString
 	 */
-	public String getMeta(CmsItemListMeta.Key known);
+	public String getMeta(CmsItemListMetaMap.Key known);
 	
-	/**
-	 * For the item list to be a useful query/reporting response type for extensible data
-	 * it has to be able to return arbitrary fields, something CmsItem can't.
-	 * @param item an item from the list
-	 * @return arbitrary key-value properties of the item, possibly including data that backs the CmsItem fields
-	 */
-	public Map<String, Object> getItemFields(CmsItem item);
 	
 }

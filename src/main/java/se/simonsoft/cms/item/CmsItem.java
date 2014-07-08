@@ -17,6 +17,7 @@ package se.simonsoft.cms.item;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Map;
 
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
@@ -72,10 +73,15 @@ public interface CmsItem {
 	 */
 	Checksum getChecksum();
 	
-	/**
+	/** Versioned properties on this item, some implementations allow editing.
 	 * @return all versioned properties on this item
 	 */
 	CmsItemProperties getProperties();
+	
+	/** Read-only key-value metadata for this item, such as embedded metadata.
+	 * @return unmodifiable map of metadata (does not contain versioned properties)
+	 */
+	public Map<String, Object> getMeta();
 	
 	/**
 	 * @return 0 for folders, size in bytes for files

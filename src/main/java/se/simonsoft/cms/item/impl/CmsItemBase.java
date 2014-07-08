@@ -15,6 +15,8 @@
  */
 package se.simonsoft.cms.item.impl;
 
+import java.util.Map;
+
 import se.simonsoft.cms.item.Checksum;
 import se.simonsoft.cms.item.CmsItem;
 import se.simonsoft.cms.item.CmsItemId;
@@ -40,6 +42,11 @@ public abstract class CmsItemBase implements CmsItem {
 	@Override
 	public Checksum getChecksum() {
 		throw new UnsupportedOperationException("getChecksum not implemented");
+	}
+	
+	@Override
+	public Map<String, Object> getMeta() {
+		throw new UnsupportedOperationException("getMeta not implemented");
 	}
 
 }
