@@ -30,7 +30,7 @@ public class CmsItemClassificationAdapterFiletypes implements
 	 * synchronized with cms_adapter.xml and javascript
 	 */
 	public static final String CMS_ADAPTER_XML = 
-			"xml|dita|ditamap|dcf|pcf|xlf|sgm|sgml|htm|html|txt";
+			"xml|dita|ditamap|dcf|pcf|xlf|sgm|sgml|htm|html|txt|svg";
 
 	/**
 	 * synchronized with cms_adapter.xml and javascript
