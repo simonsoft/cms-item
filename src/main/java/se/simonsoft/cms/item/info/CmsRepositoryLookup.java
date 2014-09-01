@@ -18,8 +18,10 @@ package se.simonsoft.cms.item.info;
 import java.util.Date;
 
 import se.simonsoft.cms.item.CmsItemLockCollection;
+import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
+import se.simonsoft.cms.item.config.CmsConfigRepositoryPath;
 
 /**
  * Repository-wide read-only services.
@@ -55,4 +57,15 @@ public interface CmsRepositoryLookup {
 	 */
 	CmsItemLockCollection getLocked(CmsRepository repository);
 	
+	
+	/**
+	 * Returns the config for a specific path in the repository.
+	 * (Typically taking inherited properties into account)
+	 * @param repository
+	 * @param path
+	 * @return config for the path in the repository
+	 */
+	/*
+	CmsRepositoryPathConfig getConfig(CmsRepository repository, CmsItemPath path);
+	*/
 }
