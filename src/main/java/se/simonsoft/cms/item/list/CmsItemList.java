@@ -38,7 +38,7 @@ public interface CmsItemList extends Iterable<CmsItem> {
 	 * Based on the query that produced the list.
 	 * @return the total number of items matching the iteration criteria
 	 */	
-	public int sizeFound();
+	public long sizeFound();
 	
 	/**
 	 * @return {@link CmsItemListMetaMap}
