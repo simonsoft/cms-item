@@ -18,10 +18,8 @@ package se.simonsoft.cms.item.info;
 import java.util.Date;
 
 import se.simonsoft.cms.item.CmsItemLockCollection;
-import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
-import se.simonsoft.cms.item.config.CmsConfigRepositoryPath;
 
 /**
  * Repository-wide read-only services.
