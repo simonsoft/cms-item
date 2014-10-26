@@ -39,6 +39,9 @@ public abstract class PathEncoder {
 	 * @return urlencoded UTF-8 except slashes
 	 */
 	protected String urlencode(CmsItemPath path) {
+		if (path == null) {
+			return ""; // ROOT, our convention is to omit the trailing slash
+		}
 		StringBuffer enc = new StringBuffer();
 		try {
 			for (String p : path.getPathSegments()) {
