@@ -497,5 +497,15 @@ public class CmsItemPathTest {
 		assertEquals("", CmsItemPath.ROOT.getNameBase());
 		fail("TODO Decide on what getPath() returns");
 	}
+	
+	@Test
+	public void testRootFromString() {
+		try {
+			new CmsItemPath("");
+			fail("APIs should return null instead of a CmsItemPath instance for root");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+	}
 
 }

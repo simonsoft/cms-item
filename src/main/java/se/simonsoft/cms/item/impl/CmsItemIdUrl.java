@@ -23,14 +23,13 @@ import se.simonsoft.cms.item.CmsRepository;
  * URL-only item id with no support for logical IDs,
  * good for webapp use like Repos "target" arguments.
  * 
- * This impl does not support {@link #getLogicalId()} and {@link #getLogicalIdFull()},
- * 
- * For operations having access to a logical ID,
- * use {@link CmsItemIdArg} instead.
+ * This impl does not support {@link #getLogicalId()} and {@link #getLogicalIdFull()}. Use {@link CmsItemIdArg} instead.
  * 
  * TODO? deprecate because equivalent to
  * {@link CmsRepository#getItemId()} with {@link CmsItemId#withRelPath(CmsItemPath)} and {@link CmsItemId#withPegRev(Long)}.
- *  - to discourage from direct instantiation except for transfer with {@link CmsItemIdArg}. 
+ *  - to discourage from direct instantiation except for transfer with {@link CmsItemIdArg}.
+ *  
+ * @deprecated replaced by {@link CmsItemIdArg} for transfer and {@link CmsRepository#getItemId()} for repo + target
  */
 public class CmsItemIdUrl extends CmsItemIdEncoderBase {
 	

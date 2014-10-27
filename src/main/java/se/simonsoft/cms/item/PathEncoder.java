@@ -22,7 +22,7 @@ import se.simonsoft.cms.item.impl.CmsItemIdEncoderBase;
  * 
  * If encoding is only done by instances that know of a CmsRepository, the type of repository can decide encoding rules.
  * 
- * @deprecated Can be deleted if we decide do make urlencoding in CmsRepository public.
+ * @deprecated Can be deleted if we decide to make urlencoding in CmsRepository public.
  * 
  */
 public abstract class PathEncoder {
