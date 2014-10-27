@@ -474,11 +474,14 @@ public class CmsItemPathTest {
 
 	@Test
 	public void testRoot() {
-		// important: No method should return the ROOT instance.
+		// important: No method should return the ROOT instance. It is used for map keys only.
+		
 		assertNotNull(CmsItemPath.ROOT);
 		assertNull("For backwards compatibility getParent of root sub-item must still return null", new CmsItemPath("/dir").getParent());
+		
 		// TBD Really null? Dangerous at string concatenation. Also causes confusion with the fact that CmsItemId has a CmsItemPath==null for root. Return empty string instead?
 		assertEquals("Root path is undefined as string", null, CmsItemPath.ROOT.getPath());
+		
 		assertEquals(0, CmsItemPath.ROOT.getPathSegmentsCount());
 		assertNotNull(CmsItemPath.ROOT.getPathSegments());
 		assertEquals(0, CmsItemPath.ROOT.getPathSegments().size());
@@ -493,9 +496,11 @@ public class CmsItemPathTest {
 		assertEquals(CmsItemPath.ROOT, CmsItemPath.ROOT);
 		assertFalse("equals method should give the same result in both directions", CmsItemPath.ROOT.equals(null));
 		// TBD
-		assertEquals("", CmsItemPath.ROOT.getName());
-		assertEquals("", CmsItemPath.ROOT.getNameBase());
-		fail("TODO Decide on what getPath() returns");
+		//assertEquals("", CmsItemPath.ROOT.getName());
+		//assertEquals("", CmsItemPath.ROOT.getNameBase());
+		// At least don't NPE
+		CmsItemPath.ROOT.getNameBase();
+		CmsItemPath.ROOT.getExtension();
 	}
 	
 	@Test

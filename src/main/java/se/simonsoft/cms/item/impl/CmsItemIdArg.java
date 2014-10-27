@@ -84,14 +84,23 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		}
 	}
 	
+	/**
+	 * Preferrably use {@link CmsRepository#getItemId()} instead.
+	 */
 	public CmsItemIdArg(CmsRepository repository) {
 		this(repository, CmsItemPath.ROOT, null);
 	}	
-	
+
+	/**
+	 * Preferrably use {@link CmsRepository#getItemId()} with {@link CmsItemId#withRelPath(CmsItemPath)} instead.
+	 */
 	public CmsItemIdArg(CmsRepository repository, CmsItemPath itemPath) {
 		this(repository, itemPath, null);
 	}
 	
+	/**
+	 * Preferrably use {@link CmsRepository#getItemId()} with {@link CmsItemId#withRelPath(CmsItemPath)} and {@link CmsItemId#withPegRev(Long)} instead.
+	 */
 	public CmsItemIdArg(CmsRepository repository, CmsItemPath itemPath, Long pegRev) {
 		this.repository = repository;
 		if (itemPath == null || itemPath == CmsItemPath.ROOT) {

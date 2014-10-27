@@ -19,7 +19,6 @@ import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
-import se.simonsoft.cms.item.impl.CmsItemIdUrl;
 
 public class IdStrategyDefault implements IdStrategy {
 
@@ -93,12 +92,12 @@ public class IdStrategyDefault implements IdStrategy {
 	
 	@Override
 	public String getId(CmsRepository repository, RepoRevision revision, CmsItemPath path) {
-		return getId(new CmsItemIdUrl(repository, path), revision); 
+		return getId(repository.getItemId().withRelPath(path), revision); 
 	}
 
 	@Override
 	public String getIdHead(CmsRepository repository, CmsItemPath path) {
-		return getIdHead(new CmsItemIdUrl(repository, path));
+		return getIdHead(repository.getItemId().withRelPath(path));
 	}
 	
 	@Override

@@ -232,6 +232,9 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 	 */
 	public String getNameBase() {
 		String n = getName();
+		if (n == null) {
+			return null;
+		}
 		String ext = getExtension();
 		
 		int endIdx = n.length();
@@ -251,6 +254,9 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 	 */
 	public String getExtension() {
 		String n = getName();
+		if (n == null) {
+			return null;
+		}
 		int d = n.lastIndexOf('.');
 		if (d == 0 || d == -1) {
 			return "";
