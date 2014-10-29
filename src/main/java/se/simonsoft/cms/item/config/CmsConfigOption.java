@@ -15,6 +15,8 @@
  */
 package se.simonsoft.cms.item.config;
 
+import java.util.List;
+
 /**
  * Represents a single configuration option.
  * By wrapping the value into a class we can extend the features in the future,
@@ -24,11 +26,16 @@ package se.simonsoft.cms.item.config;
  */
 public interface CmsConfigOption {
 
+	/**
+	 * Internal really, it should be safe to consider {@link #getKey()} unique across namespaces for now.
+	 * @return the namespace, probably same for all options
+	 */
+	public String getNamespace();
 	
 	/**
-	 * @return the name/key for the config option
+	 * @return the name/key for the config option, excluding any namespace
 	 */
-	public String getName();
+	public String getKey();
 	
 	/**
 	 * @return the value of the config option as String, where inherited properties are resolved by override.
@@ -39,4 +46,10 @@ public interface CmsConfigOption {
 	 * @return the value of the config option as Boolean, where case-insensitive and trimmed "true" becomes True. 
 	 */
 	public Boolean getValueBoolean();
+	
+	/**
+	 * @return the value of the config option as Boolean, where case-insensitive and trimmed "true" becomes True. 
+	 */
+	public List<String> getValueList();	
+
 }

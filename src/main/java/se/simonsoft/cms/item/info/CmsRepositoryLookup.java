@@ -59,11 +59,13 @@ public interface CmsRepositoryLookup {
 	/**
 	 * Returns the config for a specific path in the repository.
 	 * (Typically taking inherited properties into account)
-	 * @param repository
-	 * @param path
+	 * (Might also inherit from server configuration, which is why it belongs in this service.
+	 * @param item The item to retriev configuraiton context for,
+	 * 			pegRev will be ignored (or trigger unsupportedexception?)
+	 * @param kind File or folder, do we need to know that for consistent lookup?
 	 * @return config for the path in the repository
 	 */
 	/*
-	CmsRepositoryPathConfig getConfig(CmsRepository repository, CmsItemPath path);
+	CmsResourceContext getConfig(CmsItemId item,CmsItemKind kind);
 	*/
 }
