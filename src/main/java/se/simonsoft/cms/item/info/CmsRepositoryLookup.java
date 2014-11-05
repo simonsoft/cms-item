@@ -17,9 +17,12 @@ package se.simonsoft.cms.item.info;
 
 import java.util.Date;
 
+import se.simonsoft.cms.item.CmsItemId;
+import se.simonsoft.cms.item.CmsItemKind;
 import se.simonsoft.cms.item.CmsItemLockCollection;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
+import se.simonsoft.cms.item.config.CmsResourceContext;
 
 /**
  * Repository-wide read-only services.
@@ -65,7 +68,6 @@ public interface CmsRepositoryLookup {
 	 * @param kind File or folder, do we need to know that for consistent lookup?
 	 * @return config for the path in the repository
 	 */
-	/*
 	CmsResourceContext getConfig(CmsItemId item,CmsItemKind kind);
-	*/
+	
 }
