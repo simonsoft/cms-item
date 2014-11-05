@@ -16,7 +16,6 @@
 package se.simonsoft.cms.item.commit;
 
 import se.simonsoft.cms.item.CmsItemPath;
-import se.simonsoft.cms.item.RepoRevision;
 
 /**
  * Wraps an actual change with an instruction that there should be
@@ -24,16 +23,12 @@ import se.simonsoft.cms.item.RepoRevision;
  * 
  * Should we REALLY do SupportsIndividualBase here? Use case?
  */
-public class FolderReplace implements CmsPatchItem.TargetIsFolder, CmsPatchItem.SupportsIndividualBase {
+public final class FolderReplace implements CmsPatchItem.TargetIsFolder {
 
-	private CmsPatchItem.SupportsIndividualBase replacement;
+	private CmsPatchItem replacement;
 
-	protected FolderReplace(CmsPatchItem.SupportsIndividualBase replacement) {
+	protected FolderReplace(CmsPatchItem replacement) {
 		this.replacement = replacement;
-	}
-	
-	public FolderReplace(FolderAdd add) {
-		this((CmsPatchItem.SupportsIndividualBase) add);
 	}
 	
 	//public FolderReplace(FolderCopy add) {
@@ -47,11 +42,6 @@ public class FolderReplace implements CmsPatchItem.TargetIsFolder, CmsPatchItem.
 	
 	public CmsPatchItem getReplacement() {
 		return replacement;
-	}
-
-	@Override
-	public RepoRevision getBaseRevision() {
-		return replacement.getBaseRevision();
 	}
 
 }

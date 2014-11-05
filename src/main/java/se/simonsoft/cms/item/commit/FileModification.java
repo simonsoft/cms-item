@@ -18,13 +18,11 @@ package se.simonsoft.cms.item.commit;
 import java.io.InputStream;
 
 import se.simonsoft.cms.item.CmsItemPath;
-import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
-public class FileModification implements CmsPatchItem, CmsPatchItem.SupportsProp, CmsPatchItem.SupportsContentModification, CmsPatchItem.SupportsIndividualBase {
+public final class FileModification implements CmsPatchItem, CmsPatchItem.SupportsProp, CmsPatchItem.SupportsContentModification {
 
 	private CmsItemPath path;
-	private RepoRevision baseRevision;
 	private InputStream baseFile;
 	private InputStream workingFile;
 	private CmsItemProperties properties;
@@ -36,14 +34,7 @@ public class FileModification implements CmsPatchItem, CmsPatchItem.SupportsProp
 	 */
 	public FileModification(CmsItemPath pathInRepository,
 			InputStream baseFile, InputStream workingFile) {
-		this(pathInRepository, null, baseFile, workingFile);
-	}
-	
-	@Deprecated // base revision should be set in changeset
-	public FileModification(CmsItemPath pathInRepository,
-			RepoRevision baseRevision, InputStream baseFile, InputStream workingFile) {
 		this.path = pathInRepository;
-		this.baseRevision = baseRevision;
 		this.baseFile = baseFile;
 		this.workingFile = workingFile;
 	}
@@ -62,11 +53,6 @@ public class FileModification implements CmsPatchItem, CmsPatchItem.SupportsProp
 	@Override
 	public CmsItemPath getPath() {
 		return path;
-	}
-
-	@Override
-	public RepoRevision getBaseRevision() {
-		return baseRevision;
 	}
 	
 	@Override

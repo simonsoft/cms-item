@@ -24,6 +24,13 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
 /**
  * A modification of contents and/or properties at a {@link CmsItemPath}
  * in a repository given by execution context.
+ * 
+ * Implementations should generally <code>final</code>, and conservatively maintained, 
+ * so that backends can  safely do instanceof to identify operations.
+ * 
+ * Any modified behavior may cause existing backends to break the contract.
+ * 
+ * In other words, implement a WhateverOperation2 than to change WhateverOperation.
  */
 public interface CmsPatchItem {
 
@@ -31,18 +38,41 @@ public interface CmsPatchItem {
 	 * @return the affected path, i.e. the target where the change will happen
 	 */
 	CmsItemPath getPath();
-
-
-	
-	// TODO getProperties(); though not for Delete?
-	
-	// TODO maybe optional, how to handle the difference between unlock or keep lock at commit?
-	//CmsItemLock getLock();
 	
 	/**
-	 *  
+	 * Groups folder operations.
 	 */
 	interface TargetIsFolder extends CmsPatchItem {
+	}
+	
+	/**
+	 * For modifying properties on a resource.
+	 */
+	interface SupportsProp extends CmsPatchItem {
+		
+		/**
+		 * @return null if no property changes, i.e. to keep existing
+		 */
+		public CmsItemProperties getPropertyChange();
+		
+	}
+
+	/**
+	 * For writing new content to the resource.
+	 */
+	interface SupportsContent extends CmsPatchItem {
+		
+		public InputStream getWorkingFile();
+		
+	}	
+	
+	/**
+	 * Merge support requires a base, also minimizes the amount of data transferred.
+	 */
+	interface SupportsContentModification extends SupportsContent {
+		
+		public InputStream getBaseFile();
+		
 	}
 	
 	/**
@@ -60,32 +90,9 @@ public interface CmsPatchItem {
 	}
 	
 	/**
-	 * 
+	 * Possibly, but not entirely, {@link FolderExist}.
 	 */
-	interface SupportsProp extends CmsPatchItem {
-		
-		/**
-		 * @return null if no property changes
-		 */
-		public CmsItemProperties getPropertyChange();
-		
-	}
-
-	/**
-	 * 
-	 */
-	interface SupportsContent extends CmsPatchItem {
-		
-		public InputStream getWorkingFile();
-		
-	}	
-	
-	/**
-	 * 
-	 */
-	interface SupportsContentModification extends SupportsContent {
-		
-		public InputStream getBaseFile();
+	interface Idempotent extends CmsPatchItem {
 		
 	}
 	

@@ -21,7 +21,7 @@ import se.simonsoft.cms.item.CmsItemPath;
  * Wraps an actual change with an instruction that there should be
  * an existing file at the target path, which should be replaced.
  */
-public class FileReplace implements CmsPatchItem {
+public final class FileReplace implements CmsPatchItem {
 
 	private CmsPatchItem replacement;
 

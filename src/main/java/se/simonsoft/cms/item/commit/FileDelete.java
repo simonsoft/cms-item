@@ -16,31 +16,18 @@
 package se.simonsoft.cms.item.commit;
 
 import se.simonsoft.cms.item.CmsItemPath;
-import se.simonsoft.cms.item.RepoRevision;
 
-public class FileDelete implements CmsPatchItem, CmsPatchItem.SupportsIndividualBase {
+public final class FileDelete implements CmsPatchItem {
 
 	private CmsItemPath path;
-	private RepoRevision base;
 
 	public FileDelete(CmsItemPath path) {
-		this(path, null);
-	}	
-	
-	@Deprecated //"base revision should be set in Changeset"
-	public FileDelete(CmsItemPath path, RepoRevision base) {
 		this.path = path;
-		this.base = base;
-	}
+	}	
 	
 	@Override
 	public CmsItemPath getPath() {
 		return path;
-	}
-
-	@Override
-	public RepoRevision getBaseRevision() {
-		return base;
 	}
 
 }

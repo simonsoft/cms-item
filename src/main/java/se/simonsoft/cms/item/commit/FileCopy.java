@@ -19,10 +19,9 @@ import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
-public class FileCopy implements CmsPatchItem, CmsPatchItem.SupportsProp, CmsPatchItem.SupportsIndividualBase {
+public final class FileCopy implements CmsPatchItem, CmsPatchItem.SupportsProp {
 
 	private CmsItemPath fromPath;
-	private RepoRevision baseRevision;
 	private RepoRevision fromRev;
 	private CmsItemPath toPath;
 	private CmsItemProperties properties = null;
@@ -30,31 +29,19 @@ public class FileCopy implements CmsPatchItem, CmsPatchItem.SupportsProp, CmsPat
 	/**
 	 * 
 	 * @param fromPath
-	 * @param baseRev at which the existence of 
 	 * @param fromRev Support copy historical.
 	 *  In unversioned backend we would validate that the file timestamp matches this timestamp,
 	 *  so the operation is not mistakenly done on a file that someone else has just modified.
 	 *  This would be the same as checkint that a file is up to date before committing. 
 	 * @param toPath
 	 */
-	public FileCopy(CmsItemPath fromPath, RepoRevision baseRev, RepoRevision fromRev, CmsItemPath toPath) {
+	public FileCopy(CmsItemPath fromPath, RepoRevision fromRev, CmsItemPath pathto) {
 		if (fromRev == null) {
 			throw new IllegalArgumentException("HEAD as copy from revision is currently not supported");
 		}
 		this.fromPath = fromPath;
-		this.baseRevision = baseRev;
 		this.fromRev = fromRev;
-		this.toPath = toPath;
-	}
-	
-	/**
-	 * Just testing if we can use copyFromRev as base
-	 * @param fromPath
-	 * @param fromRev
-	 * @param pathto
-	 */
-	public FileCopy(CmsItemPath fromPath, RepoRevision fromRev, CmsItemPath pathto) {
-		this(fromPath, fromRev, fromRev, pathto);
+		this.toPath = pathto;
 	}
 
 	/**
@@ -89,11 +76,6 @@ public class FileCopy implements CmsPatchItem, CmsPatchItem.SupportsProp, CmsPat
 		return toPath;
 	}
 
-	@Override
-	public RepoRevision getBaseRevision() {
-		return baseRevision;
-	}
-	
 	/**
 	 * @return null if no property changes
 	 */

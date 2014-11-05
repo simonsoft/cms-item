@@ -22,6 +22,7 @@ import se.simonsoft.cms.item.CmsItemKind;
 import se.simonsoft.cms.item.CmsItemLockCollection;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
+import se.simonsoft.cms.item.commit.CmsCommit;
 import se.simonsoft.cms.item.config.CmsResourceContext;
 
 /**
@@ -54,6 +55,9 @@ public interface CmsRepositoryLookup {
 	
 	/**
 	 * Returns items that are currently locked in the repository.
+	 * 
+	 * Locks are created through {@link CmsCommit}.
+	 * 
 	 * @param repository the repository to check
 	 */
 	CmsItemLockCollection getLocked(CmsRepository repository);

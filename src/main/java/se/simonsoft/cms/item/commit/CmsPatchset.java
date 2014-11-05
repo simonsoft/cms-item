@@ -27,7 +27,9 @@ import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
 
 /**
- * Item modifications, never two of them at the same path.
+ * Item modifications in a single transaction.
+ * 
+ * There should only be one operation per path, so a new {@link CmsItemPath} impl must be created if existing are insufficient.
  */
 public class CmsPatchset extends LinkedList<CmsPatchItem>
 		implements List<CmsPatchItem> {
@@ -96,6 +98,9 @@ public class CmsPatchset extends LinkedList<CmsPatchItem>
 		return this.base;
 	}
 	
+	/**
+	 * Schedules an operation in the transaction.
+	 */
 	@Override
 	public boolean add(CmsPatchItem change) {
 		CmsItemPath path = change.getPath();

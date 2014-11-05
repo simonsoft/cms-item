@@ -55,6 +55,12 @@ public class SvnPropertyMap implements CmsItemProperties {
 		return map.get(key);
 	}
 	
+	/**
+	 * @return only the currently modified properties, frozen i.e. disconnected from this instance
+	 */
+	public CmsItemProperties getModified() {
+		throw new UnsupportedOperationException("not implemented");
+	}
 
 	/* (non-Javadoc)
 	 * @see se.simonsoft.cms.item.properties.CmsItemProperties#getString(java.lang.String)

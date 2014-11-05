@@ -16,31 +16,18 @@
 package se.simonsoft.cms.item.commit;
 
 import se.simonsoft.cms.item.CmsItemPath;
-import se.simonsoft.cms.item.RepoRevision;
 
-public class FolderAdd implements CmsPatchItem.TargetIsFolder, CmsPatchItem.SupportsIndividualBase {
+public final class FolderAdd implements CmsPatchItem.TargetIsFolder {
 
 	private CmsItemPath path;
-	private RepoRevision baseRevision;
-
-	public FolderAdd(CmsItemPath path) {
-		this(path, null);
-	}
 	
-	@Deprecated // use patchset base revisions
-	public FolderAdd(CmsItemPath path, RepoRevision baseRevisionForParent) {
+	public FolderAdd(CmsItemPath path) {
 		this.path = path;
-		this.baseRevision = baseRevisionForParent;
 	}
 	
 	@Override
 	public CmsItemPath getPath() {
 		return path;
-	}
-
-	@Override
-	public RepoRevision getBaseRevision() {
-		return baseRevision;
 	}
 
 	@Override

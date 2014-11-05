@@ -23,10 +23,21 @@ import se.simonsoft.cms.item.RepoRevision;
 /**
  * Operations that modify the repository in atomic changesets
  * (and transient locks).
+ * 
+ * The API is extended by adding new {@link CmsPatchItem} implementations,
+ * which backends can then add support for when needed.
+ * 
+ * Backend specific operations can be impl'd in the respective module.
+ * 
+ * Implementers: Please note the restrictions documented in {@link CmsPatchset} and {@link CmsPatchItem}.
  */
 public interface CmsCommit {
 	
 	public RepoRevision run(CmsPatchset fileModifications) throws CmsItemLockedException;
+	
+	// Possible ways for backends to declare their capabilities, if we need such a thing
+	//public boolean supports(Class<CmsPatchItem> modificationType);
+	//public Set<Class<CmsPatchItem>> getCapabilities();
 	
 	/**
 	 * Locks an item.

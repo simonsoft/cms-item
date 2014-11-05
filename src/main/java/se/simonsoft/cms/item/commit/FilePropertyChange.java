@@ -17,7 +17,6 @@ package se.simonsoft.cms.item.commit;
 
 import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.CmsItemPath;
-import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
 /**
@@ -25,10 +24,9 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
  * 
  * Svnkit SVNEditor differentiates between file property change and folder property change.
  */
-public class FilePropertyChange implements CmsPatchItem, CmsPatchItem.SupportsProp, CmsPatchItem.SupportsIndividualBase {
+public final class FilePropertyChange implements CmsPatchItem, CmsPatchItem.SupportsProp {
 
 	private CmsItemPath path;
-	private RepoRevision base;
 	private CmsItemProperties properties;
 
 	/**
@@ -37,13 +35,7 @@ public class FilePropertyChange implements CmsPatchItem, CmsPatchItem.SupportsPr
 	 *  null value means delete the property, empty value means set or keep it but make it empty
 	 */
 	public FilePropertyChange(CmsItemPath path, CmsItemProperties properties) {
-		this(path, null, properties);
-	}
-
-	@Deprecated // use changeset base
-	public FilePropertyChange(CmsItemPath path, RepoRevision base, CmsItemProperties properties) {
 		this.path = path;
-		this.base = base;
 		this.properties = properties;
 	}
 	
@@ -67,11 +59,6 @@ public class FilePropertyChange implements CmsPatchItem, CmsPatchItem.SupportsPr
 	@Override
 	public CmsItemPath getPath() {
 		return path;
-	}
-
-	@Override
-	public RepoRevision getBaseRevision() {
-		return base;
 	}
 
 }
