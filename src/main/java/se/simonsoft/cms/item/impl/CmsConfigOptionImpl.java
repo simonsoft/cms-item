@@ -55,12 +55,12 @@ public class CmsConfigOptionImpl implements CmsConfigOption {
 
 	@Override
 	public Boolean getValueBoolean() {
-		return (Boolean) value;
+		return value instanceof Boolean ? (Boolean)value : Boolean.parseBoolean((String)value);
 	}
 
 	@Override
 	public List<String> getValueList() {
-		return (List<String>) value;
+		throw new UnsupportedOperationException("Not yet implemented.");
 	}
 
 	private String extractNamespace(String key) {
