@@ -21,20 +21,18 @@ import se.simonsoft.cms.item.config.CmsConfigOption;
 /**
  *
  * @author Markus Mattsson
+ * @param <T>
  */
-public class CmsConfigOptionImpl implements CmsConfigOption {
+public class CmsConfigOptionBase<T> implements CmsConfigOption {
 
-	private String namespace;
-	private String key;
-	private Object value;
+	protected final String namespace;
+	protected final String key;
+	protected final T value;
 
-	public CmsConfigOptionImpl(String key, Object value) {
-		this(null, key, value);
-	}
-
-	public CmsConfigOptionImpl(String namespace, String key, Object value) {
-		this.namespace = namespace == null ? extractNamespace(key) : namespace;
-		this.key = key;
+	public CmsConfigOptionBase(String key, T value) {
+		String[] nameSpaceAndKey = extractNamespace(key);
+		this.namespace = nameSpaceAndKey.length > 1 ? nameSpaceAndKey[0] : null;
+		this.key = nameSpaceAndKey.length > 1 ? nameSpaceAndKey[1] : key;
 		this.value = value;
 	}
 
@@ -63,8 +61,8 @@ public class CmsConfigOptionImpl implements CmsConfigOption {
 		throw new UnsupportedOperationException("Not yet implemented.");
 	}
 
-	private String extractNamespace(String key) {
-		return key.contains(":") ? key.split(":")[0] : null;
+	private String[] extractNamespace(String key) {
+		return key.contains(":") ? key.split(":") : null;
 	}
 
 	@Override
