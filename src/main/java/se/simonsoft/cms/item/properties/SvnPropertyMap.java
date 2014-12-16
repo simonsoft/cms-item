@@ -15,8 +15,10 @@
  */
 package se.simonsoft.cms.item.properties;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -59,7 +61,20 @@ public class SvnPropertyMap implements CmsItemProperties {
 	 * @return only the currently modified properties, frozen i.e. disconnected from this instance
 	 */
 	public CmsItemProperties getModified() {
-		throw new UnsupportedOperationException("not implemented");
+		
+		SvnPropertyMap modified = new SvnPropertyMap();
+		for (Map.Entry<String, SvnPropertyValue<?>> entry : this.map.entrySet()) {
+			if (entry.getValue().isModified()) {
+				if (entry.getValue() instanceof SvnPropertyValueList) {
+					modified.putProperty(entry.getKey(), (ArrayList<String>)((ArrayList<String>) entry.getValue().getValue()).clone());
+				} else if (entry.getValue() instanceof SvnPropertyValueString) {
+					modified.putProperty(entry.getKey(), (String) entry.getValue().getValue());
+				}
+			}
+		}
+		
+		return modified;
+		
 	}
 
 	/* (non-Javadoc)

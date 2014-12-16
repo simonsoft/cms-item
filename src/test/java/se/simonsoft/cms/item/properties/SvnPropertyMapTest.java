@@ -202,5 +202,21 @@ public class SvnPropertyMapTest {
 		SvnPropertyMap map = new SvnPropertyMap();
 		map.store("p1", null);
 	}
+	
+	@Test
+	public void testGetModified() {
+		System.out.println("getModified");
+		SvnPropertyMap map = new SvnPropertyMap();
+		map.store("p1", "z");
+		map.putProperty("p2", "y");
+		
+		SvnPropertyMap props = (SvnPropertyMap) map.getModified();
+		assertFalse("Did not expect non modified p1", props.containsProperty("p1"));
+		assertTrue("Expected modified p2", props.containsProperty("p2"));
+
+		SvnPropertyMap props2 = (SvnPropertyMap) map.getModified();
+		assertNotEquals("Did not expect same property map.", props, props2);
+		
+	}
 
 }
