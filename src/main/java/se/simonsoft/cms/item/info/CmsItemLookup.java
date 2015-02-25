@@ -30,8 +30,8 @@ import se.simonsoft.cms.item.CmsItemLock;
 public interface CmsItemLookup {
 	
 	/**
-	 * @param parent folder, optional peg rev
-	 * @return children, iteration order decided by backend
+	 * @param id (revision?)
+	 * @return the item
 	 * @throws CmsConnectionException if connection to the server or repository failed
 	 * @throws CmsItemNotFoundException if the item could not be found
 	 */	
