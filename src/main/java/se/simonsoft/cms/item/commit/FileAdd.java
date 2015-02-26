@@ -17,13 +17,21 @@ package se.simonsoft.cms.item.commit;
 
 import java.io.InputStream;
 
+import javax.inject.Provider;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
 public final class FileAdd implements CmsPatchItem, CmsPatchItem.SupportsProp, CmsPatchItem.SupportsContent {
 
+	private static final Logger logger = LoggerFactory.getLogger(FileAdd.class);
+	
 	private CmsItemPath path;
-	private InputStream contents;
+	private InputStream contents = null;
+	private Provider<InputStream> contentsProvider = null;
 	private CmsItemProperties properties = null;
 
 	/**
@@ -34,6 +42,11 @@ public final class FileAdd implements CmsPatchItem, CmsPatchItem.SupportsProp, C
 	public FileAdd(CmsItemPath path, InputStream contents) {
 		this.path = path;
 		this.contents = contents;
+	}
+	
+	public FileAdd(CmsItemPath path, Provider<InputStream> contentsProvider) {
+		this.path = path;
+		this.contentsProvider = contentsProvider;
 	}
 	
 	/**
@@ -61,7 +74,12 @@ public final class FileAdd implements CmsPatchItem, CmsPatchItem.SupportsProp, C
 	 * @return Not yet opened stream
 	 */
 	public InputStream getContents() {
-		return contents;
+		if (contents != null) {
+			return contents;
+		} else {
+			logger.debug("Providing InputStream for FileAdd: " + path);
+			return contentsProvider.get();
+		}
 	}
 
 	/**
