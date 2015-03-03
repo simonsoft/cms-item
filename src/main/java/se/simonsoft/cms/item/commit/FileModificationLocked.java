@@ -16,6 +16,12 @@
 package se.simonsoft.cms.item.commit;
 
 import java.io.InputStream;
+
+import javax.inject.Provider;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
@@ -25,8 +31,11 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
  */
 public final class FileModificationLocked implements CmsPatchItem, CmsPatchItem.SupportsProp, CmsPatchItem.SupportsContentModification {
 
+	private static final Logger logger = LoggerFactory.getLogger(FileModificationLocked.class);
+	
 	private final CmsItemPath path;
-	private final InputStream workingFile;
+	private InputStream contents = null;
+	private Provider<InputStream> contentsProvider = null;
 	private InputStream baseFile;
 	private CmsItemProperties properties;
 	
@@ -36,9 +45,14 @@ public final class FileModificationLocked implements CmsPatchItem, CmsPatchItem.
 	 */
 	public FileModificationLocked(CmsItemPath pathInRepository, InputStream workingFile) {
 		this.path = pathInRepository;
-		this.workingFile = workingFile;
+		this.contents = workingFile;
 		
 		//TODO: this.baseFile = ??
+	}
+	
+	public FileModificationLocked(CmsItemPath path, Provider<InputStream> contentsProvider) {
+		this.path = path;
+		this.contentsProvider = contentsProvider;
 	}
 	
 	@Override
@@ -48,7 +62,19 @@ public final class FileModificationLocked implements CmsPatchItem, CmsPatchItem.
 
 	@Override
 	public InputStream getWorkingFile() {
-		return workingFile;
+		return getContents();
+	}
+	
+	/**
+	 * @return Not yet opened stream
+	 */
+	public InputStream getContents() {
+		if (contents != null) {
+			return contents;
+		} else {
+			logger.debug("Providing InputStream for FileModificationLocked: " + path);
+			return contentsProvider.get();
+		}
 	}
 
 	public void setBaseFile(InputStream baseFile) {
