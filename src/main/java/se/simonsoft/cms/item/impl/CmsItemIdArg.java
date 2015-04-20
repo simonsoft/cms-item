@@ -43,7 +43,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	
 	public static final String DEFAULT_PROTOCOL = "http";
 	public static final String PEG = "?p=";
-	public static final Pattern NICE = Pattern.compile(PROTO_PREFIX + "([^/]*)(.*/)([^:^]*)\\^(/|[^:?]+[^/])/?(?:\\?p=(\\d+))?");
+	public static final Pattern NICE = Pattern.compile(PROTO_PREFIX + "([^/]*)(.*/)([^:^]*)\\^(/|[^:?#]+[^/])/?(?:\\?p=(\\d+))?");
 	
 	/**
 	 * Root path is not represented in CmsItemPath so we need to define

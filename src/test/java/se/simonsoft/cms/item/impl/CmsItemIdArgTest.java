@@ -50,6 +50,21 @@ public class CmsItemIdArgTest {
 		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/grap:ics/0001.tif");
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testValidateQuestionInPath() {
+		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/grap?ics/0001.tif");
+	}
+	
+	@Test //Ampersand is actually allowed in URL path. Related to the differences in encoding rules btw path and query.
+	public void testValidateAmpersandInPath() {
+		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/grap&ics/0001.tif");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testValidateFragment() {
+		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1");
+	}
+	
 	@Test
 	public void testPegHost() {
 		CmsItemIdArg p = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1^/vvab/xml/Docs/Sa%20s.xml?p=9");
