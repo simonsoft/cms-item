@@ -115,5 +115,9 @@ public interface CmsItemId {
 	 * @return Same ID but with new peg revision
 	 */
 	CmsItemId withPegRev(Long newPegRev);
+	
+	/* Implemented in CmsItemIdFragment
+	CmsItemId withBaselineRev(Long baselineRev);
+	*/
 
 }

@@ -5,9 +5,8 @@ import java.util.regex.Pattern;
 
 import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
-import se.simonsoft.cms.item.CmsRepository;
 
-public class CmsItemIdFragment implements CmsItemId {
+public class CmsItemIdFragment {
 	
 	private CmsItemId itemId;
 	/**
@@ -75,68 +74,62 @@ public class CmsItemIdFragment implements CmsItemId {
 		return sb.toString();
 	}
 	
-
 	@Override
-	public String getUrl() {
+	public String toString() {
 		
-		// The Url refers to the item excluding fragment.
-		return itemId.getUrl();
+		return appendFragment(itemId.toString());
 	}
-
+	
 	@Override
-	public String getUrlAtHost() {
+	public int hashCode() {
 		
-		// The Url refers to the item excluding fragment.
-		return itemId.getUrlAtHost();
+		return toString().hashCode();
 	}
-
+	
 	@Override
-	public Long getPegRev() {
+	public final boolean equals(Object obj) {
+		return obj != null
+				&& obj instanceof CmsItemIdFragment
+				&& equalsId((CmsItemIdFragment) obj);
+	}
+	
+	private final boolean equalsId(CmsItemIdFragment id) {
 		
-		return itemId.getPegRev();
+		if (!itemId.equals(id.getItemId())) return false;
+		if (getFragment() == null) {
+			return id.getFragment() == null;
+		} else {
+			return getFragment().equals(id.getFragment());
+		}
 	}
+	
 
-	@Override
 	public String getLogicalId() {
 		
 		return appendFragment(itemId.getLogicalId());
 	}
 
-	@Override
 	public String getLogicalIdFull() {
 		
 		return appendFragment(itemId.getLogicalIdFull());
 	}
 
-	@Override
-	public CmsItemPath getRelPath() {
-		
-		return itemId.getRelPath();
-	}
 
-	@Override
-	public CmsRepository getRepository() {
-		
-		return itemId.getRepository();
-	}
-
-	@SuppressWarnings("deprecation")
-	@Override
-	public String getRepositoryUrl() {
-		
-		return itemId.getRepositoryUrl();
-	}
-
-	@Override
 	public CmsItemIdFragment withRelPath(CmsItemPath newRelPath) {
 		
 		return new CmsItemIdFragment(this.itemId.withRelPath(newRelPath), this.fragment);
 	}
 
-	@Override
+
 	public CmsItemIdFragment withPegRev(Long newPegRev) {
 		
 		return new CmsItemIdFragment(this.itemId.withPegRev(newPegRev), this.fragment);
+	}
+
+
+	public CmsItemIdFragment withBaselineRev(Long baselineRev) {
+		
+		throw new UnsupportedOperationException();
 	}
 
 
