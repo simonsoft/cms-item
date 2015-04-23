@@ -127,9 +127,25 @@ public class CmsItemIdFragment {
 	}
 
 
+	/** Baseline revision of the CmsItemId regardless if the original ID has a pegRev. 
+	 * @param baselineRev
+	 * @return itemId with revision no higher than the baselineRev
+	 */
 	public CmsItemIdFragment withBaselineRev(Long baselineRev) {
 		
-		throw new UnsupportedOperationException();
+		if (baselineRev == null) {
+			throw new IllegalArgumentException("The baseline revision must not be null.");
+		}
+		
+		if (baselineRev < 1) {
+			throw new IllegalArgumentException("The baseline revision must be positive.");
+		}
+		
+		if (itemId.getPegRev() == null || baselineRev < itemId.getPegRev()) {
+			return new CmsItemIdFragment(this.itemId.withPegRev(baselineRev), this.fragment);
+		}
+		
+		return this;
 	}
 
 

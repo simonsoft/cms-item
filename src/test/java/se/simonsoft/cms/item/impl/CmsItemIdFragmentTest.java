@@ -100,5 +100,43 @@ public class CmsItemIdFragmentTest {
 		
 		assertTrue(id.equals(new CmsItemIdFragment(new CmsItemIdArg("x-svn:///svn/demo1^/vvab/xml/topic.dita"), "topic1/para1")));
 	}
+	
+	@Test
+	public void testBaselineRev() {
+		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1");
+		CmsItemIdFragment idRev = new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita?p=123#topic1/para1");
+		
+		assertNull(id.getItemId().getPegRev());
+		assertEquals(new Long(123), idRev.getItemId().getPegRev());
+		
+		assertEquals("baseline rev added to HEAD-id", new Long(11), id.withBaselineRev(11L).getItemId().getPegRev());
+		assertEquals("baseline rev lowering existing rev", new Long(11), idRev.withBaselineRev(11L).getItemId().getPegRev());
+		
+		assertEquals("higher baseline rev not affecting and existing rev", new Long(123), idRev.withBaselineRev(999L).getItemId().getPegRev());
+		
+		assertEquals("preserve fragment after adding baseline", "x-svn:///svn/demo1^/vvab/xml/topic.dita?p=11#topic1/para1", id.withBaselineRev(11L).getLogicalId());
+		assertEquals("equals another id after adding baselineRev identical to other IDs pegRev", idRev, id.withBaselineRev(123L));
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testBaselineRevNull() {
+		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1");
+		
+		id.withBaselineRev(null);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testBaselineRevZero() {
+		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1");
+		
+		id.withBaselineRev(0L);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testBaselineRevNegative() {
+		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1");
+		
+		id.withBaselineRev(-1L);
+	}
 
 }
