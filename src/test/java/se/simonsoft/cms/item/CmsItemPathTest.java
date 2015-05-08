@@ -26,6 +26,9 @@ import java.util.List;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+
 public class CmsItemPathTest {
 
 	@Test
@@ -495,12 +498,40 @@ public class CmsItemPathTest {
 		assertTrue(CmsItemPath.ROOT.equals(CmsItemPath.ROOT));
 		assertEquals(CmsItemPath.ROOT, CmsItemPath.ROOT);
 		assertFalse("equals method should give the same result in both directions", CmsItemPath.ROOT.equals(null));
-		// TBD
-		//assertEquals("", CmsItemPath.ROOT.getName());
-		//assertEquals("", CmsItemPath.ROOT.getNameBase());
-		// At least don't NPE
+	}
+	
+	@Test(expected = IllegalStateException.class)
+	public void getNameOnROOTShouldThrowException() {
+		CmsItemPath.ROOT.getName();
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void getNameBaseOnROOTShouldThrowException() {
 		CmsItemPath.ROOT.getNameBase();
-		CmsItemPath.ROOT.getExtension();
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	public void getNameWithSegPositionZeroShouldThrowException() {
+		CmsItemPath.ROOT.getName(0);
+		
+	}
+	
+	@Test(expected = IllegalStateException.class)
+	public void getAncestorsOnRootShouldThrowException() {
+		CmsItemPath.ROOT.getAncestors();
+		
+	}
+	
+	@Test
+	public void toStringAtRootReturnsEmptyString() {
+		 assertEquals("" ,CmsItemPath.ROOT.toString());
+	}
+	
+	@Test(expected = UnsupportedOperationException.class)
+	public void getPathSegmentsAddAllWithPathAsNull() {
+		
+		List<String> emptyList = new ArrayList<String>();
+		CmsItemPath.ROOT.getPathSegments().addAll(1, emptyList);
 	}
 	
 	@Test
