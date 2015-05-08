@@ -118,6 +118,9 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 	 * @return the name
 	 */
 	public String getName() {
+		if (this == CmsItemPath.ROOT) {
+			throw new IllegalStateException("Can't get name on Root");
+		}
 		return getName(-1);
 	}
 	

@@ -152,6 +152,10 @@ public class CmsRepository implements Serializable {
 	public CmsItemId getItemId() {
 		return new CmsItemIdArg(this, (CmsItemPath) null);
 	}
+	//TODO: JavaDoc is needed?
+	public CmsItemId getItemId(CmsItemPath path, Long pegRev) {
+		return new CmsItemIdArg(this, path, pegRev);
+	}
 	
 	/**
 	 * Returns a "transfer" id, and validates that it belongs to this repository.
