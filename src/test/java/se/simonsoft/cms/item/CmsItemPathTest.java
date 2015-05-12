@@ -522,6 +522,12 @@ public class CmsItemPathTest {
 		
 	}
 	
+	@Test(expected = IllegalStateException.class)
+	public void getExtensionOnRootShouldThrowException() {
+		CmsItemPath.ROOT.getExtension();
+	}
+	
+	
 	@Test
 	public void toStringAtRootReturnsEmptyString() {
 		 assertEquals("" ,CmsItemPath.ROOT.toString());
