@@ -30,13 +30,17 @@ public class CmsItemClassificationAdapterFiletypes implements
 	 * synchronized with cms_adapter.xml and javascript
 	 */
 	public static final String CMS_ADAPTER_XML = 
-			"xml|dita|ditamap|dcf|pcf|xlf|sgm|sgml|htm|html|txt|bcf";
+			"xml|dita|ditamap|dcf|pcf|xlf|sgm|sgml|htm|html|txt|bcf" + 
+					"";	// dummy line - keep.
 
 	/**
 	 * synchronized with cms_adapter.xml and javascript
 	 */
 	public static final String CMS_ADAPTER_GRAPHICS = 
-			"bmp|cgm|edz|pvz|eps|ps|pdf|gif|iso|isoz|idr|idrz|jpg|jpeg|png|svg|tif|tiff";	
+			"bmp|cgm|edz|pvz|eps|ps|pdf|gif|iso|isoz|idr|idrz|jpg|jpeg|png|svg|tif|tiff" + // Arbortext default formats
+					"|ai" +  // Adding support for direct use of Illustrator files (when saved with PDF compatibility option)
+					"|psd" + // Adding support for transformation of Photoshop files. 
+					"";	// dummy line - keep.
 	
 	private static final Pattern patternXml = Pattern.compile(".*\\.(" + CMS_ADAPTER_XML + ")$");
 	private static final Pattern patternGraphics = Pattern.compile(".*\\.(" + CMS_ADAPTER_GRAPHICS + ")$");
