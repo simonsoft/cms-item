@@ -29,10 +29,14 @@ public class CmsConfigOptionBase<T> implements CmsConfigOption {
 	protected final String key;
 	protected final T value;
 
-	public CmsConfigOptionBase(String key, T value) {
-		String[] nameSpaceAndKey = extractNamespace(key);
+	/**
+	 * @param name complete name, typically a combination of namespace and key
+	 * @param value option value
+	 */
+	public CmsConfigOptionBase(String name, T value) {
+		String[] nameSpaceAndKey = extractNamespace(name);
 		this.namespace = nameSpaceAndKey.length > 1 ? nameSpaceAndKey[0] : null;
-		this.key = nameSpaceAndKey.length > 1 ? nameSpaceAndKey[1] : key;
+		this.key = nameSpaceAndKey.length > 1 ? nameSpaceAndKey[1] : name;
 		this.value = value;
 	}
 
