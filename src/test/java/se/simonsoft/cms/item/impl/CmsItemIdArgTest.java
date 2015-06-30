@@ -353,7 +353,7 @@ public class CmsItemIdArgTest {
 		try {
 			new CmsItemIdArg("x-svn:///svn/demo1^whot");
 		} catch (IllegalArgumentException e) {
-			assertEquals("Invalid path: whot", e.getMessage());
+			assertEquals("Invalid path: 'whot'", e.getMessage());
 		}
 	}
 	
