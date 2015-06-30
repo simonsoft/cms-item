@@ -85,7 +85,7 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 			path = path.substring(0, path.length() - 1);
 		}
 		if (!VALID_PATH_PATTERN.matcher(path).matches()) {
-			throw new IllegalArgumentException("Invalid path: " + path);
+			throw new IllegalArgumentException("Invalid path: '" + path + "'");
 		}
 		this.path = path;
 	}
