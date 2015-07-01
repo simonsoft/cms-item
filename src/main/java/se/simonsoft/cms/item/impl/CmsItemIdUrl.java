@@ -53,9 +53,6 @@ public class CmsItemIdUrl extends CmsItemIdEncoderBase {
 		super(repository);
 		this.repository = repository;
 		this.path = itemPath;
-		if (itemPath == CmsItemPath.ROOT) {
-			this.path = null; //Root path should be represented with null value in CmsItemId
-		}
 		this.pegRev = pegRev;
 	}
 

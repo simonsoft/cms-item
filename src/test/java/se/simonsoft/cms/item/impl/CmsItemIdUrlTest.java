@@ -174,14 +174,6 @@ public class CmsItemIdUrlTest {
 		//assertEquals("x-svn:///svn/repo^/", root.getLogicalId());
 	}
 	
-	/**
-	 * The root instance must not propagate to parts of the system that are define root as null, or we'll end up having to handle both.
-	 */
-	@Test
-	public void testProhibitRoot() {
-		CmsItemIdUrl id = new CmsItemIdUrl(mock(CmsRepository.class), CmsItemPath.ROOT);
-		assertNull(id.getRelPath());
-	}
 	
 	/**
 	 * Black box test of {@link CmsItemIdEncoderBase}, depended on for {@link CmsRepository#getItemId()}, {@link CmsItemId#getUrl()}.

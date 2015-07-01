@@ -97,7 +97,6 @@ public class CmsItemLockCollectionTest {
 		assertTrue(locks.containsPath(new CmsItemPath("/3")));
 		assertFalse(locks.containsPath(new CmsItemPath("/11")));
 		assertFalse(locks.containsPath(null));
-		assertFalse(locks.containsPath(CmsItemPath.ROOT));
 	}
 
 	@Test

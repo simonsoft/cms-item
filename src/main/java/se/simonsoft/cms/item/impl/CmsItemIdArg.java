@@ -88,7 +88,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	 * Preferrably use {@link CmsRepository#getItemId()} instead.
 	 */
 	public CmsItemIdArg(CmsRepository repository) {
-		this(repository, CmsItemPath.ROOT, null);
+		this(repository, null, null);
 	}	
 
 	/**
@@ -103,7 +103,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	 */
 	public CmsItemIdArg(CmsRepository repository, CmsItemPath itemPath, Long pegRev) {
 		this.repository = repository;
-		if (itemPath == null || itemPath == CmsItemPath.ROOT) {
+		if (itemPath == null) {
 			this.relpathDecoded = null; //Root path should be represented with null value in CmsItemId
 			this.relpathEncoded = REPO_ROOT_PATH;
 		} else {

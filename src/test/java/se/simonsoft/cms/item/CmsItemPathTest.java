@@ -475,76 +475,12 @@ public class CmsItemPathTest {
 		assertEquals("/ab/f", "" + p.get(5));
 	}
 
-	@Test
-	public void testRoot() {
-		// important: No method should return the ROOT instance. It is used for map keys only.
-		
-		assertNotNull(CmsItemPath.ROOT);
-		assertNull("For backwards compatibility getParent of root sub-item must still return null", new CmsItemPath("/dir").getParent());
-		
-		// TBD Really null? Dangerous at string concatenation. Also causes confusion with the fact that CmsItemId has a CmsItemPath==null for root. Return empty string instead?
-		assertEquals("Root path is undefined as string", null, CmsItemPath.ROOT.getPath());
-		
-		assertEquals(0, CmsItemPath.ROOT.getPathSegmentsCount());
-		assertNotNull(CmsItemPath.ROOT.getPathSegments());
-		assertEquals(0, CmsItemPath.ROOT.getPathSegments().size());
-		try {
-			CmsItemPath.ROOT.getParent();
-		} catch (IllegalStateException e) {
-			assertEquals("Attempt to get parent for root path", e.getMessage());
-		}
-		assertEquals(new CmsItemPath("/dir"), CmsItemPath.ROOT.append("dir"));
-		assertEquals("", CmsItemPath.ROOT.toString());
-		assertTrue(CmsItemPath.ROOT.equals(CmsItemPath.ROOT));
-		assertEquals(CmsItemPath.ROOT, CmsItemPath.ROOT);
-		assertFalse("equals method should give the same result in both directions", CmsItemPath.ROOT.equals(null));
-	}
-	
-	@Test(expected = IllegalStateException.class)
-	public void getNameOnROOTShouldThrowException() {
-		CmsItemPath.ROOT.getName();
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public void getNameBaseOnROOTShouldThrowException() {
-		CmsItemPath.ROOT.getNameBase();
-	}
-	
-	@Test(expected = IllegalArgumentException.class)
-	public void getNameWithSegPositionZeroShouldThrowException() {
-		CmsItemPath.ROOT.getName(0);
-		
-	}
-	
-	@Test(expected = IllegalStateException.class)
-	public void getAncestorsOnRootShouldThrowException() {
-		CmsItemPath.ROOT.getAncestors();
-		
-	}
-	
-	@Test(expected = IllegalStateException.class)
-	public void getExtensionOnRootShouldThrowException() {
-		CmsItemPath.ROOT.getExtension();
-	}
-	
-	
-	@Test
-	public void toStringAtRootReturnsEmptyString() {
-		 assertEquals("" ,CmsItemPath.ROOT.toString());
-	}
-	
-	@Test(expected = UnsupportedOperationException.class)
-	public void getPathSegmentsAddAllWithPathAsNull() {
-		
-		List<String> emptyList = new ArrayList<String>();
-		CmsItemPath.ROOT.getPathSegments().addAll(1, emptyList);
-	}
 	
 	@Test
 	public void testRootFromString() {
 		try {
 			new CmsItemPath("");
-			fail("APIs should return null instead of a CmsItemPath instance for root");
+			fail("APIs should return null for root");
 		} catch (IllegalArgumentException e) {
 			// expected
 		}
