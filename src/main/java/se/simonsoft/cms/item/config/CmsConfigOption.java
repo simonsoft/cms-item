@@ -48,7 +48,7 @@ public interface CmsConfigOption {
 	public Boolean getValueBoolean();
 	
 	/**
-	 * @return the value of the config option as Boolean, where case-insensitive and trimmed "true" becomes True. 
+	 * @return the value of the config option as List. A String value will be split on the pipe character and each element trimmed. 
 	 */
 	public List<String> getValueList();	
 

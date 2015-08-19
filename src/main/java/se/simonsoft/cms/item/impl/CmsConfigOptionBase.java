@@ -15,7 +15,9 @@
  */
 package se.simonsoft.cms.item.impl;
 
+import java.util.LinkedList;
 import java.util.List;
+
 import se.simonsoft.cms.item.config.CmsConfigOption;
 
 /**
@@ -60,9 +62,24 @@ public class CmsConfigOptionBase<T> implements CmsConfigOption {
 		return value instanceof Boolean ? (Boolean)value : Boolean.parseBoolean((String)value);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<String> getValueList() {
-		throw new UnsupportedOperationException("Not yet implemented.");
+		return value instanceof List<?> ? (List<String>)value : getList((String) value);
+	}
+	
+	private static List<String> getList(String multiValue) {
+		
+		String[] split = multiValue.split("\\|");
+		List<String> list = new LinkedList<String>();
+		for (String s : split) {
+			String t = s.trim();
+			if (t.length() == 0) {
+				throw new IllegalArgumentException("Got empty value in multi-value configuration option: " + multiValue);
+			}
+			list.add(t);
+		}
+		return list;
 	}
 
 	private String[] extractNamespace(String key) {
