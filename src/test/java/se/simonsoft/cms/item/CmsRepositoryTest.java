@@ -138,6 +138,17 @@ public class CmsRepositoryTest {
 		assertEquals(new CmsRepository("http://test.net/svn/r1").hashCode(), new CmsRepository("https://test.net:443/svn/r1").hashCode());
 	}
 	
+	@Test()
+	public void testProtocolNull() {
+		CmsRepository pNull = new CmsRepository(null, "test.net", "/svn", "repo");
+		
+		// This documents how the code currently works. Insane?!
+		assertTrue(pNull.isHostKnown());
+		assertEquals("null://test.net", pNull.getServerRootUrl());
+		
+		//assertTrue(new CmsRepository("http://test.net/svn/r1").equals(pNull));
+	}
+	
 	@Test(expected=IllegalArgumentException.class)
 	public void testHostNotEmpty() {
 		new CmsRepository("", "/svn", "repo");
