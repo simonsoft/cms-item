@@ -17,6 +17,9 @@ package se.simonsoft.cms.item.structure;
 
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import se.simonsoft.cms.item.CmsItemId;
 
 /**
@@ -26,24 +29,49 @@ import se.simonsoft.cms.item.CmsItemId;
 public class CmsItemClassificationAdapterFiletypes implements
 		CmsItemClassification {
 	
+	private String cmsAdapterXML;
+	private String cmsAdapterGraphics;
+	private Pattern patternXml;
+	private Pattern patternGraphics;
+	
 	/**
 	 * synchronized with cms_adapter.xml and javascript
 	 */
-	public static final String CMS_ADAPTER_XML = 
+	public static final String CMS_ADAPTER_XML_DEFAULT = 
 			"xml|dita|ditamap|dcf|pcf|xlf|sgm|sgml|htm|html|txt|bcf" + 
 					"";	// dummy line - keep.
 
 	/**
 	 * synchronized with cms_adapter.xml and javascript
 	 */
-	public static final String CMS_ADAPTER_GRAPHICS = 
+	public static final String CMS_ADAPTER_GRAPHICS_DEFAULT = 
 			"bmp|cgm|edz|pvz|eps|ps|pdf|gif|iso|isoz|idr|idrz|jpg|jpeg|png|svg|tif|tiff" + // Arbortext default formats
 					"|ai" +  // Adding support for direct use of Illustrator files (when saved with PDF compatibility option)
 					"|psd" + // Adding support for transformation of Photoshop files. 
 					"";	// dummy line - keep.
 	
-	private static final Pattern patternXml = Pattern.compile(".*\\.(" + CMS_ADAPTER_XML + ")$");
-	private static final Pattern patternGraphics = Pattern.compile(".*\\.(" + CMS_ADAPTER_GRAPHICS + ")$");
+	
+	public CmsItemClassificationAdapterFiletypes() {
+		this.patternXml = setPattern(CMS_ADAPTER_XML_DEFAULT);
+		this.patternGraphics = setPattern(CMS_ADAPTER_GRAPHICS_DEFAULT);
+	}
+	
+	@Inject void setCmsAdapterXml(
+			@Named("config:se.simonsoft.cms.item.filetypes.xml") String cmsAdapterXml) {
+		this.cmsAdapterXML = cmsAdapterXml;
+		this.patternXml = setPattern(this.cmsAdapterXML);
+	}
+	
+	@Inject void setCmsAdapterGraphics(
+			@Named("config:se.simonsoft.cms.item.filetypes.graphic") String cmsAdapterGraphics)  {
+		this.cmsAdapterGraphics = cmsAdapterGraphics;
+		this.patternGraphics = setPattern(this.cmsAdapterGraphics);
+	}
+	
+	private Pattern setPattern(String config) {
+		return Pattern.compile(".*\\.(" + config + ")$");
+	};
+	
 	
 	@Override
 	public boolean isXml(CmsItemId item) {
