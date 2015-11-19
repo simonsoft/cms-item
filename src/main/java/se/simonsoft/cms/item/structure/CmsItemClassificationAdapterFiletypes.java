@@ -29,8 +29,6 @@ import se.simonsoft.cms.item.CmsItemId;
 public class CmsItemClassificationAdapterFiletypes implements
 		CmsItemClassification {
 	
-	private String cmsAdapterXML;
-	private String cmsAdapterGraphics;
 	private Pattern patternXml;
 	private Pattern patternGraphics;
 	
@@ -58,14 +56,12 @@ public class CmsItemClassificationAdapterFiletypes implements
 	
 	@Inject void setCmsAdapterXml(
 			@Named("config:se.simonsoft.cms.item.filetypes.xml") String cmsAdapterXml) {
-		this.cmsAdapterXML = cmsAdapterXml;
-		this.patternXml = setPattern(this.cmsAdapterXML);
+		this.patternXml = setPattern(cmsAdapterXml);
 	}
 	
 	@Inject void setCmsAdapterGraphics(
 			@Named("config:se.simonsoft.cms.item.filetypes.graphic") String cmsAdapterGraphics)  {
-		this.cmsAdapterGraphics = cmsAdapterGraphics;
-		this.patternGraphics = setPattern(this.cmsAdapterGraphics);
+		this.patternGraphics = setPattern(cmsAdapterGraphics);
 	}
 	
 	private Pattern setPattern(String config) {
