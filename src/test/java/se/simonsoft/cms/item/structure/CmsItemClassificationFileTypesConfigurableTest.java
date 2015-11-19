@@ -27,7 +27,7 @@ public class CmsItemClassificationFileTypesConfigurableTest {
 	public void testIsGraphic() {
 		
 		CmsItemClassificationAdapterFiletypes c = new CmsItemClassificationAdapterFiletypes();
-		c.setCmsAdapterGraphics("bmp|cgm");
+		c.setFiletypesGraphic("bmp|cgm");
 		assertTrue(c.isGraphic(new CmsItemIdArg("x-svn://y.y/svn/r^/f/file.bmp")));
 		assertFalse(c.isGraphic(new CmsItemIdArg("x-svn://y.y/svn/r^/f/file.edz")));
 	}
@@ -35,7 +35,7 @@ public class CmsItemClassificationFileTypesConfigurableTest {
 	@Test
 	public void testIsXml() {
 		CmsItemClassificationAdapterFiletypes c = new CmsItemClassificationAdapterFiletypes();
-		c.setCmsAdapterXml("ditamap|pcf");
+		c.setFiletypesXml("ditamap|pcf");
 		assertFalse(c.isXml(new CmsItemIdArg("x-svn://y.y/svn/r^/f/file.xml")));
 		assertTrue(c.isXml(new CmsItemIdArg("x-svn://y.y/svn/r^/f/file.ditamap")));
 	}

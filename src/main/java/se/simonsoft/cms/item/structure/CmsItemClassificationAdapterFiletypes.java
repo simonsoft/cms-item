@@ -54,14 +54,19 @@ public class CmsItemClassificationAdapterFiletypes implements
 		this.patternGraphics = setPattern(CMS_ADAPTER_GRAPHICS_DEFAULT);
 	}
 	
-	@Inject void setCmsAdapterXml(
-			@Named("config:se.simonsoft.cms.item.filetypes.xml") String cmsAdapterXml) {
-		this.patternXml = setPattern(cmsAdapterXml);
+
+	@Inject 
+	void setFiletypesXml(
+			@Named("config:se.simonsoft.cms.item.filetypes.xml") String filetypesXml) {
+
+		this.patternXml = setPattern(filetypesXml);
 	}
 	
-	@Inject void setCmsAdapterGraphics(
-			@Named("config:se.simonsoft.cms.item.filetypes.graphic") String cmsAdapterGraphics)  {
-		this.patternGraphics = setPattern(cmsAdapterGraphics);
+	@Inject 
+	void setFiletypesGraphic(
+			@Named("config:se.simonsoft.cms.item.filetypes.graphic") String filetypesGraphic)  {
+
+		this.patternGraphics = setPattern(filetypesGraphic);
 	}
 	
 	private Pattern setPattern(String config) {
