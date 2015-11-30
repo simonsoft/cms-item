@@ -56,14 +56,14 @@ public class CmsItemClassificationAdapterFiletypes implements
 	
 
 	@Inject 
-	void setFiletypesXml(
+	public void setFiletypesXml(
 			@Named("config:se.simonsoft.cms.item.filetypes.xml") String filetypesXml) {
 
 		this.patternXml = setPattern(filetypesXml);
 	}
 	
 	@Inject 
-	void setFiletypesGraphic(
+	public void setFiletypesGraphic(
 			@Named("config:se.simonsoft.cms.item.filetypes.graphic") String filetypesGraphic)  {
 
 		this.patternGraphics = setPattern(filetypesGraphic);
