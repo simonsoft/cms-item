@@ -45,8 +45,8 @@ public class CmsItemLockImpl implements CmsItemLock, Serializable {
 		this.token = token;
 		this.owner = owner;
 		this.comment = comment;
-		this.created = created;
-		this.expires = expires;
+		this.created = created == null ? null : new Date(created.getTime()); // Ensure that the object is a standard Java Date instance.
+		this.expires = expires == null ? null : new Date(expires.getTime());
 				
 	}
 
