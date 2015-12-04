@@ -61,6 +61,13 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	private CmsRepository repository;
 	
 	/**
+	 * This empty constructor only exist to please kryo de-serialization which needs an no arg constructor
+	 * Do not initialize with this constructor
+	 */
+	@SuppressWarnings("unused")
+	private CmsItemIdArg() {}
+	
+	/**
 	 * @param logicalId with or without hostname and peg rev
 	 */
 	public CmsItemIdArg(String logicalId) {

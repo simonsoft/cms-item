@@ -61,8 +61,13 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 	
 	// simple performance improvement for repeated list operations
 	private transient List<String> pathList = null;
-
 	
+	/**
+	 * This empty constructor only exist to please kryo de-serialization which needs an no arg constructor
+	 * Do not initialize with this constructor
+	 */
+	@SuppressWarnings("unused")
+	private CmsItemPath() {}
 	/**
 	 * @param path with leading slash, trailing slash will be trimmed
 	 * @throws IllegalArgumentException for invalid path such as containing double slashes

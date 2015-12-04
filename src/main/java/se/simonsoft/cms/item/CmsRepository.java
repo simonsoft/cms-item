@@ -50,6 +50,13 @@ public class CmsRepository implements Serializable {
 	private String parent;
 	private String name;
 	
+	/**
+	 * This empty constructor only exist to please kryo de-serialization which needs an no arg constructor
+	 * Do not initialize with this constructor
+	 */
+	@SuppressWarnings("unused")
+	private CmsRepository() {}
+	
 	public CmsRepository(String repositoryUrl) {
 		Matcher m = P_URL.matcher(repositoryUrl);
 		if (!m.matches()) {

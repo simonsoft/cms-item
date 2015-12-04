@@ -31,6 +31,13 @@ public class CmsItemLockImpl implements CmsItemLock, Serializable {
 	private String comment;
 	private Date created;
 	private Date expires;
+	
+	/**
+	 * This empty constructor only exist to please kryo de-serialization which needs an no arg constructor
+	 * Do not initialize with this constructor
+	 */
+	@SuppressWarnings("unused")
+	private CmsItemLockImpl() {}
 
 	public CmsItemLockImpl(CmsItemId itemId, String token, String owner, String comment, Date created, Date expires) {
 		

@@ -31,6 +31,13 @@ public class SvnPropertyValueString implements SvnPropertyValue<String> {
 	 * Note that the value should be trimmed before splitting.
 	 */
 	public static final String NEWLINE_SPLIT = "\\s*\\n\\s*";
+	
+	/**
+	 * This empty constructor only exist to please kryo de-serialization which needs an no arg constructor
+	 * Do not initialize with this constructor
+	 */
+	@SuppressWarnings("unused")
+	private SvnPropertyValueString() {}
 
 	SvnPropertyValueString(String value, boolean modified) {
 	
