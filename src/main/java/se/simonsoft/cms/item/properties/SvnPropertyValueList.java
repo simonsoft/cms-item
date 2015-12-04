@@ -54,6 +54,15 @@ public class SvnPropertyValueList implements SvnPropertyValue<List<String>> {
 	}
 
 	/**
+	 * This empty constructor only exist to please kryo de-serialization which needs an no arg constructor
+	 * Do not initialize with this constructor
+	 */
+	@SuppressWarnings("unused")
+	private SvnPropertyValueList() {
+		this.originalValue = null; // Used only as optimization.
+	}
+	
+	/**
 	 * Package scoped because it allows the modified state to be changed.
 	 * The instance copies the <em>current contents</em> of the list and does not keep a reference to it.
 	 * @param value The property value
