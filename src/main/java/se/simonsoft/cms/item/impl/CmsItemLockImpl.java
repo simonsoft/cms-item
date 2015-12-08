@@ -85,6 +85,18 @@ public class CmsItemLockImpl implements CmsItemLock, Serializable {
 		return owner;
 	}
 	
+	@Override
+	public String toString() {
+		// Just arbitrary format that improves logging.
+		StringBuffer s = new StringBuffer();
+		s.append('[');
+		s.append(this.itemId.getRelPath()).append('|');
+		s.append(this.owner).append('|');
+		s.append(this.token);
+		s.append(']');
+		return s.toString();
+	}
+	
 	// generated, trusting that CmsItemId hashCode is implemented
 	@Override
 	public int hashCode() {

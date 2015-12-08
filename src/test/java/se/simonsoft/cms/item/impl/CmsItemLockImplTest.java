@@ -49,5 +49,15 @@ public class CmsItemLockImplTest {
 		assertFalse(lock1a.equals(lock1d));
 		assertFalse(lock1a.equals(lock1e));
 	}
+	
+	@Test
+	public void testToString() {
+		
+		CmsRepository repo = mock(CmsRepository.class);
+		Date now = new Date();
+		CmsItemLock lock1a = new CmsItemLockImpl(new CmsItemIdArg(repo, new CmsItemPath("/1")), "token1", "username", "comment", now, null);
+		
+		assertEquals("[/1|username|token1]", lock1a.toString());
+	}
 
 }
