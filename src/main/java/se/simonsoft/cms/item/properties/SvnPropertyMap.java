@@ -161,6 +161,13 @@ public class SvnPropertyMap implements CmsItemProperties {
 		
 	}
 	
+	/* #913 TODO: Implement in getModified() and test coverage.
+	public void removeProperty(String key) {
+		
+		map.put(key, null);
+	}
+	*/
+	
 	/*
 	public void putProperty(String key, SvnPropertyValue<?> value) {
 		
