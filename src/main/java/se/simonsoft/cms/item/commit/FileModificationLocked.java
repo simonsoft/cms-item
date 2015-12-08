@@ -27,7 +27,9 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
 
 /**
  * Overwrites existing resource at the path without need for a base,
- * but only if a matching {@link CmsPatchset#addLock(se.simonsoft.cms.item.CmsItemLock)} hsa been given.
+ * but only if a matching {@link CmsPatchset#addLock(se.simonsoft.cms.item.CmsItemLock)} has been given.
+ * Currently defers base processing and uploads the whole content stream to server. 
+ * Likely an insignificant performance difference when executing close to the server.
  */
 public final class FileModificationLocked implements CmsPatchItem, CmsPatchItem.SupportsProp, CmsPatchItem.SupportsContentModification {
 
@@ -47,6 +49,7 @@ public final class FileModificationLocked implements CmsPatchItem, CmsPatchItem.
 		this.path = pathInRepository;
 		this.contents = workingFile;
 		
+		// Would require some lookup implementation in order to get base.
 		//TODO: this.baseFile = ??
 	}
 	
