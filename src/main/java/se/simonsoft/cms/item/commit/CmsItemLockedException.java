@@ -24,11 +24,11 @@ public class CmsItemLockedException extends RuntimeException {
 	private static final long serialVersionUID = 1L;
 
 	public CmsItemLockedException(CmsRepository repository, CmsItemPath path) {
-		super("Item is locked at path " + path);
+		super("Item is already locked at path " + path);
 	}
 	
 	public CmsItemLockedException(CmsRepository repository, CmsItemPath path, CmsItemLock lock) {
-		super("Item is locked by user " + lock.getOwner() + " at path " + path);
+		super("Item is already locked by user " + lock.getOwner() + " at path " + path);
 	}
 	
 }
