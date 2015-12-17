@@ -27,6 +27,10 @@ public class CmsAuthenticationException extends RuntimeException {
 	
 	private static final long serialVersionUID = 1L;
 
+	public CmsAuthenticationException(String message) {
+		super(message);
+	}
+	
 	public CmsAuthenticationException(String message, Throwable cause) {
 		super(message, cause);
 	}
