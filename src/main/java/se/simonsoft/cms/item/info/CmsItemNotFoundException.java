@@ -52,7 +52,7 @@ public class CmsItemNotFoundException extends RuntimeException {
 	 * @param atRevision the revision at which the path was tried, toString should produce user readable representation
 	 */
 	public CmsItemNotFoundException(CmsRepository repository, CmsItemPath atPath, Object atRevision) {
-		super("Not found: " + repository + atPath + (atRevision == null ? "" : "@" + atRevision));
+		super("Not found: " + (repository == null ? "" : repository) + atPath + (atRevision == null ? "" : "@" + atRevision));
 		this.repository = repository;
 		this.path = atPath;
 		this.revision = atRevision;
