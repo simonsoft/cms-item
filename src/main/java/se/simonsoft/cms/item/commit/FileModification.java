@@ -17,6 +17,8 @@ package se.simonsoft.cms.item.commit;
 
 import java.io.InputStream;
 
+import se.simonsoft.cms.item.Checksum;
+import se.simonsoft.cms.item.Checksum.Algorithm;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
@@ -26,6 +28,7 @@ public final class FileModification implements CmsPatchItem, CmsPatchItem.Suppor
 	private InputStream baseFile;
 	private InputStream workingFile;
 	private CmsItemProperties properties;
+	private Checksum baseChecksum;
 
 	/**
 	 * @param pathInRepository see {@link CmsPatchItem#getPath()}
@@ -78,5 +81,17 @@ public final class FileModification implements CmsPatchItem, CmsPatchItem.Suppor
 		// modified, no prop support yet, no copy support yet
 		return "M___" + getPath().getPath();
 	}
+	/***
+	 * Set the base checksum to ensure that you can commit to the wrong base.
+	 * @param baseChecksum
+	 */
+	public void setBaseChecksum(Checksum baseChecksum) {
+		if (baseChecksum.has(Algorithm.MD5)){
+			this.baseChecksum = baseChecksum;
+		}
+	}
 	
+	public Checksum getBaseChecksum() {
+		return baseChecksum;
+	}
 }
