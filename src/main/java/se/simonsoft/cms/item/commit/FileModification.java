@@ -81,14 +81,16 @@ public final class FileModification implements CmsPatchItem, CmsPatchItem.Suppor
 		// modified, no prop support yet, no copy support yet
 		return "M___" + getPath().getPath();
 	}
-	/***
-	 * Set the base checksum to ensure that you can commit to the wrong base.
+	
+	/**
+	 * Set the base checksum to ensure that commit is performed against the correct base (i.e. server and client use the same base file).
 	 * @param baseChecksum
 	 */
 	public void setBaseChecksum(Checksum baseChecksum) {
-		if (baseChecksum.has(Algorithm.MD5)){
-			this.baseChecksum = baseChecksum;
+		if (!baseChecksum.has(Algorithm.MD5)){
+			throw new IllegalArgumentException("base checksum must provide MD5" + baseChecksum);
 		}
+		this.baseChecksum = baseChecksum;
 	}
 	
 	public Checksum getBaseChecksum() {
