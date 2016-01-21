@@ -205,7 +205,6 @@ public class SvnPropertyMapTest {
 	
 	@Test
 	public void testGetModified() {
-		System.out.println("getModified");
 		SvnPropertyMap map = new SvnPropertyMap();
 		map.store("p1", "z");
 		map.putProperty("p2", "y");
@@ -217,6 +216,30 @@ public class SvnPropertyMapTest {
 		SvnPropertyMap props2 = (SvnPropertyMap) map.getModified();
 		assertNotEquals("Did not expect same property map.", props, props2);
 		
+		
 	}
-
+	
+	@Test
+	public void testRemovePropShouldBeAnMod() {
+		
+		SvnPropertyMap props = new SvnPropertyMap();
+		props.store("p1", "z");
+		props.store("p2", "y");
+		assertEquals("z", props.getProperty("p1").toString());
+		
+		SvnPropertyMap mod = null;
+		mod = (SvnPropertyMap) props.getModified();
+		assertFalse(mod.containsProperty("p1"));
+		
+		props.putProperty("p2", "w");
+		props.removeProperty("p1");
+		mod = (SvnPropertyMap) props.getModified();
+		
+		assertTrue(mod.containsProperty("p1"));
+		assertTrue(mod.containsProperty("p2"));
+		assertEquals("w", mod.getString("p2"));
+		assertNull("Should be set to null", mod.getString("p1"));
+		assertNotEquals("Did not expect same property map.", props, mod);
+		
+	}
 }

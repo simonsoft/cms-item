@@ -64,7 +64,10 @@ public class SvnPropertyMap implements CmsItemProperties {
 		
 		SvnPropertyMap modified = new SvnPropertyMap();
 		for (Map.Entry<String, SvnPropertyValue<?>> entry : this.map.entrySet()) {
-			if (entry.getValue().isModified()) {
+			if(entry.getValue() == null) {
+				modified.putProperty(entry.getKey(), (String) null);
+			} else if (entry.getValue().isModified()) {
+				
 				if (entry.getValue() instanceof SvnPropertyValueList) {
 					modified.putProperty(entry.getKey(), (ArrayList<String>)((ArrayList<String>) entry.getValue().getValue()).clone());
 				} else if (entry.getValue() instanceof SvnPropertyValueString) {
@@ -161,12 +164,17 @@ public class SvnPropertyMap implements CmsItemProperties {
 		
 	}
 	
-	/* #913 TODO: Implement in getModified() and test coverage.
+	// #913 TODO: Implement in getModified() and test coverage.
 	public void removeProperty(String key) {
 		
-		map.put(key, null);
+		SvnPropertyValue<?> oldValue = getProperty(key);
+		if (oldValue != null) {
+			map.put(key, null);
+		} else {
+			logger.info("Property value is already null: " + oldValue);
+		}
 	}
-	*/
+	
 	
 	/*
 	public void putProperty(String key, SvnPropertyValue<?> value) {
