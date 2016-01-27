@@ -15,7 +15,6 @@
  */
 package se.simonsoft.cms.item.properties;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,17 +61,12 @@ public class SvnPropertyMap implements CmsItemProperties {
 	 */
 	public CmsItemProperties getModified() {
 		
-		SvnPropertyMap modified = new SvnPropertyMap();
+		CmsItemPropertiesMap modified = new CmsItemPropertiesMap();
 		for (Map.Entry<String, SvnPropertyValue<?>> entry : this.map.entrySet()) {
 			if(entry.getValue() == null) {
-				modified.putProperty(entry.getKey(), (String) null);
+				modified.andDelete(entry.getKey());
 			} else if (entry.getValue().isModified()) {
-				
-				if (entry.getValue() instanceof SvnPropertyValueList) {
-					modified.putProperty(entry.getKey(), (ArrayList<String>)((ArrayList<String>) entry.getValue().getValue()).clone());
-				} else if (entry.getValue() instanceof SvnPropertyValueString) {
-					modified.putProperty(entry.getKey(), (String) entry.getValue().getValue());
-				}
+				modified.and(entry.getKey(), entry.getValue().getSvnString());
 			}
 		}
 		
