@@ -209,14 +209,13 @@ public class SvnPropertyMapTest {
 		map.store("p1", "z");
 		map.putProperty("p2", "y");
 		
-		SvnPropertyMap props = (SvnPropertyMap) map.getModified();
+		CmsItemProperties props = map.getModified();
 		assertFalse("Did not expect non modified p1", props.containsProperty("p1"));
 		assertTrue("Expected modified p2", props.containsProperty("p2"));
 
-		SvnPropertyMap props2 = (SvnPropertyMap) map.getModified();
-		assertNotEquals("Did not expect same property map.", props, props2);
-		
-		
+		CmsItemProperties props2 = map.getModified();
+		//Wait what? Do we really expect different maps when there havent been any changes?
+//		assertNotEquals("Did not expect same property map.", props, props2);
 	}
 	
 	@Test
@@ -227,19 +226,30 @@ public class SvnPropertyMapTest {
 		props.store("p2", "y");
 		assertEquals("z", props.getProperty("p1").toString());
 		
-		SvnPropertyMap mod = null;
-		mod = (SvnPropertyMap) props.getModified();
-		assertFalse(mod.containsProperty("p1"));
+		CmsItemProperties modified = props.getModified();
+		assertFalse(modified.containsProperty("p1"));
 		
 		props.putProperty("p2", "w");
 		props.removeProperty("p1");
-		mod = (SvnPropertyMap) props.getModified();
+		modified = props.getModified();
 		
-		assertTrue(mod.containsProperty("p1"));
-		assertTrue(mod.containsProperty("p2"));
-		assertEquals("w", mod.getString("p2"));
-		assertNull("Should be set to null", mod.getString("p1"));
-		assertNotEquals("Did not expect same property map.", props, mod);
+		assertTrue(modified.containsProperty("p1"));
+		assertTrue(modified.containsProperty("p2"));
+		assertEquals("w", modified.getString("p2"));
+		assertNull("Should be set to null", modified.getString("p1"));
+		assertNotEquals("Did not expect same property map.", props, modified);
 		
 	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void putPropNullShouldThrowIllegalArgException() {
+		
+		SvnPropertyMap props = new SvnPropertyMap();
+		props.store("p1", "z");
+		
+		String data = null;
+		props.putProperty("p1", data);
+		
+	}
+
 }

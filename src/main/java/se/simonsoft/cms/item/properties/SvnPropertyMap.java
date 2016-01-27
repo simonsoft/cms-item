@@ -60,7 +60,6 @@ public class SvnPropertyMap implements CmsItemProperties {
 	 * @return only the currently modified properties, frozen i.e. disconnected from this instance
 	 */
 	public CmsItemProperties getModified() {
-		
 		CmsItemPropertiesMap modified = new CmsItemPropertiesMap();
 		for (Map.Entry<String, SvnPropertyValue<?>> entry : this.map.entrySet()) {
 			if(entry.getValue() == null) {
@@ -121,6 +120,10 @@ public class SvnPropertyMap implements CmsItemProperties {
 	
 	public void putProperty(String key, String data) {
 		
+		if(data == null) {
+			throw new IllegalArgumentException("Property value can not be set to null, use removeProperty(..)");
+		}
+		
 		SvnPropertyValue<String> value;
 		SvnPropertyValue<?> oldValue = map.get(key);
 		if (oldValue != null) {
@@ -140,6 +143,10 @@ public class SvnPropertyMap implements CmsItemProperties {
 	
 	public void putProperty(String key, List<?> data) {
 		
+		if(data == null) {
+			throw new IllegalArgumentException("Property value can not be set to null, use removeProperty(..)");
+		}
+		
 		SvnPropertyValue<?> value;
 		SvnPropertyValue<?> oldValue = map.get(key);
 		if (oldValue != null) {
@@ -158,15 +165,8 @@ public class SvnPropertyMap implements CmsItemProperties {
 		
 	}
 	
-	// #913 TODO: Implement in getModified() and test coverage.
 	public void removeProperty(String key) {
-		
-		SvnPropertyValue<?> oldValue = getProperty(key);
-		if (oldValue != null) {
-			map.put(key, null);
-		} else {
-			logger.info("Property value is already null: " + oldValue);
-		}
+		map.put(key, null);
 	}
 	
 	
