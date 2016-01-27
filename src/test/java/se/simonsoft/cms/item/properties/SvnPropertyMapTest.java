@@ -214,8 +214,7 @@ public class SvnPropertyMapTest {
 		assertTrue("Expected modified p2", props.containsProperty("p2"));
 
 		CmsItemProperties props2 = map.getModified();
-		//Wait what? Do we really expect different maps when there havent been any changes?
-//		assertNotEquals("Did not expect same property map.", props, props2);
+		assertFalse("Did not expect same property map.", props == props2);
 	}
 	
 	@Test
