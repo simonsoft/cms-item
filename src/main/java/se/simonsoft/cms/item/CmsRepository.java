@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 
 import se.simonsoft.cms.item.encoding.CmsItemURLEncoder;
 import se.simonsoft.cms.item.impl.CmsItemIdArg;
-import se.simonsoft.cms.item.impl.CmsItemIdEncoderBase;
 
 /**
  * Represents repository URL information.

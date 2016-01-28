@@ -31,7 +31,7 @@ import se.simonsoft.cms.item.CmsRepository;
  *  
  * @deprecated replaced by {@link CmsItemIdArg} for transfer and {@link CmsRepository#getItemId()} for repo + target
  */
-public class CmsItemIdUrl extends CmsItemIdEncoderBase {
+public class CmsItemIdUrl extends CmsItemIdBase {
 	
 	private CmsItemPath path;
 	private CmsRepository repository;
@@ -50,7 +50,6 @@ public class CmsItemIdUrl extends CmsItemIdEncoderBase {
 	}
 	
 	public CmsItemIdUrl(CmsRepository repository, CmsItemPath itemPath, Long pegRev) {
-		super(repository);
 		this.repository = repository;
 		this.path = itemPath;
 		this.pegRev = pegRev;
@@ -80,12 +79,12 @@ public class CmsItemIdUrl extends CmsItemIdEncoderBase {
 		if (path == null) {
 			return getRepositoryUrl();
 		}
-		return getRepositoryUrl() + urlencode(path);
+		return getRepositoryUrl() + repository.urlencode(path);
 	}
 
 	@Override
 	public String getUrlAtHost() {
-		return getRepository().getUrlAtHost() + urlencode(path);
+		return getRepository().getUrlAtHost() + repository.urlencode(path);
 	}
 	
 	public String getUrlAndPeg() {

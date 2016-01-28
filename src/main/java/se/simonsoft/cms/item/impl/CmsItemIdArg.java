@@ -283,7 +283,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		if (REPO_ROOT_PATH.equals(relpathEncoded)) {
 			return null;
 		}
-		String decoded = new CmsItemIdEncoderBase.Encoder(repository).decode(relpathEncoded);
+		String decoded = repository.urldecode(relpathEncoded);
 		return new CmsItemPath(decoded);
 	}
 	
