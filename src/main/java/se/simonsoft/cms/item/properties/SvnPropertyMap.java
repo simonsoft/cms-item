@@ -169,7 +169,7 @@ public class SvnPropertyMap implements CmsItemProperties {
 		if (containsProperty(key)) {
 			map.put(key, null);
 		} else {
-			logger.info("Property " + key + "does not exist, inable to remove.");
+			logger.info("Property {} does not exist, unable to remove.", key);
 		}
 	}
 	
