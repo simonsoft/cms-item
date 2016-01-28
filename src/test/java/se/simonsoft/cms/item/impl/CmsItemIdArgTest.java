@@ -76,7 +76,6 @@ public class CmsItemIdArgTest {
 		assertTrue(p.getRepository().isHostKnown());
 		assertTrue(p.isFullyQualifiedOriginally());
 		assertTrue(p.isPegged());
-		assertTrue(p.isPeggedOriginally());
 		assertEquals("/vvab/xml/Docs/Sa s.xml", p.getRelPath().toString());
 		assertEquals("http://demo.simonsoftcms.se/svn/demo1", p.getRepository().toString());
 		assertEquals(p.getLogicalIdFull(), p.toString());
@@ -88,7 +87,6 @@ public class CmsItemIdArgTest {
 		assertFalse(p.getRepository().isHostKnown());
 		assertFalse(p.isFullyQualifiedOriginally());
 		assertTrue(p.isPegged());
-		assertTrue(p.isPeggedOriginally());
 		p.setHostnameOrValidate("example.net");
 		assertEquals("http://example.net/svn/demo1", p.getRepository().getUrl());
 		assertEquals("http://example.net/svn/demo1/vvab/xml/sections/In%20in.xml", p.getUrl());
@@ -100,7 +98,6 @@ public class CmsItemIdArgTest {
 		assertFalse(p.getRepository().isHostKnown());
 		assertFalse(p.isFullyQualifiedOriginally());
 		assertFalse(p.isPegged());
-		assertFalse(p.isPeggedOriginally());
 		assertEquals("x-svn:///svn/demo1^/vvab/graphics/0001.tif", p.getLogicalId());
 		assertEquals("/vvab/graphics/0001.tif", p.getRelPath().toString());
 		assertNull(p.getPegRev());
@@ -131,7 +128,6 @@ public class CmsItemIdArgTest {
 		assertEquals("API spec", null, p.getPegRev());
 		p.setPegRev(1234567);
 		assertTrue(p.isPegged());
-		assertFalse(p.isPeggedOriginally());
 		assertEquals(1234567, p.getPegRev().longValue());
 		assertEquals("x-svn:///svn/demo1^/vvab/graphics/0001.tif?p=1234567", p.getLogicalId());
 		assertEquals("x-svn://x.y.z/svn/demo1^/vvab/graphics/0001.tif?p=1234567", p.getLogicalIdFull());

@@ -157,13 +157,6 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		return pegRev != null;
 	}
 	
-	/**
-	 * 
-	 * @deprecated class is no longer mutable with respect to pegRev
-	 */
-	public boolean isPeggedOriginally() {
-		return orgpeg;
-	}
 	
 	/**
 	 * @param fullyQualifiedName Often set by the web application and not the caller
