@@ -166,7 +166,11 @@ public class SvnPropertyMap implements CmsItemProperties {
 	}
 	
 	public void removeProperty(String key) {
-		map.put(key, null);
+		if (containsProperty(key)) {
+			map.put(key, null);
+		} else {
+			logger.info("Property " + key + "does not exist, inable to remove.");
+		}
 	}
 	
 	
