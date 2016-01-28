@@ -20,7 +20,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import se.simonsoft.cms.item.CmsItemId;
 

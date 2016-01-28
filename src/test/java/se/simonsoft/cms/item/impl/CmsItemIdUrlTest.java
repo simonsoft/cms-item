@@ -24,6 +24,7 @@ import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 
+@SuppressWarnings("deprecation")
 public class CmsItemIdUrlTest {
 
 	CmsRepository repo1 = new CmsRepository("http://localhost:1234/svn/repo1");
