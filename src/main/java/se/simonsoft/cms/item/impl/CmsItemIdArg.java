@@ -57,7 +57,6 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	private CmsItemPath relpathDecoded;
 	private Long pegRev = null;
 	private boolean orgfull;
-	private boolean orgpeg;
 	private CmsRepository repository;
 	
 	/**
@@ -87,7 +86,6 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		setRelPathEncoded(m.group(4), repository); // this is obviously not a configured repository so we'll get default encoding
 		if (m.group(5) != null) {
 			this.pegRev  = Long.parseLong(m.group(5));
-			this.orgpeg = true;
 		}
 	}
 	
