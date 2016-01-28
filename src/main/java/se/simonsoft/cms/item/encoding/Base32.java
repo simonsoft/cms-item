@@ -38,9 +38,9 @@ public class Base32 {
 	private SecureRandom r = null;
 
 	/**
-	 * @deprecated Use instance method 
+	 * 
 	 */
-	public static String base32(long i) {
+	private static String base32(long i) {
 		char[] buf = new char[65];
 		int charPos = 64;
 		boolean negative = (i < 0);
@@ -57,9 +57,9 @@ public class Base32 {
 	}
 	
 	/**
-	 * @deprecated Use instance method
+	 * 
 	 */
-	public static long debase32(String base32) {
+	private static long debase32(String base32) {
 		
 		long result = 0;
 		long negative = 1;
