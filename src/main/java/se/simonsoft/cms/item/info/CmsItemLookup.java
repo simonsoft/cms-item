@@ -30,8 +30,8 @@ import se.simonsoft.cms.item.CmsItemLock;
 public interface CmsItemLookup {
 	
 	/**
-	 * @param id (revision?)
-	 * @return the item
+	 * @param id, with or without revision
+	 * @return the item, where id is identical to argument
 	 * @throws CmsConnectionException if connection to the server or repository failed
 	 * @throws CmsItemNotFoundException if the item could not be found
 	 */	
@@ -43,6 +43,7 @@ public interface CmsItemLookup {
 	 * 
 	 * TODO decide which revision number to return: commit, path or argument's
 	 * TODO return with null revision if argument is HEAD? Then you would have to look up current head to get commit revisions.
+	 * General rule: Should return with argument revision, i.e. no revision when requesting HEAD.
 	 * 
 	 * @param parent folder or repository root, optional peg rev, should support withRelPath and withPegRev
 	 * @return children that are folders, iteration order decided by backend
@@ -85,6 +86,7 @@ public interface CmsItemLookup {
 	/**
 	 * Get contents recursively. This is an expensive operation that should be used with care,
 	 * but it is essential to for example admin tasks.
+	 * TODO: Debate whether this call should return CmsItem or CmsItemId. Perhaps both are needed due to the different performance profiles of backends.
 	 * @param parent
 	 * @return
 	 */
