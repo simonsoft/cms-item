@@ -38,31 +38,32 @@ public class Shard1K implements CmsItemNaming {
             throw new IllegalArgumentException("Folder and extension must not be null");
         }
 
-        logger.debug("Trying to create new name based on path: {}, with pattern: {} and extension: {}", folder.getPath(), namePattern.getName(), extension);
+        logger.info("Trying to create new name based on path: {}, with pattern: {} and extension: {}", folder.getPath(), namePattern.getName(), extension);
         String newName;
 
         CmsItemId itemId = repository.getItemId(folder.getPath());
         Set<CmsItemId> immediateFolders = lookup.getImmediateFolders(itemId);
 
         CmsItemPath newPath;
-        if (immediateFolders != null && !immediateFolders.isEmpty()) {
+        if (immediateFolders != null) {
 
             CmsItemId fileFolder = getItemIdWithHighestNumber(immediateFolders);
             newPath = fileFolder.getRelPath();
             Set<CmsItemId> immediateFiles = lookup.getImmediateFiles(fileFolder);
             if (immediateFiles.size() != MAX_NUMBER_OF_FILES && !immediateFiles.isEmpty()) {
+                logger.info("Folder is not full and there is previous files, returning file based on previous file name with counter incremented by 1");
                 String name = getItemIdWithHighestNumber(immediateFiles).getRelPath().getName();
                 newName = createNewFileName(name, extension);
             } else if (immediateFiles.isEmpty()) {
-                //No Files in the folder, return item zero
+                logger.info("No files in folder {} creating CmsItemPath at count 0", newPath);
                 newName = newPath.getName().concat(ITEM_ZERO);
             } else {
-                //Folder is full creating new one.
+                logger.info("The folder {} has reached it's maximum number of files. Creating a new folder", newPath);
                 newPath = createNewFolderPath(fileFolder, namePattern);
                 newName = newPath.getName().concat(ITEM_ZERO);
             }
         } else {
-            //Folder is empty or missing, creating new one with 0
+            logger.info("No folders in path: {}, creating folder with count 0", folder.getPath());
             newPath = folder.append(namePattern.getName().concat(ITEM_ZERO));
             newName = newPath.getName().concat(ITEM_ZERO);
         }
