@@ -31,6 +31,23 @@ public class Shard1KTest {
     }
 
 
+    @Test
+    public void parentFolderAndExtensionCantBeNull() {
+            CmsItemNaming naming = new Shard1K(repo, lookup);
+            try {
+                CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00");
+                naming.getItemPath(null, pattern, "tif");
+            } catch (IllegalArgumentException e) {
+                assertEquals("Folder and extension must not be null", e.getMessage());
+            }
+
+            try {
+                CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00");
+                naming.getItemPath(new CmsItemPath("/se/simonsoft/cms/item"), pattern, null);
+            } catch (IllegalArgumentException e) {
+                assertEquals("Folder and extension must not be null", e.getMessage());
+            }
+    }
 
     /**
      * There is one folder SEC0001000 and it's not full should return next item path 003.
