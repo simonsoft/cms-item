@@ -32,40 +32,43 @@ public class Shard1K implements CmsItemNaming {
     }
 
     @Override
-    public CmsItemPath getItemPath(CmsItemPath folder, CmsItemNamePattern namePattern, String extension) {
+    public CmsItemPath getItemPath(CmsItemPath parentFolder, CmsItemNamePattern namePattern, String extension) {
 
-        if (folder == null || extension == null) {
+        if (parentFolder == null || extension == null) {
             throw new IllegalArgumentException("Folder and extension must not be null");
         }
+        logger.info("Trying to create new name based on path: {}, with pattern: {} and extension: {}", parentFolder.getPath(), namePattern.getName(), extension);
 
-        logger.info("Trying to create new name based on path: {}, with pattern: {} and extension: {}", folder.getPath(), namePattern.getName(), extension);
         String newName;
-
-        CmsItemId itemId = repository.getItemId(folder.getPath());
+        CmsItemId itemId = repository.getItemId(parentFolder.getPath());
         Set<CmsItemId> immediateFolders = lookup.getImmediateFolders(itemId);
 
-        CmsItemPath newPath;
+        CmsItemPath folderPath;
         if (immediateFolders != null) {
-            CmsItemId fileFolder = getItemIdWithHighestNumber(immediateFolders);
-            newPath = fileFolder.getRelPath();
+            CmsItemId folder = getItemIdWithHighestNumber(immediateFolders);
+            folderPath = folder.getRelPath();
 
-            Set<CmsItemId> immediateFiles = lookup.getImmediateFiles(fileFolder);
-            if (immediateFiles.size() != MAX_NUMBER_OF_FILES && !immediateFiles.isEmpty()) {
+            Set<CmsItemId> immediateFiles = lookup.getImmediateFiles(folder);
+            if (!isFolderFullOrEmpty(immediateFiles)) {
                 logger.info("Folder is not full and there is previous files, returning file based on previous file name with counter incremented by 1");
-                String name = getItemIdWithHighestNumber(immediateFiles).getRelPath().getName();
-                newName = createNewFileName(name, extension);
+                String prevFileName = getItemIdWithHighestNumber(immediateFiles).getRelPath().getName();
+                newName = createNewFileName(prevFileName, extension);
             } else {
-                logger.info("The folder {} has reached it's maximum number of files. Creating a new folder", newPath);
-                newPath = (immediateFiles.isEmpty()) ? newPath : createNewFolderPath(fileFolder, namePattern);
-                newName = newPath.getName().concat(ITEM_ZERO);
+                folderPath = immediateFiles.isEmpty() ? folderPath : createNewFolderPath(folder, namePattern);
+                newName = folderPath.getName().concat(ITEM_ZERO);
+                logger.info("Folder: {}, new file name: {}", folderPath, newName);
             }
         } else {
-            logger.info("No folders in path: {}, creating folder with count 0", folder.getPath());
-            newPath = folder.append(namePattern.getName().concat(ITEM_ZERO));
-            newName = newPath.getName().concat(ITEM_ZERO);
+            logger.info("No folders in path: {}, creating folder with count 0", parentFolder.getPath());
+            folderPath = parentFolder.append(namePattern.getName().concat(ITEM_ZERO));
+            newName = folderPath.getName().concat(ITEM_ZERO);
         }
 
-        return getNewCmsItemPath(newName, extension, newPath);
+        return getNewCmsItemPath(newName, extension, folderPath);
+    }
+
+    private boolean isFolderFullOrEmpty(Set<CmsItemId> immediateFiles) {
+        return (immediateFiles.size() != MAX_NUMBER_OF_FILES && !immediateFiles.isEmpty()) ? false : true;
     }
 
     private String createNewFileName(String name, String extension) {
