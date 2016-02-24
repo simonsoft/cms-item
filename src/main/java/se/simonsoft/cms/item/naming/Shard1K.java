@@ -46,20 +46,17 @@ public class Shard1K implements CmsItemNaming {
 
         CmsItemPath newPath;
         if (immediateFolders != null) {
-
             CmsItemId fileFolder = getItemIdWithHighestNumber(immediateFolders);
             newPath = fileFolder.getRelPath();
+
             Set<CmsItemId> immediateFiles = lookup.getImmediateFiles(fileFolder);
             if (immediateFiles.size() != MAX_NUMBER_OF_FILES && !immediateFiles.isEmpty()) {
                 logger.info("Folder is not full and there is previous files, returning file based on previous file name with counter incremented by 1");
                 String name = getItemIdWithHighestNumber(immediateFiles).getRelPath().getName();
                 newName = createNewFileName(name, extension);
-            } else if (immediateFiles.isEmpty()) {
-                logger.info("No files in folder {} creating CmsItemPath at count 0", newPath);
-                newName = newPath.getName().concat(ITEM_ZERO);
             } else {
                 logger.info("The folder {} has reached it's maximum number of files. Creating a new folder", newPath);
-                newPath = createNewFolderPath(fileFolder, namePattern);
+                newPath = (immediateFiles.isEmpty()) ? newPath : createNewFolderPath(fileFolder, namePattern);
                 newName = newPath.getName().concat(ITEM_ZERO);
             }
         } else {
@@ -84,7 +81,8 @@ public class Shard1K implements CmsItemNaming {
         return nameWithoutExtension.substring(nameWithoutExtension.length() - FILE_COUNTER_LENGTH);
     }
 
-    private CmsItemPath createNewFolderPath(CmsItemId fileFolder, CmsItemNamePattern pattern) throws IllegalStateException {
+    private CmsItemPath createNewFolderPath(CmsItemId fileFolder, CmsItemNamePattern pattern) {
+
         String number = fileFolder.getRelPath().getName().replace(pattern.getName(), "");
         String name = pattern.getName().concat(incrementNumberWithOne(number));
         return fileFolder.getRelPath().getParent().append(name);
@@ -99,8 +97,8 @@ public class Shard1K implements CmsItemNaming {
         }
 
         Collections.sort(cmsItemIds, new CmsItemIdNameComparator());
-        //Sorted collection with highest name last returning the last index.
-        return cmsItemIds.get(cmsItemIds.size() - 1);
+        Collections.reverse(cmsItemIds);
+        return cmsItemIds.get(0);
     }
 
     private String incrementNumberWithOne(String number) throws IllegalStateException {
@@ -113,7 +111,7 @@ public class Shard1K implements CmsItemNaming {
         if (incrementedNumber.length() < maxLength) {
             incrementedNumber = reGenerateZeros(incrementedNumber, maxLength);
         } else if (incrementedNumber.length() > maxLength) {
-            throw new IllegalStateException("Return String can't be longer then initial strings length");
+            throw new IllegalStateException("Incremented string can't be longer then initial strings length");
         }
 
         return incrementedNumber;
