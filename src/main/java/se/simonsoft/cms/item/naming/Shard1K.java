@@ -24,7 +24,10 @@ import se.simonsoft.cms.item.info.CmsItemLookup;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Set;
 
 /**
  * Created by jonand on 17/02/16.
@@ -33,6 +36,7 @@ public class Shard1K implements CmsItemNaming {
 
     private CmsRepository repository;
     private CmsItemLookup lookup;
+    private CmsItemNamePattern namePattern;
     private static final String ITEM_ZERO = "000";
     private static int MAX_NUMBER_OF_FILES = 1000;
     private static int FILE_COUNTER_LENGTH = 3;
@@ -53,6 +57,7 @@ public class Shard1K implements CmsItemNaming {
             throw new IllegalArgumentException("Folder and extension must not be null");
         }
         logger.info("Trying to create new name based on path: {}, with pattern: {} and extension: {}", parentFolder.getPath(), namePattern.getName(), extension);
+        this.namePattern = namePattern;
 
         String newName;
         CmsItemId itemId = repository.getItemId(parentFolder.getPath());
@@ -67,7 +72,7 @@ public class Shard1K implements CmsItemNaming {
             if (!isFolderFullOrEmpty(immediateFiles)) {
                 logger.info("Folder is not full and there is previous files, returning file based on previous file name with counter incremented by 1");
                 String prevFileName = getItemIdWithHighestNumber(immediateFiles).getRelPath().getName();
-                newName = createNewFileName(prevFileName, extension);
+                newName = createNewFileName(prevFileName);
             } else {
                 folderPath = immediateFiles.isEmpty() ? folderPath : createNewFolderPath(folder, namePattern);
                 newName = folderPath.getName().concat(ITEM_ZERO);
@@ -75,7 +80,7 @@ public class Shard1K implements CmsItemNaming {
             }
         } else {
             logger.info("No folders in path: {}, creating folder with count 0", parentFolder.getPath());
-            folderPath = parentFolder.append(namePattern.getName().concat(ITEM_ZERO));
+            folderPath = parentFolder.append(namePattern.getFullFolderName());
             newName = folderPath.getName().concat(ITEM_ZERO);
         }
 
@@ -86,36 +91,36 @@ public class Shard1K implements CmsItemNaming {
         return (immediateFiles.size() != MAX_NUMBER_OF_FILES && !immediateFiles.isEmpty()) ? false : true;
     }
 
-    private String createNewFileName(String name, String extension) {
+    private String createNewFileName(String name) {
 
-        String nameWithoutExtension = name.replace("." + extension, "");
-        String number = incrementNumberWithOne(getFileNameCounter(name, extension));
+        String nameWithoutExtension = name.substring(0, name.lastIndexOf("."));
+        String number = incrementNumberWithOne(getFileNameCounter(nameWithoutExtension));
 
         return nameWithoutExtension.substring(0, nameWithoutExtension.length() - FILE_COUNTER_LENGTH).concat(number);
     }
 
-    private String getFileNameCounter(String name, String extension) {
-        String nameWithoutExtension = name.replace("." + extension, "");
+    private String getFileNameCounter(String nameWithoutExtension) {
         return nameWithoutExtension.substring(nameWithoutExtension.length() - FILE_COUNTER_LENGTH);
     }
 
     private CmsItemPath createNewFolderPath(CmsItemId fileFolder, CmsItemNamePattern pattern) {
 
-        String number = fileFolder.getRelPath().getName().replace(pattern.getName(), "");
+        String number = getFolderCounter(fileFolder);
         String name = pattern.getName().concat(incrementNumberWithOne(number));
         return fileFolder.getRelPath().getParent().append(name);
     }
 
-    private CmsItemId getItemIdWithHighestNumber(Set<CmsItemId> immediateFolders) {
+    private String getFolderCounter(CmsItemId folder) {
+        return folder.getRelPath().getName().replace(namePattern.getName(), "");
+    }
 
-        Iterator<CmsItemId> iterator = immediateFolders.iterator();
+    private CmsItemId getItemIdWithHighestNumber(Set<CmsItemId> immediateFolders) {
         ArrayList<CmsItemId> cmsItemIds = new ArrayList<CmsItemId>();
-        while (iterator.hasNext()) {
-            cmsItemIds.add(iterator.next());
-        }
+        cmsItemIds.addAll(immediateFolders);
 
         Collections.sort(cmsItemIds, new CmsItemIdNameComparator());
         Collections.reverse(cmsItemIds);
+
         return cmsItemIds.get(0);
     }
 
@@ -125,14 +130,14 @@ public class Shard1K implements CmsItemNaming {
         int parseInt = Integer.parseInt(number);
         parseInt++;
 
-        String incrementedNumber = Integer.toString(parseInt);
-        if (incrementedNumber.length() < maxLength) {
-            incrementedNumber = reGenerateZeros(incrementedNumber, maxLength);
-        } else if (incrementedNumber.length() > maxLength) {
+        String incrementedString = Integer.toString(parseInt);
+        if (incrementedString.length() < maxLength) {
+            incrementedString = reGenerateZeros(incrementedString, maxLength);
+        } else if (incrementedString.length() > maxLength) {
             throw new IllegalStateException("Incremented string can't be longer then initial strings length");
         }
 
-        return incrementedNumber;
+        return incrementedString;
     }
 
     private String reGenerateZeros(String number, int length) {
