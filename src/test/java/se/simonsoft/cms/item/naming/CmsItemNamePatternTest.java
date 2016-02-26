@@ -39,7 +39,7 @@ public class CmsItemNamePatternTest {
     public void getNameReturnsName() {
 
         CmsItemNamePattern name = new CmsItemNamePattern("name####");
-        assertEquals("name", name.getName());
+        assertEquals("name", name.getPrefix());
     }
 
     @Test
@@ -57,14 +57,14 @@ public class CmsItemNamePatternTest {
     public void testStringAlphanumeric() {
 
         CmsItemNamePattern name = new CmsItemNamePattern("thisShou1dBeOk########");
-        assertEquals("thisShou1dBeOk", name.getName());
+        assertEquals("thisShou1dBeOk", name.getPrefix());
     }
 
     @Test
     public void testStringAlphanumericAndUnderScore() {
 
         CmsItemNamePattern name = new CmsItemNamePattern("ok_ok####");
-        assertEquals("ok_ok", name.getName());
+        assertEquals("ok_ok", name.getPrefix());
     }
 
     @Test
@@ -143,11 +143,19 @@ public class CmsItemNamePatternTest {
         CmsItemNamePattern name1 = new CmsItemNamePattern("ok_ok##################");
         assertEquals("000000000000000", name1.getFolderCounterAsZeros());
     }
+    @Test
+    public void getFileCounterAsZeros() {
+        CmsItemNamePattern name = new CmsItemNamePattern("ok_ok######");
+        assertEquals("000", name.getFileCounterAsZeros());
+
+        CmsItemNamePattern name1 = new CmsItemNamePattern("ok_ok##################");
+        assertEquals("000", name1.getFileCounterAsZeros());
+    }
 
     @Test
     public void getFullFolderName() {
         CmsItemNamePattern name = new CmsItemNamePattern("ok_ok######");
-        assertEquals("Full folder name is name + folderCounterAsZero", "ok_ok000", name.getFullFolderName());
+        assertEquals("Full folder name is name + folderCounterAsZero + FileCounterAsZero", "ok_ok000000", name.getFullFolderName());
     }
 
 }

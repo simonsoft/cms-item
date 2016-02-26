@@ -36,7 +36,7 @@ import java.util.Set;
 /**
  * Shard1k will suggest new folder and file names with an count based on previous folders and files.
  */
-public class Shard1K implements CmsItemNaming {
+public class CmsItemNamingShard1K implements CmsItemNaming {
 
     private CmsRepository repository;
     private CmsItemLookup lookup;
@@ -44,11 +44,11 @@ public class Shard1K implements CmsItemNaming {
     private static final String ITEM_ZERO = "000";
     private static int MAX_NUMBER_OF_FILES = 1000;
     private static int FILE_COUNTER_LENGTH = 3;
-    private static final Logger logger = LoggerFactory.getLogger(Shard1K.class);
+    private static final Logger logger = LoggerFactory.getLogger(CmsItemNamingShard1K.class);
 
 
     @Inject
-    public Shard1K(CmsRepository repository, @Named("CmsItemLookup") CmsItemLookup lookup) {
+    public CmsItemNamingShard1K(CmsRepository repository, @Named("CmsItemLookup") CmsItemLookup lookup) {
 
         this.repository = repository;
         this.lookup = lookup;
@@ -72,7 +72,7 @@ public class Shard1K implements CmsItemNaming {
         if (parentFolder == null || extension == null) {
             throw new IllegalArgumentException("Folder and extension must not be null");
         }
-        logger.info("Trying to create new name based on path: {}, with pattern: {} and extension: {}", parentFolder.getPath(), namePattern.getName(), extension);
+        logger.info("Trying to create new name based on path: {}, with pattern: {} and extension: {}", parentFolder.getPath(), namePattern.getPrefix(), extension);
         this.namePattern = namePattern;
 
         String newName;
@@ -91,13 +91,13 @@ public class Shard1K implements CmsItemNaming {
                 newName = createNewFileName(prevFileName);
             } else {
                 folderPath = immediateFiles.isEmpty() ? folderPath : createNewFolderPath(folder, namePattern);
-                newName = folderPath.getName().concat(ITEM_ZERO);
+                newName = folderPath.getName();
                 logger.info("Folder: {}, new file name: {}", folderPath, newName);
             }
         } else {
             logger.info("No folders in path: {}, creating folder with count 0", parentFolder.getPath());
             folderPath = parentFolder.append(namePattern.getFullFolderName());
-            newName = folderPath.getName().concat(ITEM_ZERO);
+            newName = namePattern.getFullFolderName();
         }
 
         return getNewCmsItemPath(newName, extension, folderPath);
@@ -122,12 +122,14 @@ public class Shard1K implements CmsItemNaming {
     private CmsItemPath createNewFolderPath(CmsItemId fileFolder, CmsItemNamePattern pattern) {
 
         String number = getFolderCounter(fileFolder);
-        String name = pattern.getName().concat(incrementNumberWithOne(number));
-        return fileFolder.getRelPath().getParent().append(name);
+        String name = pattern.getPrefix().concat(incrementNumberWithOne(number));
+        return fileFolder.getRelPath().getParent().append(name.concat(ITEM_ZERO));
     }
 
     private String getFolderCounter(CmsItemId folder) {
-        return folder.getRelPath().getName().replace(namePattern.getName(), "");
+
+        String folderAndFileCounter = folder.getRelPath().getName().replace(namePattern.getPrefix(), "");
+        return folderAndFileCounter.substring(0, folderAndFileCounter.length() - FILE_COUNTER_LENGTH);
     }
 
     private CmsItemId getItemIdWithHighestNumber(Set<CmsItemId> immediateFolders) {

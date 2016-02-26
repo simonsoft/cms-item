@@ -24,7 +24,7 @@ package se.simonsoft.cms.item.naming;
  */
 public class CmsItemNamePattern {
 
-    private String name;
+    private String prefix;
     private String fileCounter;
     private String pattern = "^[a-zA-Z0-9_-]{1,}$";
     private static String FILE_COUNTER_PATTERN= "^[#]{3,3}$";
@@ -44,17 +44,17 @@ public class CmsItemNamePattern {
             throw new IllegalArgumentException("The name pattern can't be null or empty");
         }
 
-        setNameAndCounters(name);
+        setPrefixAndCounters(name);
     }
 
-    private void setNameAndCounters(String namePattern) {
+    private void setPrefixAndCounters(String namePattern) {
 
         int firstHash = namePattern.indexOf("#");
         if (firstHash == -1) {
             throw new IllegalArgumentException("Counter pattern must have be at least 4 # at the end of the pattern");
         }
 
-        setName(namePattern.substring(0, firstHash));
+        setPrefix(namePattern.substring(0, firstHash));
         setFolderCounter(namePattern.substring(firstHash, namePattern.length() - 3));
         setFileCounter(namePattern.substring(namePattern.length() - 3));
 
@@ -64,17 +64,17 @@ public class CmsItemNamePattern {
      *
      * @return returns the name without counters
      */
-    public String getName() {
-        return name;
+    public String getPrefix() {
+        return prefix;
     }
 
-    private void setName(String name) {
+    private void setPrefix(String prefix) {
 
-        if (!name.matches(pattern)) {
+        if (!prefix.matches(pattern)) {
             throw new IllegalArgumentException("The name must be alphanumeric and at least one char long");
         }
 
-        this.name = name;
+        this.prefix = prefix;
     }
 
     private void setFileCounter(String fileCounter) {
@@ -121,12 +121,23 @@ public class CmsItemNamePattern {
         return asZeros;
     }
 
+    public String getFileCounterAsZeros () {
+
+        int length = fileCounter.length();
+        String asZeros = "";
+        for (int i = 0; i < length; i++) {
+            asZeros = asZeros + "0";
+        }
+        return asZeros;
+    }
+
+
     /**
-     * Concat's name and folder counter as zeros
-     * @return String name with counter as zeros
+     * Concat's name, folder counter and file counter as zeros
+     * @return String name with counters as zeros
      */
     public String getFullFolderName() {
-        return getName().concat(getFolderCounterAsZeros());
+        return getPrefix().concat(getFolderCounterAsZeros()).concat(getFileCounterAsZeros());
     }
 
 }
