@@ -50,14 +50,14 @@ public class Shard1KTest {
     public void parentFolderAndExtensionCantBeNull() {
             CmsItemNaming naming = new Shard1K(repo, lookup);
             try {
-                CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00");
+                CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00####");
                 naming.getItemPath(null, pattern, "tif");
             } catch (IllegalArgumentException e) {
                 assertEquals("Folder and extension must not be null", e.getMessage());
             }
 
             try {
-                CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00");
+                CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00####");
                 naming.getItemPath(new CmsItemPath("/se/simonsoft/cms/item"), pattern, null);
             } catch (IllegalArgumentException e) {
                 assertEquals("Folder and extension must not be null", e.getMessage());
@@ -86,7 +86,7 @@ public class Shard1KTest {
 
         when(lookup.getImmediateFiles(folders.iterator().next())).thenReturn(files);
 
-        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00");
+        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00#####");
         CmsItemPath path = new CmsItemPath("/se/simonsoft/cms/item/naming/");
         CmsItemNaming naming = new Shard1K(repo, lookup);
 
@@ -120,7 +120,7 @@ public class Shard1KTest {
 
         when(lookup.getImmediateFiles(folders.iterator().next())).thenReturn(files);
 
-        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00");
+        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00#######");
         CmsItemPath path = new CmsItemPath("/se/simonsoft/cms/item/");
         CmsItemNaming naming = new Shard1K(repo, lookup);
 
@@ -137,13 +137,13 @@ public class Shard1KTest {
         when(repo.getItemId(new CmsItemPath("/se/simonsoft/cms/item/").getPath())).thenReturn(itemId);
         when(lookup.getImmediateFolders(itemId)).thenReturn(null);
 
-        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00");
+        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00#######");
         CmsItemPath path = new CmsItemPath("/se/simonsoft/cms/item/");
         CmsItemNaming naming = new Shard1K(repo, lookup);
 
         CmsItemPath itemPath = naming.getItemPath(path, pattern, "jpeg");
 
-        assertEquals("Return folder 0 and item 0", "/se/simonsoft/cms/item/SEC00000/SEC00000000.jpeg", itemPath.getPath());
+        assertEquals("Return folder 0 and item 0", "/se/simonsoft/cms/item/SEC000000/SEC000000000.jpeg", itemPath.getPath());
 
     }
 
@@ -160,7 +160,7 @@ public class Shard1KTest {
         Set<CmsItemId> files = new HashSet<CmsItemId>();
         when(lookup.getImmediateFiles(folders.iterator().next())).thenReturn(files);
 
-        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00");
+        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00#####");
         CmsItemPath path = new CmsItemPath("/se/simonsoft/cms/item/");
         CmsItemNaming naming = new Shard1K(repo, lookup);
 
@@ -188,7 +188,7 @@ public class Shard1KTest {
         }
         when(lookup.getImmediateFiles(itemIdWithHighestNumber)).thenReturn(files);
 
-        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00");
+        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00########");
         CmsItemPath path = new CmsItemPath("/se/simonsoft/cms/item/");
         CmsItemNaming naming = new Shard1K(repo, lookup);
 
@@ -224,7 +224,7 @@ public class Shard1KTest {
         }
         when(lookup.getImmediateFiles(itemIdWithHighestNumber)).thenReturn(files);
 
-        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00");
+        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00#####");
         CmsItemPath path = new CmsItemPath("/se/simonsoft/cms/item/");
 
         naming.getItemPath(path, pattern, "jpeg");
@@ -238,9 +238,9 @@ public class Shard1KTest {
         Shard1K naming = new Shard1K(repo, lookup);
 
         try {
-            naming.getItemPath(path, new CmsItemNamePattern("SEC00!"), "tif");
+            naming.getItemPath(path, new CmsItemNamePattern("SEC00!####"), "tif");
         } catch (IllegalArgumentException e) {
-            assertEquals("The name must be alphanumeric", e.getMessage());
+            assertEquals("The name must be alphanumeric and at least one char long", e.getMessage());
         }
     }
 

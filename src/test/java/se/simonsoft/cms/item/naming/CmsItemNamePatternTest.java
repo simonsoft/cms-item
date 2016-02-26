@@ -18,6 +18,7 @@ package se.simonsoft.cms.item.naming;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created by jonand on 17/02/16.
@@ -36,14 +37,17 @@ public class CmsItemNamePatternTest {
 
     @Test
     public void getNameReturnsName() {
-        CmsItemNamePattern name = new CmsItemNamePattern("name001000");
-        assertEquals("name001000", name.getName());
+
+        CmsItemNamePattern name = new CmsItemNamePattern("name####");
+        assertEquals("name", name.getName());
     }
 
     @Test
     public void testIllegalArgException() {
+
         try {
-            new CmsItemNamePattern("");
+            CmsItemNamePattern pattern = new CmsItemNamePattern("");
+            assertNull(pattern);
         } catch (IllegalArgumentException e) {
             assertEquals("The name pattern can't be null or empty", e.getMessage());
         }
@@ -51,23 +55,99 @@ public class CmsItemNamePatternTest {
 
     @Test
     public void testStringAlphanumeric() {
-        CmsItemNamePattern name = new CmsItemNamePattern("thisShou1dBeOk");
+
+        CmsItemNamePattern name = new CmsItemNamePattern("thisShou1dBeOk########");
         assertEquals("thisShou1dBeOk", name.getName());
     }
 
     @Test
     public void testStringAlphanumericAndUnderScore() {
-        CmsItemNamePattern name = new CmsItemNamePattern("thisShouldBe_Ok");
-        assertEquals("thisShouldBe_Ok", name.getName());
+
+        CmsItemNamePattern name = new CmsItemNamePattern("ok_ok####");
+        assertEquals("ok_ok", name.getName());
     }
 
     @Test
     public void testStringIllegalChars() {
+
         try {
-            new CmsItemNamePattern("thisShould Not be Ok");
+            CmsItemNamePattern pattern = new CmsItemNamePattern("thisShould Not be Ok####");
+            assertNull(pattern);
         } catch (IllegalArgumentException e) {
-            assertEquals("The name must be alphanumeric", e.getMessage());
+            assertEquals("The name must be alphanumeric and at least one char long", e.getMessage());
         }
+    }
+
+    @Test
+    public void counterPatternContainsIllegalChar() {
+
+        try {
+            CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00#i####");
+            assertNull(pattern);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Folder counter must match: ^[#]{1,}$", e.getMessage());
+        }
+    }
+
+    @Test
+    public void counterPatternIsToShort() {
+
+        try {
+            CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00###");
+            assertNull(pattern);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Folder counter must match: ^[#]{1,}$", e.getMessage());
+        }
+    }
+
+    @Test
+    public void nameDoseNotContainAnyHashes() {
+
+        try {
+            CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00");
+            assertNull(pattern);
+        } catch (IllegalArgumentException e) {
+            assertEquals("Counter pattern must have be at least 4 # at the end of the pattern", e.getMessage());
+        }
+    }
+
+    @Test
+    public void fileCounterContainsIllegalChars() {
+        try {
+            CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00##i#");
+            assertNull(pattern);
+        } catch (IllegalArgumentException e) {
+            assertEquals("File counter must match: ^[#]{3,3}$", e.getMessage());
+        }
+    }
+
+    @Test
+    public void getFolderCounter() {
+
+        CmsItemNamePattern name = new CmsItemNamePattern("ok_ok######");
+        assertEquals(3, name.getFolderCounter().length());
+    }
+
+    @Test
+    public void  getFileCounter() {
+
+        CmsItemNamePattern name = new CmsItemNamePattern("ok_ok######");
+        assertEquals(3, name.getFileCounter().length());
+    }
+
+    @Test
+    public void getFolderCounterAsZeros() {
+        CmsItemNamePattern name = new CmsItemNamePattern("ok_ok######");
+        assertEquals("000", name.getFolderCounterAsZeros());
+
+        CmsItemNamePattern name1 = new CmsItemNamePattern("ok_ok##################");
+        assertEquals("000000000000000", name1.getFolderCounterAsZeros());
+    }
+
+    @Test
+    public void getFullFolderName() {
+        CmsItemNamePattern name = new CmsItemNamePattern("ok_ok######");
+        assertEquals("Full folder name is name + folderCounterAsZero", "ok_ok000", name.getFullFolderName());
     }
 
 }

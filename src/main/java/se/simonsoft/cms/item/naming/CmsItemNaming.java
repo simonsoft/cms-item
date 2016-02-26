@@ -20,7 +20,15 @@ import se.simonsoft.cms.item.CmsItemPath;
 /**
  * Created by jonand on 17/02/16.
  */
+
 public interface CmsItemNaming {
 
+    /**
+     * increments by 1 based on previous folder and files in sent in folder
+     * @param folder which is parent to the folders of the folders that contains the files /folder/someFolder001/some_file000.txt
+     * @param namePattern the name pattern you want to use, checks that there are no illegal chars.
+     * @param extension extension of the file.
+     * @return a complete CmsItemPath pointing at the file with the name incremented by 1.
+     */
     CmsItemPath getItemPath(CmsItemPath folder, CmsItemNamePattern namePattern, String extension);
 }

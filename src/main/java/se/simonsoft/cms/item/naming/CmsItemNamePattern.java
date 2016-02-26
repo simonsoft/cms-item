@@ -18,15 +18,26 @@ package se.simonsoft.cms.item.naming;
 /**
  * Created by jonand on 17/02/16.
  */
+
+/**
+ * Checks if the suggested name is valid with name, folder counter and file counter
+ */
 public class CmsItemNamePattern {
 
     private String name;
     private String fileCounter;
-    private String pattern = "^[a-zA-Z0-9_]{1,}$";
+    private String pattern = "^[a-zA-Z0-9_-]{1,}$";
     private static String FILE_COUNTER_PATTERN= "^[#]{3,3}$";
     private static String FOLDER_COUNTER_PATTERN = "^[#]{1,}$";
     private String folderCounter;
 
+    /**
+     * @param name must contain at least one char(^[a-zA-Z0-9_]{1,}$) for the name,
+     *             one # for the folder counter and
+     *             three # for the file counter.
+     *             e.g name|folderCounter|fileCounter
+     *             funny_name#####: name will be funny_name max folder count is 99 max file count is 999 funny_name07666.jpeg
+     */
     CmsItemNamePattern(String name) {
 
         if (name == null || name == "") {
@@ -36,7 +47,7 @@ public class CmsItemNamePattern {
         setNameAndCounters(name);
     }
 
-    public void setNameAndCounters(String namePattern) {
+    private void setNameAndCounters(String namePattern) {
 
         int firstHash = namePattern.indexOf("#");
         if (firstHash == -1) {
@@ -49,11 +60,15 @@ public class CmsItemNamePattern {
 
     }
 
+    /**
+     *
+     * @return returns the name without counters
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
 
         if (!name.matches(pattern)) {
             throw new IllegalArgumentException("The name must be alphanumeric and at least one char long");
@@ -79,15 +94,23 @@ public class CmsItemNamePattern {
         this.folderCounter = folderCounter;
     }
 
-
+    /**
+     * @return File counter which always is the last 3 hashes
+     */
     public String getFileCounter() {
         return this.fileCounter;
     }
-
+    /**
+     * @return folder counter which always is the hashes between name and file counter
+     */
     public String getFolderCounter() {
         return this.folderCounter;
     }
 
+    /**
+     * Converts hashes in folder counter.
+     * @return the folder counter hashes converted to zeros as an String
+     */
     public String getFolderCounterAsZeros () {
 
         int length = folderCounter.length();
@@ -98,8 +121,12 @@ public class CmsItemNamePattern {
         return asZeros;
     }
 
+    /**
+     * Concat's name and folder counter as zeros
+     * @return String name with counter as zeros
+     */
     public String getFullFolderName() {
-        return getName() + getFolderCounterAsZeros();
+        return getName().concat(getFolderCounterAsZeros());
     }
 
 }

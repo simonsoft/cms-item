@@ -32,6 +32,10 @@ import java.util.Set;
 /**
  * Created by jonand on 17/02/16.
  */
+
+/**
+ * Shard1k will suggest new folder and file names with an count based on previous folders and files.
+ */
 public class Shard1K implements CmsItemNaming {
 
     private CmsRepository repository;
@@ -50,6 +54,18 @@ public class Shard1K implements CmsItemNaming {
         this.lookup = lookup;
     }
 
+    /**
+     * Will increment the file name with one.
+     * Max files in a folder is 1000 (zero indexed) if file counter reaches 999 it will suggest a an CmsItemPath with the folder incremented by 1
+     * and a file with count zero.
+     * Folder name and file name will follow the given namePattern.
+     * Folder counter will never be higher then the given hashes in the name pattern e.g name###### the max folder count will be 999.
+     * See CmsNamePattern doc for more info.
+     * @param parentFolder which is parent to the folders of the folders that contains the files /folder/someFolder001/some_file000.txt
+     * @param namePattern the name pattern you want to use, checks that there are no illegal chars.
+     * @param extension extension of the file.
+     * @return
+     */
     @Override
     public CmsItemPath getItemPath(CmsItemPath parentFolder, CmsItemNamePattern namePattern, String extension) {
 
