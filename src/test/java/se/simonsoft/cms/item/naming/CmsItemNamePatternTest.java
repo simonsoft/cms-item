@@ -85,7 +85,7 @@ public class CmsItemNamePatternTest {
             CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00#i####");
             assertNull(pattern);
         } catch (IllegalArgumentException e) {
-            assertEquals("Folder counter must match: ^[#]{1,}$", e.getMessage());
+            assertEquals("Counter must match: ^[#]{2,}$", e.getMessage());
         }
     }
 
@@ -93,10 +93,10 @@ public class CmsItemNamePatternTest {
     public void counterPatternIsToShort() {
 
         try {
-            CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00###");
+            CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00#");
             assertNull(pattern);
         } catch (IllegalArgumentException e) {
-            assertEquals("Folder counter must match: ^[#]{1,}$", e.getMessage());
+            assertEquals("Counter must match: ^[#]{2,}$", e.getMessage());
         }
     }
 
@@ -107,55 +107,30 @@ public class CmsItemNamePatternTest {
             CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00");
             assertNull(pattern);
         } catch (IllegalArgumentException e) {
-            assertEquals("Counter pattern must have be at least 4 # at the end of the pattern", e.getMessage());
+            assertEquals("Counter pattern must have be at least 2 # at the end of the pattern", e.getMessage());
         }
     }
 
     @Test
-    public void fileCounterContainsIllegalChars() {
-        try {
-            CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00##i#");
-            assertNull(pattern);
-        } catch (IllegalArgumentException e) {
-            assertEquals("File counter must match: ^[#]{3,3}$", e.getMessage());
-        }
+    public void getCounter() {
+
+        CmsItemNamePattern name = new CmsItemNamePattern("ok_ok######");
+        assertEquals(6, name.getCounter().length());
     }
 
     @Test
-    public void getFolderCounter() {
-
+    public void getCounterAsZeros() {
         CmsItemNamePattern name = new CmsItemNamePattern("ok_ok######");
-        assertEquals(3, name.getFolderCounter().length());
-    }
-
-    @Test
-    public void  getFileCounter() {
-
-        CmsItemNamePattern name = new CmsItemNamePattern("ok_ok######");
-        assertEquals(3, name.getFileCounter().length());
-    }
-
-    @Test
-    public void getFolderCounterAsZeros() {
-        CmsItemNamePattern name = new CmsItemNamePattern("ok_ok######");
-        assertEquals("000", name.getFolderCounterAsZeros());
+        assertEquals("000000", name.getCounterAsZeros());
 
         CmsItemNamePattern name1 = new CmsItemNamePattern("ok_ok##################");
-        assertEquals("000000000000000", name1.getFolderCounterAsZeros());
-    }
-    @Test
-    public void getFileCounterAsZeros() {
-        CmsItemNamePattern name = new CmsItemNamePattern("ok_ok######");
-        assertEquals("000", name.getFileCounterAsZeros());
-
-        CmsItemNamePattern name1 = new CmsItemNamePattern("ok_ok##################");
-        assertEquals("000", name1.getFileCounterAsZeros());
+        assertEquals("000000000000000000", name1.getCounterAsZeros());
     }
 
     @Test
     public void getFullFolderName() {
         CmsItemNamePattern name = new CmsItemNamePattern("ok_ok######");
-        assertEquals("Full folder name is name + folderCounterAsZero + FileCounterAsZero", "ok_ok000000", name.getFullFolderName());
+        assertEquals("Full folder name is name + counter as zeros", "ok_ok000000", name.getFullNameWithCountZero());
     }
 
 }

@@ -25,11 +25,9 @@ package se.simonsoft.cms.item.naming;
 public class CmsItemNamePattern {
 
     private String prefix;
-    private String fileCounter;
     private String pattern = "^[a-zA-Z0-9_-]{1,}$";
-    private static String FILE_COUNTER_PATTERN= "^[#]{3,3}$";
-    private static String FOLDER_COUNTER_PATTERN = "^[#]{1,}$";
-    private String folderCounter;
+    private static String COUNTER_PATTERN = "^[#]{2,}$";
+    private String counter;
 
     /**
      * @param name must contain at least one char(^[a-zA-Z0-9_]{1,}$) for the name,
@@ -44,19 +42,18 @@ public class CmsItemNamePattern {
             throw new IllegalArgumentException("The name pattern can't be null or empty");
         }
 
-        setPrefixAndCounters(name);
+        setPrefixAndCounter(name);
     }
 
-    private void setPrefixAndCounters(String namePattern) {
+    private void setPrefixAndCounter(String namePattern) {
 
         int firstHash = namePattern.indexOf("#");
         if (firstHash == -1) {
-            throw new IllegalArgumentException("Counter pattern must have be at least 4 # at the end of the pattern");
+            throw new IllegalArgumentException("Counter pattern must have be at least 2 # at the end of the pattern");
         }
 
         setPrefix(namePattern.substring(0, firstHash));
-        setFolderCounter(namePattern.substring(firstHash, namePattern.length() - 3));
-        setFileCounter(namePattern.substring(namePattern.length() - 3));
+        setCounter(namePattern.substring(firstHash));
 
     }
 
@@ -77,67 +74,41 @@ public class CmsItemNamePattern {
         this.prefix = prefix;
     }
 
-    private void setFileCounter(String fileCounter) {
+    private void setCounter(String counter) {
 
-        if (!fileCounter.matches(FILE_COUNTER_PATTERN)) {
-            throw new IllegalArgumentException("File counter must match: " + FILE_COUNTER_PATTERN);
+        if (!counter.matches(COUNTER_PATTERN)) {
+            throw new IllegalArgumentException("Counter must match: " + COUNTER_PATTERN);
         }
-
-        this.fileCounter = fileCounter;
+        this.counter = counter;
     }
 
-    private void setFolderCounter(String folderCounter) {
-
-        if (!folderCounter.matches(FOLDER_COUNTER_PATTERN)) {
-            throw new IllegalArgumentException("Folder counter must match: " + FOLDER_COUNTER_PATTERN);
-        }
-        this.folderCounter = folderCounter;
-    }
-
-    /**
-     * @return File counter which always is the last 3 hashes
-     */
-    public String getFileCounter() {
-        return this.fileCounter;
-    }
     /**
      * @return folder counter which always is the hashes between name and file counter
      */
-    public String getFolderCounter() {
-        return this.folderCounter;
+    public String getCounter() {
+        return this.counter;
     }
 
     /**
-     * Converts hashes in folder counter.
-     * @return the folder counter hashes converted to zeros as an String
+     * Converts hashes in counter.
+     * @return the counter hashes converted to zeros as an String
      */
-    public String getFolderCounterAsZeros () {
+    public String getCounterAsZeros () {
 
-        int length = folderCounter.length();
+        int length = counter.length();
         String asZeros = "";
         for (int i = 0; i < length; i++) {
             asZeros = asZeros + "0";
         }
         return asZeros;
     }
-
-    public String getFileCounterAsZeros () {
-
-        int length = fileCounter.length();
-        String asZeros = "";
-        for (int i = 0; i < length; i++) {
-            asZeros = asZeros + "0";
-        }
-        return asZeros;
-    }
-
 
     /**
      * Concat's name, folder counter and file counter as zeros
      * @return String name with counters as zeros
      */
-    public String getFullFolderName() {
-        return getPrefix().concat(getFolderCounterAsZeros()).concat(getFileCounterAsZeros());
+    public String getFullNameWithCountZero() {
+        return getPrefix().concat(getCounterAsZeros());
     }
 
 }

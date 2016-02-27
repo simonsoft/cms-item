@@ -96,8 +96,8 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
             }
         } else {
             logger.info("No folders in path: {}, creating folder with count 0", parentFolder.getPath());
-            folderPath = parentFolder.append(namePattern.getFullFolderName());
-            newName = namePattern.getFullFolderName();
+            folderPath = parentFolder.append(namePattern.getFullNameWithCountZero());
+            newName = namePattern.getFullNameWithCountZero();
         }
 
         return getNewCmsItemPath(newName, extension, folderPath);
