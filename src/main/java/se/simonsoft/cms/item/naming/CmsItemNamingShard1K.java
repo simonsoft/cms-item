@@ -23,7 +23,6 @@ import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.info.CmsItemLookup;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -41,6 +40,7 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
     private CmsRepository repository;
     private CmsItemLookup lookup;
     private CmsItemNamePattern namePattern;
+    private String extension;
     private static final String ITEM_ZERO = "000";
     private static int MAX_NUMBER_OF_FILES = 1000;
     private static int FILE_COUNTER_LENGTH = 3;
@@ -48,7 +48,7 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
 
 
     @Inject
-    public CmsItemNamingShard1K(CmsRepository repository, @Named("CmsItemLookup") CmsItemLookup lookup) {
+    public CmsItemNamingShard1K(CmsRepository repository, CmsItemLookup lookup) {
 
         this.repository = repository;
         this.lookup = lookup;
@@ -56,7 +56,7 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
 
     /**
      * Will increment the file name with one.
-     * Max files in a folder is 1000 (zero indexed) if file counter reaches 999 it will suggest a an CmsItemPath with the folder incremented by 1
+     * Max files in a folder is 1000 (zero indexed) if file counter reaches 999 it will suggest a CmsItemPath with the folder incremented by 1
      * and a file with count zero.
      * Folder name and file name will follow the given namePattern.
      * Folder counter will never be higher then the given hashes in the name pattern e.g name###### the max folder count will be 999.
@@ -72,6 +72,9 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
         if (parentFolder == null || extension == null) {
             throw new IllegalArgumentException("Folder and extension must not be null");
         }
+
+        this.extension = extension;
+
         logger.info("Trying to create new name based on path: {}, with pattern: {} and extension: {}", parentFolder.getPath(), namePattern.getPrefix(), extension);
         this.namePattern = namePattern;
 
@@ -80,7 +83,7 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
         Set<CmsItemId> immediateFolders = lookup.getImmediateFolders(itemId);
 
         CmsItemPath folderPath;
-        if (immediateFolders != null) {
+        if (immediateFolders.size() != 0) {
             CmsItemId folder = getItemIdWithHighestNumber(immediateFolders);
             folderPath = folder.getRelPath();
 
@@ -90,7 +93,7 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
                 String prevFileName = getItemIdWithHighestNumber(immediateFiles).getRelPath().getName();
                 newName = createNewFileName(prevFileName);
             } else {
-                folderPath = immediateFiles.isEmpty() ? folderPath : createNewFolderPath(folder, namePattern);
+                folderPath = immediateFiles.isEmpty() ? folderPath : createNewFolderPath(folder);
                 newName = folderPath.getName();
                 logger.info("Folder: {}, new file name: {}", folderPath, newName);
             }
@@ -104,7 +107,9 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
     }
 
     private boolean isFolderFullOrEmpty(Set<CmsItemId> immediateFiles) {
-        return (immediateFiles.size() != MAX_NUMBER_OF_FILES && !immediateFiles.isEmpty()) ? false : true;
+
+        boolean full = (immediateFiles.size() != MAX_NUMBER_OF_FILES && !immediateFiles.isEmpty()) ? false : true;
+        return full ? full : getItemIdWithHighestNumber(immediateFiles).getRelPath().getName().endsWith("999.".concat(extension));
     }
 
     private String createNewFileName(String name) {
@@ -119,10 +124,10 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
         return nameWithoutExtension.substring(nameWithoutExtension.length() - FILE_COUNTER_LENGTH);
     }
 
-    private CmsItemPath createNewFolderPath(CmsItemId fileFolder, CmsItemNamePattern pattern) {
+    private CmsItemPath createNewFolderPath(CmsItemId fileFolder) {
 
         String number = getFolderCounter(fileFolder);
-        String name = pattern.getPrefix().concat(incrementNumberWithOne(number));
+        String name = namePattern.getPrefix().concat(incrementNumberWithOne(number));
         return fileFolder.getRelPath().getParent().append(name.concat(ITEM_ZERO));
     }
 

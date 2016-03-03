@@ -95,7 +95,7 @@ public class CmsItemNamingShard1KTest {
         assertNotNull("Should return an item path", itemPath);
         assertEquals("SEC10003.tif", itemPath.getName());
         assertEquals(itemPath.getExtension(), "tif");
-        assertEquals("Same folder but new item",itemPath.getPath(), "/se/simonsoft/cms/item/SEC10000/SEC10003.tif");
+        assertEquals("Same folder but new item", itemPath.getPath(), "/se/simonsoft/cms/item/SEC10000/SEC10003.tif");
 
     }
 
@@ -103,6 +103,31 @@ public class CmsItemNamingShard1KTest {
     /**
      * There is a folder but it's full, should return new empty folder and item 0.
      */
+    @Test
+    public void folderIsNotFullButCounterMaxIsReached() {
+
+        CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
+        when(repo.getItemId(new CmsItemPath("/se/simonsoft/cms/item/").getPath())).thenReturn(itemId);
+
+        Set<CmsItemId> folders = new HashSet<CmsItemId>();
+        folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC1000000")));
+        when(lookup.getImmediateFolders(itemId)).thenReturn(folders);
+
+        Set<CmsItemId> files = new HashSet<CmsItemId>();
+        files.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC1000000/SEC1000" + "999" + ".jpeg")));
+
+        when(lookup.getImmediateFiles(folders.iterator().next())).thenReturn(files);
+
+        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC#######");
+        CmsItemPath path = new CmsItemPath("/se/simonsoft/cms/item/");
+        CmsItemNaming naming = new CmsItemNamingShard1K(repo, lookup);
+
+        CmsItemPath itemPath = naming.getItemPath(path, pattern, "jpeg");
+
+        assertEquals("Return next folder number and item 0", "/se/simonsoft/cms/item/SEC1001000/SEC1001000.jpeg", itemPath.getPath());
+
+    }
+
     @Test
     public void folderIsFullGenerateNewOneWithItemZero() {
 
@@ -130,12 +155,13 @@ public class CmsItemNamingShard1KTest {
 
     }
 
+
     @Test
     public void noPreviousFolderOrItems() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
         when(repo.getItemId(new CmsItemPath("/se/simonsoft/cms/item/").getPath())).thenReturn(itemId);
-        when(lookup.getImmediateFolders(itemId)).thenReturn(null);
+        when(lookup.getImmediateFolders(itemId)).thenReturn(new HashSet<CmsItemId>());
 
         CmsItemNamePattern pattern = new CmsItemNamePattern("SEC#######");
         CmsItemPath path = new CmsItemPath("/se/simonsoft/cms/item/");

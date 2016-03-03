@@ -49,7 +49,7 @@ public class CmsItemNamePattern {
 
         int firstHash = namePattern.indexOf("#");
         if (firstHash == -1) {
-            throw new IllegalArgumentException("Counter pattern must have be at least 2 # at the end of the pattern");
+            throw new IllegalArgumentException("Counter pattern must have be at least 2 '#' at the end of the pattern");
         }
 
         setPrefix(namePattern.substring(0, firstHash));
@@ -83,7 +83,7 @@ public class CmsItemNamePattern {
     }
 
     /**
-     * @return folder counter which always is the hashes between name and file counter
+     * @return folder counter which always is the hashes
      */
     public String getCounter() {
         return this.counter;
