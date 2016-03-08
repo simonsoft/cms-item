@@ -40,11 +40,11 @@ public class CmsItemNamePattern {
      */
     CmsItemNamePattern(String name) {
 
-        logger.info("Trying to parse String: {} as an CmsItemNamePattern, patterns length {} ", name, name.length());
-
         if (name == null || name == "") {
             throw new IllegalArgumentException("The name pattern can't be null or empty");
         }
+
+        logger.info("Trying to parse String: {} as an CmsItemNamePattern, patterns length {} ", name, name.length());
 
         setPrefixAndCounter(name);
     }
