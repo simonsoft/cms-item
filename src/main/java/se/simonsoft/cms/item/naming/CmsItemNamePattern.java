@@ -15,6 +15,9 @@
  */
 package se.simonsoft.cms.item.naming;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,6 +30,7 @@ public class CmsItemNamePattern {
     private static Pattern PREFIX_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]{1,}$");
     private static Pattern COUNTER_PATTERN = Pattern.compile("^[#]{2,}$");
     private String counter;
+    private Logger logger = LoggerFactory.getLogger(CmsItemNamePattern.class);
 
     /**
      * @param name must contain at least one char(^[a-zA-Z0-9_]{1,}$) for the name,
@@ -36,6 +40,8 @@ public class CmsItemNamePattern {
      *             funny_name#####: name will be funny_name max folder count is 99 max file count is 999 funny_name07666.jpeg
      */
     CmsItemNamePattern(String name) {
+
+        logger.info("Trying to parse String: {} as an CmsItemNamePattern", name);
 
         if (name == null || name == "") {
             throw new IllegalArgumentException("The name pattern can't be null or empty");
@@ -48,7 +54,7 @@ public class CmsItemNamePattern {
 
         int firstHash = indexOf(Pattern.compile("[#]"), namePattern);
         if (firstHash == -1) {
-            throw new IllegalArgumentException("Counter pattern must have at least 2 '#' at the end of the pattern: " + namePattern);
+            throw new IllegalArgumentException("Name pattern must have at least 2 '#' at the end of the pattern: " + namePattern);
         }
 
 

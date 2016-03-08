@@ -104,7 +104,7 @@ public class CmsItemNamePatternTest {
             CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00");
             assertNull(pattern);
         } catch (IllegalArgumentException e) {
-            assertEquals("Counter pattern must have at least 2 '#' at the end of the pattern", e.getMessage());
+            assertEquals("Name pattern must have at least 2 '#' at the end of the pattern: SEC00", e.getMessage());
         }
     }
 
