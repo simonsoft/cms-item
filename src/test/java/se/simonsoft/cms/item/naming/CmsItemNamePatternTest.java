@@ -130,4 +130,11 @@ public class CmsItemNamePatternTest {
         assertEquals("Full folder name is name + counter as zeros", "ok_ok000000", name.getFullNameWithCountZero());
     }
 
+    @Test
+    public void indexOfSaneTest() {
+        String someHashes = "1234#12";
+        assertEquals("Need an working index of to", 4, someHashes.indexOf("#"));
+
+    }
+
 }

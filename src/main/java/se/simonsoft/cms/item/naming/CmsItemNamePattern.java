@@ -52,7 +52,7 @@ public class CmsItemNamePattern {
 
     private void setPrefixAndCounter(String namePattern) {
 
-        int firstHash = indexOf(Pattern.compile("[#]"), namePattern);
+        int firstHash = indexOf(Pattern.compile("[#]", Pattern.UNICODE_CHARACTER_CLASS), namePattern);
         if (firstHash == -1) {
             throw new IllegalArgumentException("Name pattern must have at least 2 '#' at the end of the pattern: " + namePattern);
         }
