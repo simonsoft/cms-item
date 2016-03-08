@@ -30,9 +30,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by jonand on 17/02/16.
- */
 public class CmsItemNamingShard1KTest {
 
     private CmsRepository repo;

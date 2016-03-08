@@ -20,9 +20,6 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-/**
- * Created by jonand on 17/02/16.
- */
 public class CmsItemNamePatternTest {
 
     @Test(expected = IllegalArgumentException.class)

@@ -15,14 +15,16 @@
  */
 package se.simonsoft.cms.item.naming;
 
+import java.util.regex.Pattern;
+
 /**
  * Checks if the suggested name is valid with name, folder counter and file counter
  */
 public class CmsItemNamePattern {
 
     private String prefix;
-    private String pattern = "^[a-zA-Z0-9_-]{1,}$";
-    private static String COUNTER_PATTERN = "^[#]{2,}$";
+    private static Pattern PREFIX_PATTERN = Pattern.compile("^[a-zA-Z0-9_-]{1,}$");
+    private static Pattern COUNTER_PATTERN = Pattern.compile("^[#]{2,}$");
     private String counter;
 
     /**
@@ -63,7 +65,7 @@ public class CmsItemNamePattern {
 
     private void setPrefix(String prefix) {
 
-        if (!prefix.matches(pattern)) {
+        if (!PREFIX_PATTERN.matcher(prefix).matches()) {
             throw new IllegalArgumentException("The name must be alphanumeric and at least one char long");
         }
 
@@ -72,7 +74,7 @@ public class CmsItemNamePattern {
 
     private void setCounter(String counter) {
 
-        if (!counter.matches(COUNTER_PATTERN)) {
+        if (!COUNTER_PATTERN.matcher(counter).matches()) {
             throw new IllegalArgumentException("Counter must match: " + COUNTER_PATTERN);
         }
         this.counter = counter;
