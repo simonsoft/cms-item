@@ -137,4 +137,10 @@ public class CmsItemNamePatternTest {
 
     }
 
+    @Test
+    public void indexOfSaneTest2() {
+        CmsItemNamePattern name = new CmsItemNamePattern("SEC####");
+        assertEquals("SEC", name.getPrefix());
+    }
+
 }
