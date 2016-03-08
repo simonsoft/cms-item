@@ -266,6 +266,13 @@ public class CmsItemNamingShard1KTest {
         }
     }
 
+    @Test
+    public void saneTestOfNamePatternsIndexOf() {
+        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC#####");
+        assertEquals("SEC" , pattern.getPrefix());
+        assertEquals("00000", pattern.getCounterAsZeros());
+    }
+
     private CmsItemId getItemIdWithHighestNumber(Set<CmsItemId> immediateFolders) {
 
         Iterator<CmsItemId> iterator = immediateFolders.iterator();

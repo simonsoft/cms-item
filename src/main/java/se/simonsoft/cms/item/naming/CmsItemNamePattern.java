@@ -18,7 +18,6 @@ package se.simonsoft.cms.item.naming;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -52,20 +51,14 @@ public class CmsItemNamePattern {
 
     private void setPrefixAndCounter(String namePattern) {
 
-        int firstHash = indexOf(Pattern.compile("[#]", Pattern.UNICODE_CHARACTER_CLASS), namePattern);
+        int firstHash = namePattern.indexOf("#");
         if (firstHash == -1) {
             throw new IllegalArgumentException("Name pattern must have at least 2 '#' at the end of the pattern: " + namePattern);
         }
 
-
         setPrefix(namePattern.substring(0, firstHash));
         setCounter(namePattern.substring(firstHash));
 
-    }
-
-    private static int indexOf(Pattern pattern, String s) {
-        Matcher matcher = pattern.matcher(s);
-        return matcher.find() ? matcher.start() : -1;
     }
 
     /**
