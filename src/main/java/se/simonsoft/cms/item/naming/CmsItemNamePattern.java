@@ -46,9 +46,9 @@ public class CmsItemNamePattern {
 
     private void setPrefixAndCounter(String namePattern) {
 
-        int firstHash = indexOf(Pattern.compile("#"), namePattern);
+        int firstHash = indexOf(Pattern.compile("[#]"), namePattern);
         if (firstHash == -1) {
-            throw new IllegalArgumentException("Counter pattern must have at least 2 '#' at the end of the pattern");
+            throw new IllegalArgumentException("Counter pattern must have at least 2 '#' at the end of the pattern: " + namePattern);
         }
 
 
