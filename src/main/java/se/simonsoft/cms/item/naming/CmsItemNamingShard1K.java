@@ -29,10 +29,6 @@ import java.util.Comparator;
 import java.util.Set;
 
 /**
- * Created by jonand on 17/02/16.
- */
-
-/**
  * Shard1k will suggest new folder and file names with an count based on previous folders and files.
  */
 public class CmsItemNamingShard1K implements CmsItemNaming {

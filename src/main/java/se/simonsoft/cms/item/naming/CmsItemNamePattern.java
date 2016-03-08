@@ -16,10 +16,6 @@
 package se.simonsoft.cms.item.naming;
 
 /**
- * Created by jonand on 17/02/16.
- */
-
-/**
  * Checks if the suggested name is valid with name, folder counter and file counter
  */
 public class CmsItemNamePattern {
