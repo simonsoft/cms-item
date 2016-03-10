@@ -63,6 +63,13 @@ public class CmsItemNamePatternTest {
         CmsItemNamePattern name = new CmsItemNamePattern("ok_ok####");
         assertEquals("ok_ok", name.getPrefix());
     }
+    
+    @Test(expected=IllegalArgumentException.class)
+    public void testStringLeadingSpace() {
+
+        @SuppressWarnings("unused")
+		CmsItemNamePattern name = new CmsItemNamePattern(" A####");
+    }
 
     @Test
     public void testStringIllegalChars() {
@@ -71,7 +78,7 @@ public class CmsItemNamePatternTest {
             CmsItemNamePattern pattern = new CmsItemNamePattern("thisShould Not be Ok####");
             assertNull(pattern);
         } catch (IllegalArgumentException e) {
-            assertEquals("The name must be alphanumeric and at least one char long", e.getMessage());
+            assertEquals("The name prefix must be alphanumeric and at least one char long", e.getMessage());
         }
     }
 
