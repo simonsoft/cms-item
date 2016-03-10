@@ -38,13 +38,13 @@ public class CmsItemNamePattern {
      *             e.g name|folderCounter|fileCounter
      *             funny_name#####: name will be funny_name max folder count is 99 max file count is 999 funny_name07666.jpeg
      */
-    CmsItemNamePattern(String name) {
+    public CmsItemNamePattern(String name) {
 
         if (name == null || name == "") {
             throw new IllegalArgumentException("The name pattern can't be null or empty");
         }
 
-        logger.info("Trying to parse String: {} as an CmsItemNamePattern, patterns length {} ", name, name.length());
+        logger.info("Trying to parse name '{}' as a CmsItemNamePattern, pattern length {} ", name, name.length());
 
         setPrefixAndCounter(name);
     }
@@ -72,7 +72,7 @@ public class CmsItemNamePattern {
     private void setPrefix(String prefix) {
 
         if (!PREFIX_PATTERN.matcher(prefix).matches()) {
-            throw new IllegalArgumentException("The name must be alphanumeric and at least one char long");
+            throw new IllegalArgumentException("The name prefix must be alphanumeric and at least one char long");
         }
 
         this.prefix = prefix;
