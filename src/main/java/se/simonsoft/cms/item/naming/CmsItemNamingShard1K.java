@@ -75,7 +75,7 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
         this.namePattern = namePattern;
 
         String newName;
-        CmsItemId itemId = repository.getItemId(parentFolder.getPath());
+        CmsItemId itemId = repository.getItemId(parentFolder, null);
         Set<CmsItemId> immediateFolders = lookup.getImmediateFolders(itemId);
 
         CmsItemPath folderPath;
