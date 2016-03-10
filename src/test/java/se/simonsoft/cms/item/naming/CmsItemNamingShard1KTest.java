@@ -17,6 +17,7 @@ package se.simonsoft.cms.item.naming;
 
 import org.junit.Before;
 import org.junit.Test;
+
 import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
@@ -25,8 +26,7 @@ import se.simonsoft.cms.item.info.CmsItemLookup;
 
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -42,6 +42,30 @@ public class CmsItemNamingShard1KTest {
         lookup = mock(CmsItemLookup.class);
     }
 
+    @Test
+    public void patternHashesShort2() {
+            CmsItemNaming naming = new CmsItemNamingShard1K(repo, lookup);
+            try {
+                CmsItemNamePattern pattern = new CmsItemNamePattern("SEC##");
+                naming.getItemPath(new CmsItemPath("/se/simonsoft/cms/item/naming/"), pattern, "tif");
+                fail("should fail");
+            } catch (IllegalArgumentException e) {
+                assertEquals("The configured naming requires a minimum 3 '#' in the naming pattern.", e.getMessage());
+            }
+    }
+    
+    // TODO: Will this work? If possible I think is should work.
+    @Test
+    public void patternHashesShort3() {
+            CmsItemNaming naming = new CmsItemNamingShard1K(repo, lookup);
+            try {
+                CmsItemNamePattern pattern = new CmsItemNamePattern("SEC###");
+                naming.getItemPath(new CmsItemPath("/se/simonsoft/cms/item/naming/"), pattern, "tif");
+                fail("test coverage needed...");
+            } catch (IllegalArgumentException e) {
+                assertEquals("...", e.getMessage());
+            }
+    }
 
     @Test
     public void parentFolderAndExtensionCantBeNull() {
@@ -49,6 +73,7 @@ public class CmsItemNamingShard1KTest {
             try {
                 CmsItemNamePattern pattern = new CmsItemNamePattern("SEC####");
                 naming.getItemPath(null, pattern, "tif");
+                fail("should fail");
             } catch (IllegalArgumentException e) {
                 assertEquals("Folder and extension must not be null", e.getMessage());
             }
@@ -56,6 +81,7 @@ public class CmsItemNamingShard1KTest {
             try {
                 CmsItemNamePattern pattern = new CmsItemNamePattern("SEC####");
                 naming.getItemPath(new CmsItemPath("/se/simonsoft/cms/item"), pattern, null);
+                fail("should fail");
             } catch (IllegalArgumentException e) {
                 assertEquals("Folder and extension must not be null", e.getMessage());
             }
@@ -261,8 +287,9 @@ public class CmsItemNamingShard1KTest {
 
         try {
             naming.getItemPath(path, new CmsItemNamePattern("SEC!####"), "tif");
+            fail("should fail");
         } catch (IllegalArgumentException e) {
-            assertEquals("The name must be alphanumeric and at least one char long", e.getMessage());
+            assertEquals("The name prefix must be alphanumeric and at least one char long", e.getMessage());
         }
     }
 
