@@ -131,6 +131,35 @@ public class CmsItemNamingShard1KTest {
         assertEquals("New folder new item", itemPath.getPath(), "/se/simonsoft/cms/item/SEC00000/SEC00000.tif");
     }
 
+    @Test
+    public void mixedFoldersBoothShardsAndNoneShards() {
+
+        CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
+        Set<CmsItemId> folders = new HashSet<CmsItemId>();
+        folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SECABCSE")));
+        folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC01000")));
+        folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC02000")));
+        folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC03000")));
+        folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/carzyFolder")));
+        folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/Righto")));
+        folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC0412121212")));
+
+
+        when(lookup.getImmediateFolders(itemId)).thenReturn(folders);
+
+        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC#####");
+        CmsItemPath path = new CmsItemPath("/se/simonsoft/cms/item/");
+        CmsItemNaming naming = new CmsItemNamingShard1K(repo, lookup);
+
+        CmsItemPath itemPath = naming.getItemPath(path, pattern, "tif");
+
+        assertNotNull("Should return an item path", itemPath);
+        assertEquals("SEC03000.tif", itemPath.getName());
+        assertEquals(itemPath.getExtension(), "tif");
+        assertEquals("New folder new item", itemPath.getPath(), "/se/simonsoft/cms/item/SEC03000/SEC03000.tif");
+    }
+
+
     /**
      * There is one folder SEC0001000 and it's not full should return next item path 003.
      */

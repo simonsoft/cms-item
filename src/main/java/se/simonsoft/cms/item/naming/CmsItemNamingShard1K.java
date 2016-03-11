@@ -23,10 +23,7 @@ import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.info.CmsItemLookup;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Shard1k will suggest new folder and file names with an count based on previous folders and files.
@@ -84,10 +81,9 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
 
 
         CmsItemPath folderPath;
-        if (!newFolder(immediateFolders)) {
-            CmsItemId folder = getItemIdWithHighestNumber(immediateFolders);
+        CmsItemId folder = getItemIdWithHighestNumber(immediateFolders);
+        if (folder != null) {
             folderPath = folder.getRelPath();
-
             Set<CmsItemId> immediateFiles = lookup.getImmediateFiles(folder);
 
             if (!isFolderFullOrEmpty(immediateFiles)) {
@@ -113,10 +109,6 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
 
         boolean full = (immediateFiles.size() != MAX_NUMBER_OF_FILES && !immediateFiles.isEmpty()) ? false : true;
         return full ? full : getItemIdWithHighestNumber(immediateFiles).getRelPath().getName().endsWith("999.".concat(extension));
-    }
-
-    private boolean newFolder(Set<CmsItemId> immediateFolders) {
-        return immediateFolders.size() == 0 || !isPrevFoldersMatchingPattern(getItemIdWithHighestNumber(immediateFolders).getRelPath());
     }
 
     private boolean isPrevFoldersMatchingPattern(CmsItemPath path) {
@@ -150,13 +142,33 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
     }
 
     private CmsItemId getItemIdWithHighestNumber(Set<CmsItemId> immediateFolders) {
+
         ArrayList<CmsItemId> cmsItemIds = new ArrayList<CmsItemId>();
         cmsItemIds.addAll(immediateFolders);
+
+        Iterator<CmsItemId> iterator = cmsItemIds.iterator();
+        removeNoneShards(iterator);
 
         Collections.sort(cmsItemIds, new CmsItemIdNameComparator());
         Collections.reverse(cmsItemIds);
 
-        return cmsItemIds.get(0);
+        CmsItemId highestNumber = null;
+
+        if(cmsItemIds.size() != 0) {
+            highestNumber = cmsItemIds.get(0);
+        }
+
+        return highestNumber;
+    }
+
+    private void removeNoneShards(Iterator<CmsItemId> iterator) {
+
+        while (iterator.hasNext()) {
+            String name = iterator.next().getRelPath().getName();
+            if (!this.namePattern.isNameMatchingPattern(name) && !name.contains(this.extension)) {
+                iterator.remove();
+            }
+        }
     }
 
     private String incrementNumberWithOne(String number) throws IllegalStateException {
