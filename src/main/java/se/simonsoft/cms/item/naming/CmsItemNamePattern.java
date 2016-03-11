@@ -115,4 +115,16 @@ public class CmsItemNamePattern {
         return getPrefix().concat(getCounterAsZeros());
     }
 
+    public boolean isNameMatchingPattern(String name) {
+
+        boolean matches = false;
+        if (name.startsWith(prefix) && name.length() == getFullNameWithCountZero().length()) {
+            String substring = name.substring(prefix.length());
+            int len = substring.length();
+            matches = substring.matches("[0-9]{"+len+"}");
+        }
+
+        return matches;
+    }
+
 }

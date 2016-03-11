@@ -69,6 +69,10 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
             throw new IllegalArgumentException("Folder and extension must not be null");
         }
 
+        if (namePattern.getCounter().length() < 3) {
+            throw new IllegalArgumentException("The configured naming requires a minimum 3 '#' in the naming pattern.");
+        }
+
         this.extension = extension;
 
         logger.info("Trying to create new name based on path: {}, with pattern: {} and extension: {}", parentFolder.getPath(), namePattern.getPrefix(), extension);
@@ -78,12 +82,14 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
         CmsItemId itemId = repository.getItemId(parentFolder, null);
         Set<CmsItemId> immediateFolders = lookup.getImmediateFolders(itemId);
 
+
         CmsItemPath folderPath;
-        if (immediateFolders.size() != 0) {
+        if (!newFolder(immediateFolders)) {
             CmsItemId folder = getItemIdWithHighestNumber(immediateFolders);
             folderPath = folder.getRelPath();
 
             Set<CmsItemId> immediateFiles = lookup.getImmediateFiles(folder);
+
             if (!isFolderFullOrEmpty(immediateFiles)) {
                 logger.info("Folder is not full and there is previous files, returning file based on previous file name with counter incremented by 1");
                 String prevFileName = getItemIdWithHighestNumber(immediateFiles).getRelPath().getName();
@@ -102,10 +108,19 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
         return getNewCmsItemPath(newName, extension, folderPath);
     }
 
+
     private boolean isFolderFullOrEmpty(Set<CmsItemId> immediateFiles) {
 
         boolean full = (immediateFiles.size() != MAX_NUMBER_OF_FILES && !immediateFiles.isEmpty()) ? false : true;
         return full ? full : getItemIdWithHighestNumber(immediateFiles).getRelPath().getName().endsWith("999.".concat(extension));
+    }
+
+    private boolean newFolder(Set<CmsItemId> immediateFolders) {
+        return immediateFolders.size() == 0 || !isPrevFoldersMatchingPattern(getItemIdWithHighestNumber(immediateFolders).getRelPath());
+    }
+
+    private boolean isPrevFoldersMatchingPattern(CmsItemPath path) {
+        return namePattern.isNameMatchingPattern(path.getName());
     }
 
     private String createNewFileName(String name) {
@@ -123,6 +138,7 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
     private CmsItemPath createNewFolderPath(CmsItemId fileFolder) {
 
         String number = getFolderCounter(fileFolder);
+
         String name = namePattern.getPrefix().concat(incrementNumberWithOne(number));
         return fileFolder.getRelPath().getParent().append(name.concat(ITEM_ZERO));
     }
@@ -146,7 +162,13 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
     private String incrementNumberWithOne(String number) throws IllegalStateException {
 
         int maxLength = number.length();
-        int parseInt = Integer.parseInt(number);
+        int parseInt;
+        try {
+            parseInt = Integer.parseInt(number);
+        }catch (NumberFormatException e) {
+            throw new IllegalStateException("Counter is missing, namePattern: " + namePattern.getFullNameWithCountZero() + " needs hashes that represents counters");
+        }
+
         parseInt++;
 
         String incrementedString = Integer.toString(parseInt);

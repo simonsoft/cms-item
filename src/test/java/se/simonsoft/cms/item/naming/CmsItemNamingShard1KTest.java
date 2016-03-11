@@ -16,9 +16,7 @@
 package se.simonsoft.cms.item.naming;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-
 import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
@@ -43,7 +41,7 @@ public class CmsItemNamingShard1KTest {
         lookup = mock(CmsItemLookup.class);
     }
 
-    @Test @Ignore
+    @Test
     public void patternHashesShort2() {
             CmsItemNaming naming = new CmsItemNamingShard1K(repo, lookup);
             try {
@@ -55,17 +53,41 @@ public class CmsItemNamingShard1KTest {
             }
     }
     
-    // TODO: Will this work? If possible I think is should work.
-    @Test  @Ignore
-    public void patternHashesShort3() {
-            CmsItemNaming naming = new CmsItemNamingShard1K(repo, lookup);
-            try {
-                CmsItemNamePattern pattern = new CmsItemNamePattern("SEC###");
-                naming.getItemPath(new CmsItemPath("/se/simonsoft/cms/item/naming/"), pattern, "tif");
-                fail("test coverage needed...");
-            } catch (IllegalArgumentException e) {
-                assertEquals("...", e.getMessage());
-            }
+    @Test
+    public void patternIs3HashesAndfolderIsEmpty() {
+        CmsItemNaming naming = new CmsItemNamingShard1K(repo, lookup);
+        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC###");
+        CmsItemPath tif = naming.getItemPath(new CmsItemPath("/se/simonsoft/cms/item/naming/"), pattern, "tif");
+        assertEquals("Give new name", "SEC000.tif", tif.getName());
+        assertEquals("No Counter for folder.", "/se/simonsoft/cms/item/naming/SEC000/SEC000.tif", tif.getPath());
+
+    }
+
+    @Test
+    public void folderCounterMissingFolderIsFull() {
+
+        CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
+
+        Set<CmsItemId> folders = new HashSet<CmsItemId>();
+        folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC000")));
+        when(lookup.getImmediateFolders(itemId)).thenReturn(folders);
+
+        Set<CmsItemId> files = new HashSet<CmsItemId>();
+        files.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC000/SEC999.jpeg")));
+
+        when(lookup.getImmediateFiles(folders.iterator().next())).thenReturn(files);
+
+        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC###");
+        CmsItemPath path = new CmsItemPath("/se/simonsoft/cms/item/");
+        CmsItemNaming naming = new CmsItemNamingShard1K(repo, lookup);
+
+        try {
+            naming.getItemPath(path, pattern, "jpeg");
+            fail("Should fail can't increment none existing counter");
+        } catch (IllegalStateException e) {
+            assertEquals("Counter is missing, namePattern: SEC000 needs hashes that represents counters", e.getMessage());
+        }
+
     }
 
     @Test
@@ -88,15 +110,34 @@ public class CmsItemNamingShard1KTest {
             }
     }
 
+    @Test
+    public void prevFoldersThatDoesNotMatchPattern() {
+
+        CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
+        Set<CmsItemId> folders = new HashSet<CmsItemId>();
+        folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SECABCSE")));
+
+        when(lookup.getImmediateFolders(itemId)).thenReturn(folders);
+
+        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC#####");
+        CmsItemPath path = new CmsItemPath("/se/simonsoft/cms/item/");
+        CmsItemNaming naming = new CmsItemNamingShard1K(repo, lookup);
+
+        CmsItemPath itemPath = naming.getItemPath(path, pattern, "tif");
+
+        assertNotNull("Should return an item path", itemPath);
+        assertEquals("SEC00000.tif", itemPath.getName());
+        assertEquals(itemPath.getExtension(), "tif");
+        assertEquals("New folder new item", itemPath.getPath(), "/se/simonsoft/cms/item/SEC00000/SEC00000.tif");
+    }
+
     /**
      * There is one folder SEC0001000 and it's not full should return next item path 003.
      */
     @Test
     public void getItemPathShouldReturnNextPathWithNextNumber() throws Exception {
 
-        CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item"));
-
-        when(repo.getItemId(new CmsItemPath("/se/simonsoft/cms/item/naming/").getPath())).thenReturn(itemId);
+        CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/simonsoft/cms/item/"));
 
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC10000")));
@@ -111,7 +152,7 @@ public class CmsItemNamingShard1KTest {
         when(lookup.getImmediateFiles(folders.iterator().next())).thenReturn(files);
 
         CmsItemNamePattern pattern = new CmsItemNamePattern("SEC#####");
-        CmsItemPath path = new CmsItemPath("/se/simonsoft/cms/item/naming/");
+        CmsItemPath path = new CmsItemPath("/simonsoft/cms/item/");
         CmsItemNaming naming = new CmsItemNamingShard1K(repo, lookup);
 
         CmsItemPath itemPath = naming.getItemPath(path, pattern, "tif");
@@ -131,7 +172,6 @@ public class CmsItemNamingShard1KTest {
     public void folderIsNotFullButCounterMaxIsReached() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
-        when(repo.getItemId(new CmsItemPath("/se/simonsoft/cms/item/").getPath())).thenReturn(itemId);
 
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC1000000")));
@@ -156,7 +196,6 @@ public class CmsItemNamingShard1KTest {
     public void folderIsFullGenerateNewOneWithItemZero() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
-        when(repo.getItemId(new CmsItemPath("/se/simonsoft/cms/item/").getPath())).thenReturn(itemId);
 
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC1000000")));
@@ -184,7 +223,6 @@ public class CmsItemNamingShard1KTest {
     public void noPreviousFolderOrItems() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
-        when(repo.getItemId(new CmsItemPath("/se/simonsoft/cms/item/").getPath())).thenReturn(itemId);
         when(lookup.getImmediateFolders(itemId)).thenReturn(new HashSet<CmsItemId>());
 
         CmsItemNamePattern pattern = new CmsItemNamePattern("SEC#######");
@@ -201,7 +239,6 @@ public class CmsItemNamingShard1KTest {
     public void folderExistButIsEmpty() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
-        when(repo.getItemId(new CmsItemPath("/se/simonsoft/cms/item/").getPath())).thenReturn(itemId);
 
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC01000")));
@@ -224,7 +261,6 @@ public class CmsItemNamingShard1KTest {
     public void folderCounterIsAt9999() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
-        when(repo.getItemId(new CmsItemPath("/se/simonsoft/cms/item/").getPath())).thenReturn(itemId);
 
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC09999000")));
@@ -254,7 +290,6 @@ public class CmsItemNamingShard1KTest {
     public void allFoldersAreFull() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
-        when(repo.getItemId(new CmsItemPath("/se/simonsoft/cms/item/").getPath())).thenReturn(itemId);
 
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         for (int i = 0; i < 10; i++) {
