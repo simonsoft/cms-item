@@ -70,6 +70,7 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
             throw new IllegalArgumentException("The configured naming requires a minimum 3 '#' in the naming pattern.");
         }
 
+
         this.extension = extension;
 
         logger.info("Trying to create new name based on path: {}, with pattern: {} and extension: {}", parentFolder.getPath(), namePattern.getPrefix(), extension);
@@ -77,6 +78,11 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
 
         String newName;
         CmsItemId itemId = repository.getItemId(parentFolder, null);
+
+        if (!lookup.getItem(itemId).getProperties().getString("cms:class").contains("shardparent")) {
+            throw new IllegalArgumentException("The parent folder is not intended for the configured automated naming.");
+        }
+
         Set<CmsItemId> immediateFolders = lookup.getImmediateFolders(itemId);
 
 

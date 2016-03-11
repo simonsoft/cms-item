@@ -17,11 +17,13 @@ package se.simonsoft.cms.item.naming;
 
 import org.junit.Before;
 import org.junit.Test;
+import se.simonsoft.cms.item.CmsItem;
 import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.impl.CmsItemIdArg;
 import se.simonsoft.cms.item.info.CmsItemLookup;
+import se.simonsoft.cms.item.properties.CmsItemPropertiesMap;
 
 import java.util.*;
 
@@ -56,6 +58,10 @@ public class CmsItemNamingShard1KTest {
     @Test
     public void patternIs3HashesAndfolderIsEmpty() {
         CmsItemNaming naming = new CmsItemNamingShard1K(repo, lookup);
+
+        CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/naming"));
+        mockCmsItem(itemId);
+
         CmsItemNamePattern pattern = new CmsItemNamePattern("SEC###");
         CmsItemPath tif = naming.getItemPath(new CmsItemPath("/se/simonsoft/cms/item/naming/"), pattern, "tif");
         assertEquals("Give new name", "SEC000.tif", tif.getName());
@@ -67,6 +73,8 @@ public class CmsItemNamingShard1KTest {
     public void folderCounterMissingFolderIsFull() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
+
+        mockCmsItem(itemId);
 
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC000")));
@@ -89,6 +97,8 @@ public class CmsItemNamingShard1KTest {
         }
 
     }
+
+
 
     @Test
     public void parentFolderAndExtensionCantBeNull() {
@@ -114,6 +124,8 @@ public class CmsItemNamingShard1KTest {
     public void prevFoldersThatDoesNotMatchPattern() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
+        mockCmsItem(itemId);
+
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SECABCSE")));
 
@@ -135,6 +147,8 @@ public class CmsItemNamingShard1KTest {
     public void mixedFoldersBoothShardsAndNoneShards() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
+        mockCmsItem(itemId);
+
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SECABCSE")));
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC01000")));
@@ -167,7 +181,7 @@ public class CmsItemNamingShard1KTest {
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC1000")));
 
-
+        mockCmsItem(itemId);
         when(lookup.getImmediateFolders(itemId)).thenReturn(folders);
 
         Set<CmsItemId> files = new HashSet<CmsItemId>();
@@ -194,6 +208,9 @@ public class CmsItemNamingShard1KTest {
     public void noFilesWhitShardedName() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
+        mockCmsItem(itemId);
+
+
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC1000")));
 
@@ -228,6 +245,7 @@ public class CmsItemNamingShard1KTest {
     public void getItemPathShouldReturnNextPathWithNextNumber() throws Exception {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/simonsoft/cms/item/"));
+        mockCmsItem(itemId);
 
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC10000")));
@@ -262,6 +280,7 @@ public class CmsItemNamingShard1KTest {
     public void folderIsNotFullButCounterMaxIsReached() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
+        mockCmsItem(itemId);
 
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC1000000")));
@@ -286,6 +305,7 @@ public class CmsItemNamingShard1KTest {
     public void folderIsFullGenerateNewOneWithItemZero() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
+        mockCmsItem(itemId);
 
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC1000000")));
@@ -314,6 +334,7 @@ public class CmsItemNamingShard1KTest {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
         when(lookup.getImmediateFolders(itemId)).thenReturn(new HashSet<CmsItemId>());
+        mockCmsItem(itemId);
 
         CmsItemNamePattern pattern = new CmsItemNamePattern("SEC#######");
         CmsItemPath path = new CmsItemPath("/se/simonsoft/cms/item/");
@@ -329,6 +350,7 @@ public class CmsItemNamingShard1KTest {
     public void folderExistButIsEmpty() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
+        mockCmsItem(itemId);
 
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC01000")));
@@ -351,6 +373,7 @@ public class CmsItemNamingShard1KTest {
     public void folderCounterIsAt9999() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
+        mockCmsItem(itemId);
 
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC09999000")));
@@ -380,7 +403,7 @@ public class CmsItemNamingShard1KTest {
     public void allFoldersAreFull() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
-
+        mockCmsItem(itemId);
         Set<CmsItemId> folders = new HashSet<CmsItemId>();
         for (int i = 0; i < 10; i++) {
             folders.add(new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/SEC" + i +"000")));
@@ -445,5 +468,11 @@ public class CmsItemNamingShard1KTest {
         public int compare(CmsItemId itemId1, CmsItemId itemId2) {
             return itemId1.getRelPath().getName().compareTo(itemId2.getRelPath().getName());
         }
+    }
+
+    private void mockCmsItem(CmsItemId itemId) {
+        CmsItem mockItem = mock(CmsItem.class);
+        when(lookup.getItem(itemId)).thenReturn(mockItem);
+        when(mockItem.getProperties()).thenReturn(new CmsItemPropertiesMap("cms:class", "shardparent"));
     }
 }
