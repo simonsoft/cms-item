@@ -116,7 +116,6 @@ public class CmsItemNamePattern {
     }
 
     public boolean isNameMatchingPattern(String name) {
-
         boolean matches = false;
         if (name.startsWith(prefix) && name.length() == getFullNameWithCountZero().length()) {
             String substring = name.substring(prefix.length());

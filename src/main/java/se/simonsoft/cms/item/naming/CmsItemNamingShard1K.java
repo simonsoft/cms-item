@@ -88,8 +88,14 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
 
             if (!isFolderFullOrEmpty(immediateFiles)) {
                 logger.info("Folder is not full and there is previous files, returning file based on previous file name with counter incremented by 1");
-                String prevFileName = getItemIdWithHighestNumber(immediateFiles).getRelPath().getName();
-                newName = createNewFileName(prevFileName);
+
+                CmsItemId itemIdWithHighestNumber = getItemIdWithHighestNumber(immediateFiles);
+                if (itemIdWithHighestNumber == null) {
+                    newName = folderPath.getName();
+                } else {
+                    String prevFileName =itemIdWithHighestNumber.getRelPath().getName();
+                    newName = createNewFileName(prevFileName);
+                }
             } else {
                 folderPath = immediateFiles.isEmpty() ? folderPath : createNewFolderPath(folder);
                 newName = folderPath.getName();
@@ -104,15 +110,17 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
         return getNewCmsItemPath(newName, extension, folderPath);
     }
 
-
     private boolean isFolderFullOrEmpty(Set<CmsItemId> immediateFiles) {
 
-        boolean full = (immediateFiles.size() != MAX_NUMBER_OF_FILES && !immediateFiles.isEmpty()) ? false : true;
-        return full ? full : getItemIdWithHighestNumber(immediateFiles).getRelPath().getName().endsWith("999.".concat(extension));
-    }
+        boolean fullOrEmpty = (immediateFiles.size() == MAX_NUMBER_OF_FILES && immediateFiles.isEmpty()) ? true : false;
 
-    private boolean isPrevFoldersMatchingPattern(CmsItemPath path) {
-        return namePattern.isNameMatchingPattern(path.getName());
+        boolean not999 = false;
+        if (!fullOrEmpty) {
+            CmsItemId itemIdWithHighestNumber = getItemIdWithHighestNumber(immediateFiles);
+            not999 = (itemIdWithHighestNumber != null) ? itemIdWithHighestNumber.getRelPath().getName().endsWith("999.".concat(extension)) : false;
+        }
+
+        return fullOrEmpty ? fullOrEmpty : not999;
     }
 
     private String createNewFileName(String name) {
@@ -165,7 +173,11 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
 
         while (iterator.hasNext()) {
             String name = iterator.next().getRelPath().getName();
-            if (!this.namePattern.isNameMatchingPattern(name) && !name.contains(this.extension)) {
+            int i = name.lastIndexOf(".");
+            if (i != -1) {
+                name = name.substring(0, i);
+            }
+            if (!this.namePattern.isNameMatchingPattern(name)) {
                 iterator.remove();
             }
         }
