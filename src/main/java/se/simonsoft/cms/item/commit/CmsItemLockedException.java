@@ -21,14 +21,35 @@ import se.simonsoft.cms.item.CmsRepository;
 
 public class CmsItemLockedException extends RuntimeException {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 
+	private CmsRepository repository;
+	private CmsItemPath path;
+	private CmsItemLock lock;
+	
 	public CmsItemLockedException(CmsRepository repository, CmsItemPath path) {
 		super("Item is already locked at path " + path);
+		this.repository = repository;
+		this.path = path;
 	}
 	
 	public CmsItemLockedException(CmsRepository repository, CmsItemPath path, CmsItemLock lock) {
 		super("Item is already locked by user " + lock.getOwner() + " at path " + path);
+		this.repository = repository;
+		this.path = path;
+		this.lock = lock;
+	}
+	
+	public CmsRepository getRepository() {
+		return repository;
+	}
+	
+	public CmsItemPath getPath() {
+		return path;
+	}
+	
+	public CmsItemLock getLock() {
+		return lock;
 	}
 	
 }
