@@ -56,20 +56,6 @@ public class CmsItemNamingShard1KTest {
     }
     
     @Test
-    public void patternIs3HashesAndfolderIsEmpty() {
-        CmsItemNaming naming = new CmsItemNamingShard1K(repo, lookup);
-
-        CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/naming"));
-        mockCmsItem(itemId);
-
-        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC###");
-        CmsItemPath tif = naming.getItemPath(new CmsItemPath("/se/simonsoft/cms/item/naming/"), pattern, "tif");
-        assertEquals("Give new name", "SEC000.tif", tif.getName());
-        assertEquals("No Counter for folder.", "/se/simonsoft/cms/item/naming/SEC000/SEC000.tif", tif.getPath());
-
-    }
-
-    @Test
     public void folderCounterMissingFolderIsFull() {
 
         CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
@@ -97,7 +83,41 @@ public class CmsItemNamingShard1KTest {
         }
 
     }
+    
+    @Test
+    public void patternIs3HashesAndfolderIsEmpty() {
+        CmsItemNaming naming = new CmsItemNamingShard1K(repo, lookup);
 
+        CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/naming"));
+        mockCmsItem(itemId);
+
+        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC###");
+        CmsItemPath tif = naming.getItemPath(new CmsItemPath("/se/simonsoft/cms/item/naming/"), pattern, "tif");
+        assertEquals("Give new name", "SEC000.tif", tif.getName());
+        assertEquals("No Counter for folder.", "/se/simonsoft/cms/item/naming/SEC000/SEC000.tif", tif.getPath());
+
+    }
+
+    @Test
+    public void folderNotShardParent() {
+
+        CmsItemId itemId = new CmsItemIdArg(repo, new CmsItemPath("/se/simonsoft/cms/item/"));
+
+        CmsItem mockItem = mock(CmsItem.class);
+        when(lookup.getItem(itemId)).thenReturn(mockItem);
+        when(mockItem.getProperties()).thenReturn(new CmsItemPropertiesMap());
+
+        CmsItemNamePattern pattern = new CmsItemNamePattern("SEC###");
+        CmsItemPath path = new CmsItemPath("/se/simonsoft/cms/item/");
+        CmsItemNaming naming = new CmsItemNamingShard1K(repo, lookup);
+
+        try {
+            naming.getItemPath(path, pattern, "jpeg");
+            fail("Should fail not shardparent");
+        } catch (IllegalArgumentException e) {
+            assertTrue(e.getMessage().startsWith("The parent folder"));
+        }
+    }
 
 
     @Test
