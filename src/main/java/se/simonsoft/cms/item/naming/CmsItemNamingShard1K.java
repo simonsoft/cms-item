@@ -21,6 +21,7 @@ import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.info.CmsItemLookup;
+import se.simonsoft.cms.item.properties.CmsItemProperties;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -37,6 +38,8 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
     private static final String ITEM_ZERO = "000";
     private static int MAX_NUMBER_OF_FILES = 1000;
     private static int FILE_COUNTER_LENGTH = 3;
+    private static String CMS_CLASS_PROPERTY = "cms:class";
+    private static String CMS_SHARD_PARENT = "shardparent";
     private static final Logger logger = LoggerFactory.getLogger(CmsItemNamingShard1K.class);
 
 
@@ -79,7 +82,7 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
         String newName;
         CmsItemId itemId = repository.getItemId(parentFolder, null);
 
-        if (!lookup.getItem(itemId).getProperties().getString("cms:class").contains("shardparent")) {
+        if (!isShardParent(itemId)) {
             throw new IllegalArgumentException("The parent folder is not intended for the configured automated naming.");
         }
 
@@ -114,6 +117,19 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
         }
 
         return getNewCmsItemPath(newName, extension, folderPath);
+    }
+
+    private boolean isShardParent(CmsItemId itemId) {
+
+        boolean shardParent = false;
+        CmsItemProperties properties = this.lookup.getItem(itemId).getProperties();
+        String classProperty = properties.getString(CMS_CLASS_PROPERTY);
+
+        if (classProperty != null && classProperty.contains(CMS_SHARD_PARENT)) {
+            shardParent = true;
+        }
+
+        return shardParent;
     }
 
     private boolean isFolderFullOrEmpty(Set<CmsItemId> immediateFiles) {
