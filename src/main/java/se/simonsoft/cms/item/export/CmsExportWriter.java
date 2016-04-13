@@ -15,6 +15,8 @@
  */
 package se.simonsoft.cms.item.export;
 
+import java.nio.file.Path;
+
 public interface CmsExportWriter {
 
     void prepare(CmsExportJob job);
@@ -23,5 +25,13 @@ public interface CmsExportWriter {
 
     void write();
 
-    CmsExportPath getExportPath();
+    public interface LocalFileSystem extends CmsExportWriter {
+    
+    	Path getExportPath();
+    }
+    
+    public interface ResultUrl extends CmsExportWriter {
+        
+    	String getExportUrl();
+    }
 }
