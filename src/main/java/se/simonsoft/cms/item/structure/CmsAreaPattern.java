@@ -114,7 +114,7 @@ public class CmsAreaPattern {
 	
 	/**
 	 * Extracts the label from a path inside the area,
-	 * label could be a language code or a release name.
+	 * label could be a translation locale or a release label.
 	 * @param pathInsideArea
 	 * @return label according to path
 	 * @throws IllegalArgumentException if the path is not inside area
