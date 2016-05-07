@@ -76,7 +76,9 @@ public class CmsExportJobZip {
             zipOutputStream = new ZipOutputStream(out);
 
             for (CmsExportItem item: getExportItems()) {
-                ZipEntry entry = new ZipEntry(item.getResultPath().getPath());
+                String path = item.getResultPath().getPath();
+                //Path's first "/" must be removed for zips on windows should work.
+                ZipEntry entry = new ZipEntry(path.substring(1, path.length()));
                 zipOutputStream.putNextEntry(entry);
                 item.getResultStream(zipOutputStream);
                 zipOutputStream.closeEntry();
