@@ -33,6 +33,8 @@ import se.simonsoft.cms.item.CmsRepository;
 public class CmsItemNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
+	private static final String MESSAGE = "Not found: ";
+	
 	
 	private CmsRepository repository;
 	private CmsItemPath path;
@@ -52,7 +54,11 @@ public class CmsItemNotFoundException extends RuntimeException {
 	 * @param atRevision the revision at which the path was tried, toString should produce user readable representation
 	 */
 	public CmsItemNotFoundException(CmsRepository repository, CmsItemPath atPath, Object atRevision) {
-		super("Not found: " + (repository == null ? "" : repository) + atPath + (atRevision == null ? "" : "@" + atRevision));
+		this(MESSAGE, repository, atPath, atRevision);
+	}
+	
+	protected CmsItemNotFoundException(String msg, CmsRepository repository, CmsItemPath atPath, Object atRevision) {
+		super(msg + (repository == null ? "" : repository) + atPath + (atRevision == null ? "" : "@" + atRevision));
 		this.repository = repository;
 		this.path = atPath;
 		this.revision = atRevision;
