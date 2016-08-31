@@ -265,9 +265,14 @@ public class CmsItemIdArgTest {
 		
 		
 		// The preservation can be discussed. Should it normalize even via constructor? Will impact equals(..)?
+		// cms-item 3.0: No longer preserving incorrect encoding even from constructor. 
 		CmsItemId i2 = new CmsItemIdArg("x-svn:/svn/demo1/v%20%28copy%29/a%20b/fä.xml");
+		/*
 		assertEquals("Should preserve logicalId encoding (from constructor)", 
 				"x-svn:/svn/demo1/v%20%28copy%29/a%20b/fä.xml", i2.getLogicalId());
+		*/
+		assertEquals("No longer preserving logicalId encoding from constructor", 
+				"x-svn:/svn/demo1/v%20(copy)/a%20b/f%C3%A4.xml", i2.getLogicalId()); // changed in cms-item 3.0
 		
 		// Important to ensure that new paths are freshly encoded with normalizing code. (new in cms-item 2.3)
 		assertEquals("Should normalize logicalId encoding (when changing relpath)", 

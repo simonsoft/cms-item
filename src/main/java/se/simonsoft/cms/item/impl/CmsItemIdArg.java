@@ -56,10 +56,9 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	 * Single slash is consistent with how SvnLogicalId represents repo root id,
 	 * though it is inconsistent with other paths as it ends with slash.
 	 */
-	public static final String REPO_ROOT_PATH = "/";
+	private static final String REPO_ROOT_PATH = "/";
 	
-	private String relpathEncoded; // the path part of the logical ID
-	private CmsItemPath relpathDecoded;
+	private CmsItemPath relPath;
 	private Long pegRev = null;
 	private boolean orgfull;
 	private CmsRepository repository;
@@ -124,11 +123,9 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	public CmsItemIdArg(CmsRepository repository, CmsItemPath itemPath, Long pegRev) {
 		this.repository = repository;
 		if (itemPath == null) {
-			this.relpathDecoded = null; //Root path should be represented with null value in CmsItemId
-			this.relpathEncoded = REPO_ROOT_PATH;
+			this.relPath = null; //Root path should be represented with null value in CmsItemId
 		} else {
-			this.relpathDecoded = itemPath;
-			this.relpathEncoded = repository.urlencode(relpathDecoded);
+			this.relPath = itemPath;
 		}
 		this.pegRev = pegRev;
 	}
@@ -149,13 +146,11 @@ public class CmsItemIdArg extends CmsItemIdBase {
 */
 
 	private void setRelPathEncoded(String relpathEncoded, CmsRepository repository) {
-		if (this.relpathEncoded != null) {
+		if (this.relPath != null) {
 			throw new IllegalStateException("Instance should not be mutable");
 			// does not guard against making a repository id point to an item in the repo.
 		}
-		this.relpathEncoded = relpathEncoded; // REMOVE after testing
-		this.relpathDecoded = getRelPath(relpathEncoded, repository);
-		//this.relpathEncoded = repository.urlencode(relpathDecoded);
+		this.relPath = getCmsItemPath(relpathEncoded, repository);
 	}
 	
 	public boolean isFullyQualifiedOriginally() {
@@ -239,15 +234,15 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	
 	@Override
 	public String getUrl() {
-		if (REPO_ROOT_PATH.equals(relpathEncoded)) {
+		if (this.relPath == null) {
 			return getRepository().getUrl();
 		}
-		return getRepository().getUrl() + relpathEncoded;
+		return getRepository().getUrl() + getRelPathEncoded();
 	}
 	
 	@Override
 	public String getUrlAtHost() {
-		return getRepository().getUrlAtHost() + relpathEncoded;
+		return getRepository().getUrlAtHost() + getRelPathEncoded();
 	}
 
 	@Override
@@ -274,7 +269,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	protected String getLogicalId(String anyHost) {
 		
 		String end = repository.getParentPath() + "/" + repository.getName() 
-				+ relpathEncoded
+				+ getRelPathEncoded()
 				+ getQuery(pegRev);
 		if (anyHost != null && !anyHost.isEmpty()) {
 			return PROTO + "://"
@@ -290,7 +285,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 
 	@Override
 	public CmsItemPath getRelPath() {
-		return relpathDecoded;
+		return relPath;
 	}
 	
 	
@@ -301,7 +296,15 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		return "";
 	}
 	
-	private static CmsItemPath getRelPath(String relpathEncoded, CmsRepository repository) {
+	private String getRelPathEncoded() {
+		
+		if (relPath == null) {
+			return "";
+		}
+		return repository.urlencode(relPath);
+	}
+	
+	private static CmsItemPath getCmsItemPath(String relpathEncoded, CmsRepository repository) {
 		if (REPO_ROOT_PATH.equals(relpathEncoded)) {
 			return null;
 		}
@@ -309,10 +312,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		return new CmsItemPath(decoded);
 	}
 	
-	/**
-	 * As this implementation can not do encoding it only accepts new path that is ancestor of current.
-	 * Use SvnLogicalId for more complex manipulations.
-	 */
+
 	@Override
 	public CmsItemId withRelPath(CmsItemPath newRelPath) {
 		
@@ -321,7 +321,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 
 	@Override
 	public CmsItemId withPegRev(Long newPegRev) {
-		return new CmsItemIdArg(this.repository, this.relpathDecoded, newPegRev);
+		return new CmsItemIdArg(this.repository, this.relPath, newPegRev);
 	}
 
 	@Override
@@ -332,26 +332,6 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		} else {
 			return getLogicalId();
 		}
-	}
-	
-	// TODO: Remove?
-	class CmsItemIdRelpathEncoded {
-		
-		private String relpathEncoded;
-		
-		CmsItemIdRelpathEncoded(String relpathEncoded) {
-			
-			if (relpathEncoded == null) {
-				throw new IllegalArgumentException("relpath can be " + REPO_ROOT_PATH + " but not null");
-			}
-			this.relpathEncoded = relpathEncoded;
-		}
-
-		public String getRelpathEncoded() {
-			return relpathEncoded;
-		}
-			
-		
 	}
 
 }
