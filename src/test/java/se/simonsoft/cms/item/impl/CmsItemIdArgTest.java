@@ -310,9 +310,6 @@ public class CmsItemIdArgTest {
 		
 		assertEquals("/svn/repo1/demo/Documents/Presentation%20-%20(B).xml", 
 				new CmsItemIdArg("x-svn://localtesthost/svn/repo1^/demo/Documents/Presentation%20-%20(B).xml").getUrlAtHost());
-		assertEquals("/svn/repo1/demo/Documents/Presentation%20-%20(B).xml", 
-				new CmsItemIdUrl(new CmsRepository("http://localtesthost/svn/repo1"),
-						new CmsItemPath("/demo/Documents/Presentation - (B).xml")).getUrlAtHost());
 	}
 	
 	@Test

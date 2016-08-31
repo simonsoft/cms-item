@@ -24,37 +24,6 @@ import se.simonsoft.cms.item.CmsRepository;
 
 public class CmsItemIdBaseTest {
 
-	@Test
-	public void testArgAndUrl() {
-		CmsItemIdArg arg = new CmsItemIdArg("x-svn:///svn/repo1^/a/b%20c.txt");
-		CmsItemIdUrl url = new CmsItemIdUrl(new CmsRepository("/svn", "repo1"), new CmsItemPath("/a/b c.txt"));
-		assertTrue(arg.equals(url));
-		assertTrue(url.equals(arg));
-		assertEquals(arg.hashCode(), url.hashCode());
-		assertFalse(arg.withPegRev(1L).equals(url));
-		assertFalse("hash code should differ on peg rev because there might be collections with a history of the same file",
-				arg.withPegRev(1L).hashCode() == arg.hashCode());
-		assertTrue(arg.withPegRev(2L).equals(url.withPegRev(2L)));
-		assertTrue(url.withPegRev(2L).equals(arg.withPegRev(2L)));
-		assertFalse(arg.withPegRev(2L).equals(url.withPegRev(3L)));
-		assertEquals(arg.withPegRev(2L).hashCode(), url.withPegRev(2L).hashCode());
-		// this should not change result of equals
-		arg.setHostnameOrValidate("host.x");
-		assertTrue("one unknown host, still equals", arg.equals(url));
-		assertTrue(url.equals(arg));
-		CmsItemIdUrl urlh = new CmsItemIdUrl(new CmsRepository("http://host.y/svn/repo1"), new CmsItemPath("/a/b c.txt"));
-		assertFalse("different host, not equals", urlh.equals(arg));
-	}
-	
-	@Test
-	public void testRepositoryRoot() {
-		CmsItemIdArg arg = new CmsItemIdArg("x-svn:///svn/repo1^/");
-		CmsItemIdUrl url = new CmsItemIdUrl(new CmsRepository("/svn", "repo1"), (CmsItemPath) null);
-		assertTrue(arg.equals(url));
-		assertTrue(url.equals(arg));
-		assertEquals(arg.hashCode(), url.hashCode());
-		assertFalse(url.withRelPath(new CmsItemPath("/x")).equals(arg));
-		assertFalse(url.withRelPath(new CmsItemPath("/x")).equals(url));
-	}
+	// Currently no tests here since removal of CmsItemIdUrl.
 
 }

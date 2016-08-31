@@ -32,14 +32,14 @@ public class CmsItemLockImplTest {
 	public void testEquals() {
 		CmsRepository repo = mock(CmsRepository.class);		
 		Date now = new Date();
-		CmsItemLock lock1a = new CmsItemLockImpl(new CmsItemIdUrl(repo, new CmsItemPath("/1")), "token1", "", "", now, null);
-		CmsItemLock lock1b = new CmsItemLockImpl(new CmsItemIdUrl(repo, new CmsItemPath("/1")), "token1", "", "", now, null);
-		CmsItemLock lock1x = new CmsItemLockImpl(new CmsItemIdUrl(repo, new CmsItemPath("/1")), "tokenX", "", "", now, null);
-		CmsItemLock lock1f = new CmsItemLockImpl(new CmsItemIdUrl(repo, new CmsItemPath("/F")), "token1", "", "", now, null);
-		CmsItemLock lock1o = new CmsItemLockImpl(new CmsItemIdUrl(repo, new CmsItemPath("/1")), "token1", "o", "", now, null);
-		CmsItemLock lock1m = new CmsItemLockImpl(new CmsItemIdUrl(repo, new CmsItemPath("/1")), "token1", "", "m", now, null);
-		CmsItemLock lock1d = new CmsItemLockImpl(new CmsItemIdUrl(repo, new CmsItemPath("/1")), "token1", "", "", new Date(now.getTime() + 1), null);
-		CmsItemLock lock1e = new CmsItemLockImpl(new CmsItemIdUrl(repo, new CmsItemPath("/1")), "token1", "", "", now, new Date());
+		CmsItemLock lock1a = new CmsItemLockImpl(new CmsItemIdArg(repo, new CmsItemPath("/1")), "token1", "", "", now, null);
+		CmsItemLock lock1b = new CmsItemLockImpl(new CmsItemIdArg(repo, new CmsItemPath("/1")), "token1", "", "", now, null);
+		CmsItemLock lock1x = new CmsItemLockImpl(new CmsItemIdArg(repo, new CmsItemPath("/1")), "tokenX", "", "", now, null);
+		CmsItemLock lock1f = new CmsItemLockImpl(new CmsItemIdArg(repo, new CmsItemPath("/F")), "token1", "", "", now, null);
+		CmsItemLock lock1o = new CmsItemLockImpl(new CmsItemIdArg(repo, new CmsItemPath("/1")), "token1", "o", "", now, null);
+		CmsItemLock lock1m = new CmsItemLockImpl(new CmsItemIdArg(repo, new CmsItemPath("/1")), "token1", "", "m", now, null);
+		CmsItemLock lock1d = new CmsItemLockImpl(new CmsItemIdArg(repo, new CmsItemPath("/1")), "token1", "", "", new Date(now.getTime() + 1), null);
+		CmsItemLock lock1e = new CmsItemLockImpl(new CmsItemIdArg(repo, new CmsItemPath("/1")), "token1", "", "", now, new Date());
 		// maybe these rules could be relaxed but the safe start is to verify everything
 		assertTrue(lock1a.equals(lock1b));
 		assertFalse(lock1a.equals(lock1x));
