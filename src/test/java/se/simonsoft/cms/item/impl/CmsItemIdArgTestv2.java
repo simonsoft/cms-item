@@ -29,47 +29,6 @@ import se.simonsoft.cms.item.CmsRepository;
 
 public class CmsItemIdArgTestv2 {
 	
-	@Test(expected=IllegalArgumentException.class)
-	public void testValidateNoRoot() {
-		new CmsItemIdArg("x-svn:///svn/demo1/vvab/graphics/0001.tif");
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	@Ignore
-	public void testValidateNoStartSlash() {
-		new CmsItemIdArg("x-svn://svn/demo1^/vvab/graphics/0001.tif");
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testValidateColonInRepo() {
-		new CmsItemIdArg("x-svn:///svn/d:mo1^/vvab/graphics/0001.tif");
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testValidateColonInPath() {
-		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/grap:ics/0001.tif");
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testValidateQuestionInPath() {
-		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/grap?ics/0001.tif");
-	}
-	
-	@Test //Ampersand is actually allowed in URL path. Related to the differences in encoding rules btw path and query.
-	public void testValidateAmpersandInPath() {
-		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/grap&ics/0001.tif");
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testValidateFragment() {
-		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1");
-	}
-	
-	@Test(expected=IllegalArgumentException.class)
-	public void testValidateFragmentRev() {
-		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/xml/topic.dita?p=123#topic1/para1");
-	}
-	
 	@Test
 	public void testPegHost() {
 		CmsItemIdArg p = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1^/vvab/xml/Docs/Sa%20s.xml?p=9");
@@ -312,16 +271,7 @@ public class CmsItemIdArgTestv2 {
 				new CmsItemIdArg("x-svn://localtesthost/svn/repo1^/demo/Documents/Presentation%20-%20(B).xml").getUrlAtHost());
 	}
 	
-	@Test
-	public void testUrldecode() {
-		
-		assertEquals("/a&b", new CmsItemIdArg("x-svn://host.x/s/r2^/a&b").getRelPath().toString());
-		assertEquals("/(a b)", new CmsItemIdArg("x-svn://host.x/s/r2^/(a%20b)").getRelPath().toString());
-		// TODO Support + in decoder (don't decode it).
-		// Plus should NOT be encoded in path of URL. However, it means space in query.
-		// http://stackoverflow.com/questions/1005676/urls-and-plus-signs
-		//assertEquals("/a+b", new CmsItemIdArg("x-svn://host.x/s/r2^/a+b").getRelPath().toString());
-	}
+
 	
 	@Test
 	public void testHostnameMatchPort() {
@@ -334,12 +284,6 @@ public class CmsItemIdArgTestv2 {
 		}
 	}
 	
-	@Test
-	public void testRelPathInstanceReuse() {
-		CmsItemId id = new CmsItemIdArg("x-svn:///svn/demo1^/v/ab/c.xml");
-		assertTrue("there's quite some string manipulation in conversion to path so this should be done only once",
-				id.getRelPath() == id.getRelPath());
-	}
 	
 	@Test
 	public void testValidateRelPathAtCreation() {
