@@ -45,7 +45,10 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	
 	public static final String DEFAULT_PROTOCOL = "http";
 	public static final String PEG = "?p=";
-	public static final Pattern NICE = Pattern.compile(PROTO_PREFIX + "([^/]*)(.*/)([^:^]*)\\^(/|[^:?#]+[^/])/?(?:\\?p=(\\d+))?");
+	// ([^/]*)
+	public static final Pattern NICEv2 = Pattern.compile(PROTO + "://" + "([^/]*)/([^/]*)/([^:^]*)\\^(/|[^:?#]+[^/])/?(?:\\?p=(\\d+))?");
+	public static final Pattern NICEv3_SHORT = Pattern.compile(PROTO + ":" + "(/)([^/:]*)/([^/:]*)(/|[^:?#]+[^/])/?(?:\\?p=(\\d+))?");
+	public static final Pattern NICEv3_FULL  = Pattern.compile(PROTO + "://" + "([^/]*)/([^/:]*)/([^/:]*)(/|[^:?#]+[^/])/?(?:\\?p=(\\d+))?");
 	
 	/**
 	 * Root path is not represented in CmsItemPath so we need to define
@@ -72,17 +75,27 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	 * @param logicalId with or without hostname and peg rev
 	 */
 	public CmsItemIdArg(String logicalId) {
-		Matcher m = NICE.matcher(logicalId);
+		Matcher m;
+		if (logicalId.contains("^")) { // Only v2 format can contain a non-encoded ^. 
+			m = NICEv2.matcher(logicalId);
+		} else if (logicalId.startsWith(PROTO + ":///")) {
+			// Should not allow triple slash when using v3 format.
+			throw new IllegalArgumentException("Not a valid logical id: " + logicalId);
+		} else if (logicalId.startsWith(PROTO + "://")) {
+			m = NICEv3_FULL.matcher(logicalId);
+		} else {
+			m = NICEv3_SHORT.matcher(logicalId);
+		}
 		if (!m.matches()) {
 			throw new IllegalArgumentException("Not a valid logical id: " + logicalId);
 		}
 		String host = m.group(1);
 		String parent = m.group(2);
 		String repo = m.group(3);
-		if (host.length() == 0) {
-			this.repository = new CmsRepository(parent.substring(0, parent.length() - 1), repo);
+		if (host.length() == 0 || host.equals("/")) {
+			this.repository = new CmsRepository("/" + parent, repo);
 		} else {
-			this.repository = new CmsRepository(DEFAULT_PROTOCOL, host, parent.substring(0, parent.length() - 1), repo);
+			this.repository = new CmsRepository(DEFAULT_PROTOCOL, host, "/" + parent, repo);
 			this.orgfull = true;
 		}
 		setRelPathEncoded(m.group(4), repository); // this is obviously not a configured repository so we'll get default encoding
@@ -259,11 +272,20 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	}
 	
 	protected String getLogicalId(String anyHost) {
-		return PROTO_PREFIX
-				+ anyHost
-				+ repository.getParentPath() + "/" + repository.getName() + "^" 
+		
+		String end = repository.getParentPath() + "/" + repository.getName() 
 				+ relpathEncoded
-				+ getQuery(pegRev);		
+				+ getQuery(pegRev);
+		if (anyHost != null && !anyHost.isEmpty()) {
+			return PROTO + "://"
+					+ anyHost
+					+ end;
+		} else {
+			return PROTO + ":"
+					+ end;
+		}
+		
+						
 	}
 
 	@Override

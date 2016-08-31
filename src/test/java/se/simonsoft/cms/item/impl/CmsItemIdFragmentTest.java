@@ -26,11 +26,11 @@ public class CmsItemIdFragmentTest {
 	
 	@Test
 	public void testConstructor() {
-		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1");
-		assertEquals("verify toString",  "x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1", id.toString());
+		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita#topic1/para1");
+		assertEquals("verify toString",  "x-svn:/svn/demo1/vvab/xml/topic.dita#topic1/para1", id.toString());
 		assertEquals("Path should not include the fragment", new CmsItemPath("/vvab/xml/topic.dita"), id.getItemId().getRelPath());
 		assertEquals("Fragment correctly extracted", "topic1/para1", id.getFragment());
-		assertEquals("Fragment preserved", "x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1", id.getLogicalId());
+		assertEquals("Fragment preserved", "x-svn:/svn/demo1/vvab/xml/topic.dita#topic1/para1", id.getLogicalId());
 		
 		CmsItemIdFragment idNewPath = id.withRelPath(new CmsItemPath("/vvab/xml/demo.dita"));
 		assertEquals("Path should have changed", new CmsItemPath("/vvab/xml/demo.dita"), idNewPath.getItemId().getRelPath());
@@ -40,7 +40,7 @@ public class CmsItemIdFragmentTest {
 	
 	@Test
 	public void testConstructorRev() {
-		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita?p=123#topic1/para1");
+		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita?p=123#topic1/para1");
 		assertEquals("Path should not include the fragment", new CmsItemPath("/vvab/xml/topic.dita"), id.getItemId().getRelPath());
 		assertEquals("Revision",  new Long(123), id.getItemId().getPegRev());
 		assertEquals("Fragment correctly extracted", "topic1/para1", id.getFragment());
@@ -58,20 +58,20 @@ public class CmsItemIdFragmentTest {
 	
 	@Test
 	public void testConstructorHostname() {
-		CmsItemIdFragment id = new CmsItemIdFragment("x-svn://hostname.example.com/svn/demo1^/vvab/xml/topic.dita#topic1/para1");
-		assertEquals("verify toString",  "x-svn://hostname.example.com/svn/demo1^/vvab/xml/topic.dita#topic1/para1", id.toString());
+		CmsItemIdFragment id = new CmsItemIdFragment("x-svn://hostname.example.com/svn/demo1/vvab/xml/topic.dita#topic1/para1");
+		assertEquals("verify toString",  "x-svn://hostname.example.com/svn/demo1/vvab/xml/topic.dita#topic1/para1", id.toString());
 		assertEquals("Path should not include the fragment", new CmsItemPath("/vvab/xml/topic.dita"), id.getItemId().getRelPath());
 		assertEquals("Fragment correctly extracted", "topic1/para1", id.getFragment());
-		assertEquals("Fragment preserved", "x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1", id.getLogicalId());
-		assertEquals("Fragment preserved", "x-svn://hostname.example.com/svn/demo1^/vvab/xml/topic.dita#topic1/para1", id.getLogicalIdFull());	
+		assertEquals("Fragment preserved", "x-svn:/svn/demo1/vvab/xml/topic.dita#topic1/para1", id.getLogicalId());
+		assertEquals("Fragment preserved", "x-svn://hostname.example.com/svn/demo1/vvab/xml/topic.dita#topic1/para1", id.getLogicalIdFull());	
 	}
 	
 	@Test
 	public void testConstructorNoFragment() {
-		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita");
+		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita");
 		assertEquals("Path", new CmsItemPath("/vvab/xml/topic.dita"), id.getItemId().getRelPath());
 		assertNull("Fragment should be null", id.getFragment());
-		assertEquals("LogicalId", "x-svn:///svn/demo1^/vvab/xml/topic.dita", id.getLogicalId());
+		assertEquals("LogicalId", "x-svn:/svn/demo1/vvab/xml/topic.dita", id.getLogicalId());
 		
 		CmsItemIdFragment idNewPath = id.withRelPath(new CmsItemPath("/vvab/xml/demo.dita"));
 		assertEquals("Path should have changed", new CmsItemPath("/vvab/xml/demo.dita"), idNewPath.getItemId().getRelPath());
@@ -80,46 +80,48 @@ public class CmsItemIdFragmentTest {
 	
 	@Test // Non-ASCII is actually allowed.
 	public void testValidateFragmentNonAscii() {
-		new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/böp");
+		new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita#topic1/böp");
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testValidateFragmentHash() {
-		new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1#bogus");
+		new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita#topic1/para1#bogus");
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testValidateFragmentEmpty() {
-		new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#");
+		new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita#");
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testValidateFragmentNumberFirst() {
-		new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#1topic1/para1#bogus");
+		new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita#1topic1/para1#bogus");
 	}
 	
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testValidateFragmentAmpersand() {
-		new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/p&ra1");
+		new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita#topic1/p&ra1");
 	}
 	
 	@Test
 	public void testEquals() {
-		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1");
+		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita#topic1/para1");
 		assertTrue(id.equals(id));
-		assertTrue(id.equals(new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1")));
-		assertTrue(id.equals(new CmsItemIdFragment("x-svn://hostname.example.com/svn/demo1^/vvab/xml/topic.dita#topic1/para1")));
-		assertFalse(id.equals(new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#different/fragment")));
-		assertFalse(id.equals(new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita?p=123#topic1/para1")));
+		assertTrue(id.equals(new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita#topic1/para1"))); // Test Java equals.
+		assertTrue(id.equals(new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita#topic1/para1"))); // Test legacy v2 format.
+		assertTrue(id.equals(new CmsItemIdFragment("x-svn://hostname.example.com/svn/demo1/vvab/xml/topic.dita#topic1/para1")));
+		assertFalse(id.equals(new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita#different/fragment")));
+		assertFalse(id.equals(new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita?p=123#topic1/para1")));
 		
-		assertTrue(id.equals(new CmsItemIdFragment(new CmsItemIdArg("x-svn:///svn/demo1^/vvab/xml/topic.dita"), "topic1/para1")));
+		assertTrue(id.equals(new CmsItemIdFragment(new CmsItemIdArg("x-svn:/svn/demo1/vvab/xml/topic.dita"), "topic1/para1")));
+		assertTrue(id.equals(new CmsItemIdFragment(new CmsItemIdArg("x-svn:/svn/demo1/vvab/xml/topic.dita"), "topic1/para1"))); // Test legacy v2 format.
 	}
 	
 	@Test
 	public void testBaselineRev() {
-		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1");
-		CmsItemIdFragment idRev = new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita?p=123#topic1/para1");
+		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita#topic1/para1");
+		CmsItemIdFragment idRev = new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita?p=123#topic1/para1");
 		
 		assertNull(id.getItemId().getPegRev());
 		assertEquals(new Long(123), idRev.getItemId().getPegRev());
@@ -129,27 +131,27 @@ public class CmsItemIdFragmentTest {
 		
 		assertEquals("higher baseline rev not affecting and existing rev", new Long(123), idRev.withBaselineRev(999L).getItemId().getPegRev());
 		
-		assertEquals("preserve fragment after adding baseline", "x-svn:///svn/demo1^/vvab/xml/topic.dita?p=11#topic1/para1", id.withBaselineRev(11L).getLogicalId());
+		assertEquals("preserve fragment after adding baseline", "x-svn:/svn/demo1/vvab/xml/topic.dita?p=11#topic1/para1", id.withBaselineRev(11L).getLogicalId());
 		assertEquals("equals another id after adding baselineRev identical to other IDs pegRev", idRev, id.withBaselineRev(123L));
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testBaselineRevNull() {
-		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1");
+		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita#topic1/para1");
 		
 		id.withBaselineRev(null);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testBaselineRevZero() {
-		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1");
+		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita#topic1/para1");
 		
 		id.withBaselineRev(0L);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void testBaselineRevNegative() {
-		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1");
+		CmsItemIdFragment id = new CmsItemIdFragment("x-svn:/svn/demo1/vvab/xml/topic.dita#topic1/para1");
 		
 		id.withBaselineRev(-1L);
 	}

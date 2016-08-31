@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import se.simonsoft.cms.item.CmsItemId;
@@ -29,8 +28,18 @@ import se.simonsoft.cms.item.CmsRepository;
 
 public class CmsItemIdArgTestv2 {
 	
+	@Test(expected=IllegalArgumentException.class) // No longer supported since v3.
+	public void testValidateNoParentPath() {
+		new CmsItemIdArg("x-svn:///r^/");
+	}
+	
+	@Test(expected=IllegalArgumentException.class) // No longer supported since v3.
+	public void testValidateNoParentPathHost() {
+		new CmsItemIdArg("x-svn://local.test/r^/");
+	}
+	
 	@Test(expected=IllegalArgumentException.class)
-	public void testValidateColonInRepov2() {
+	public void testValidateColonInRepo() {
 		new CmsItemIdArg("x-svn:///svn/d:mo1^/vvab/graphics/0001.tif");
 	}
 	
@@ -61,7 +70,7 @@ public class CmsItemIdArgTestv2 {
 	
 	@Test
 	public void testEqualsv2() {
-		CmsItemIdArg idv2 = new CmsItemIdArg("x-svn:/svn/demo1^/vvab/xml/Docs/Sa%20s.xml?p=9");
+		CmsItemIdArg idv2 = new CmsItemIdArg("x-svn:///svn/demo1^/vvab/xml/Docs/Sa%20s.xml?p=9");
 		CmsItemIdArg idv3 = new CmsItemIdArg("x-svn:/svn/demo1/vvab/xml/Docs/Sa%20s.xml?p=9");
 		CmsItemIdArg idHostv2 = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1^/vvab/xml/Docs/Sa%20s.xml?p=9");
 		CmsItemIdArg idHostv3 = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1/vvab/xml/Docs/Sa%20s.xml?p=9");
@@ -71,6 +80,7 @@ public class CmsItemIdArgTestv2 {
 		assertTrue(idv2.equals(idHostv3));
 		assertTrue(idHostv2.equals(idv3));
 	}
+	
 	
 	@Test
 	public void testPegHost() {
@@ -182,11 +192,6 @@ public class CmsItemIdArgTestv2 {
 				"http://x.y/svn/r1/vv", parent.getUrl());
 	}
 
-	@Test
-	public void testRepoRootId() {
-		CmsItemId repoId = new CmsItemIdArg("x-svn://local.test/r^/");
-		assertEquals(null, repoId.getRelPath());
-	}
 	
 	@Test
 	public void testWithRelPathToRepoRoot() {
@@ -214,28 +219,28 @@ public class CmsItemIdArgTestv2 {
 	
 	@Test
 	public void testEqualsAfterWith() {
-		CmsItemId i = new CmsItemIdArg("x-svn://local.test/r^/y");
+		CmsItemId i = new CmsItemIdArg("x-svn://local.test/svn/r^/y");
 		assertTrue(i.equals(i.withPegRev(null)));
 		assertTrue(i.withPegRev(null).equals(i));
-		CmsItemId ip = new CmsItemIdArg("x-svn://local.test/r^/y?p=1");
+		CmsItemId ip = new CmsItemIdArg("x-svn://local.test/svn/r^/y?p=1");
 		assertTrue(ip.withPegRev(null).equals(i));
 		assertTrue(i.equals(ip.withPegRev(null)));
-		assertTrue(i.withRelPath(null).equals(new CmsItemIdArg("x-svn://local.test/r^/")));
+		assertTrue(i.withRelPath(null).equals(new CmsItemIdArg("x-svn://local.test/svn/r^/")));
 	}
 	
 	@Test
 	public void testEqualsAndHashCode() {
-		CmsItemIdArg id1 = new CmsItemIdArg("x-svn://local.test/r^/x");
-		CmsItemIdArg id2 = new CmsItemIdArg("x-svn://local.test/r^/x");
+		CmsItemIdArg id1 = new CmsItemIdArg("x-svn://local.test/svn/r^/x");
+		CmsItemIdArg id2 = new CmsItemIdArg("x-svn://local.test/svn/r^/x");
 		assertTrue(id1.equals(id2));
 		Set<CmsItemId> hashSet = new HashSet<CmsItemId>();
 		hashSet.add(id1);
 		assertTrue("Equal ids must have the same hash code or collections may fail to note the equality",
 				hashSet.contains(id2));
 		assertFalse("Different path should in general result in different hash code",
-				id1.hashCode() == new CmsItemIdArg("x-svn://local.test/r^/y").hashCode());
+				id1.hashCode() == new CmsItemIdArg("x-svn://local.test/svn/r^/y").hashCode());
 		assertTrue("hashCode is allowed to ignore hostname", // SvnLogicalId does the same through toString ecluding hostname
-				id1.hashCode() == new CmsItemIdArg("x-svn:///r^/x").hashCode());
+				id1.hashCode() == new CmsItemIdArg("x-svn:///svn/r^/x").hashCode());
 	}
 
 	@Test

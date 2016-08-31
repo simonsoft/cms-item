@@ -39,6 +39,26 @@ public class CmsItemIdArgTest {
 		new CmsItemIdArg("x-svn:/svn/demo1^/vvab/graphics/0001.tif");
 	}
 	
+	@Test(expected=IllegalArgumentException.class) // No longer supported since v3.
+	public void testValidateNoParentPath() {
+		new CmsItemIdArg("x-svn:/r");
+	}
+	
+	@Test(expected=IllegalArgumentException.class) // No longer supported since v3.
+	public void testValidateNoParentPathHost() {
+		new CmsItemIdArg("x-svn://local.test/r");
+	}
+	
+	@Test(expected=IllegalArgumentException.class) // No longer supported since v3.
+	public void testValidateNoParentPathSlash() {
+		new CmsItemIdArg("x-svn:/r/");
+	}
+	
+	@Test(expected=IllegalArgumentException.class) // No longer supported since v3.
+	public void testValidateNoParentPathHostSlash() {
+		new CmsItemIdArg("x-svn://local.test/r/");
+	}
+	
 	@Test(expected=IllegalArgumentException.class)
 	@Ignore
 	public void testValidateNoStartSlash() {
@@ -78,6 +98,33 @@ public class CmsItemIdArgTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void testValidateFragmentRev() {
 		new CmsItemIdArg("x-svn:/svn/demo1/vvab/xml/topic.dita?p=123#topic1/para1");
+	}
+	
+	@Test
+	public void testRepo() {
+		CmsItemIdArg p = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1");
+		assertEquals("http://demo.simonsoftcms.se/svn/demo1", p.getRepository().toString());
+		assertEquals("x-svn:/svn/demo1", p.getLogicalId());
+		assertEquals("x-svn://demo.simonsoftcms.se/svn/demo1", p.getLogicalIdFull());
+		assertNull(p.getRelPath());
+	}
+	
+	@Test
+	public void testRepoTrailingSlash() {
+		CmsItemIdArg p = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1/");
+		assertEquals("http://demo.simonsoftcms.se/svn/demo1", p.getRepository().toString());
+		assertEquals("x-svn:/svn/demo1", p.getLogicalId());
+		assertEquals("x-svn://demo.simonsoftcms.se/svn/demo1", p.getLogicalIdFull());
+		assertNull(p.getRelPath());
+	}
+	
+	@Test
+	public void testFolderTrailingSlash() {
+		CmsItemIdArg p = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1/vvab/");
+		assertEquals("/vvab", p.getRelPath().toString());
+		assertEquals("http://demo.simonsoftcms.se/svn/demo1", p.getRepository().toString());
+		assertEquals("x-svn:/svn/demo1/vvab", p.getLogicalId());
+		assertEquals("x-svn://demo.simonsoftcms.se/svn/demo1/vvab", p.getLogicalIdFull());
 	}
 	
 	@Test
@@ -190,22 +237,17 @@ public class CmsItemIdArgTest {
 				"http://x.y/svn/r1/vv", parent.getUrl());
 	}
 
-	@Test
-	public void testRepoRootId() {
-		CmsItemId repoId = new CmsItemIdArg("x-svn://local.test/r/");
-		assertEquals(null, repoId.getRelPath());
-	}
 	
 	@Test
 	public void testWithRelPathToRepoRoot() {
 		CmsItemId i1 = new CmsItemIdArg("x-svn://x.y/parent/repo/a/b.xml");
 		CmsItemId repoId = i1.withRelPath(null);
-		assertEquals("x-svn:///parent/repo/", repoId.getLogicalId());
+		assertEquals("x-svn:/parent/repo", repoId.getLogicalId());
 		assertEquals("For consistency, URLs can not have traling slash",
 				"http://x.y/parent/repo", repoId.getUrl());
 		CmsItemId i2 = new CmsItemIdArg("x-svn://x.y/p/r/a?p=9");
 		CmsItemId repoRootRev = i2.withRelPath(null);
-		assertEquals("x-svn:///p/r/?p=9", repoRootRev.getLogicalId());
+		assertEquals("x-svn:/p/r/?p=9", repoRootRev.getLogicalId());
 		// We have not path to represent root
 		//CmsItemId repoAlso = i1.withRelPath(new CmsItemPath("/"));
 		//assertEquals("x-svn://x.y/parent/repo/", repoAlso.getLogicalIdFull());
@@ -242,33 +284,33 @@ public class CmsItemIdArgTest {
 	
 	@Test
 	public void testEqualsAfterWith() {
-		CmsItemId i = new CmsItemIdArg("x-svn://local.test/r/y");
+		CmsItemId i = new CmsItemIdArg("x-svn://local.test/svn/r/y");
 		assertTrue(i.equals(i.withPegRev(null)));
 		assertTrue(i.withPegRev(null).equals(i));
-		CmsItemId ip = new CmsItemIdArg("x-svn://local.test/r/y?p=1");
+		CmsItemId ip = new CmsItemIdArg("x-svn://local.test/svn/r/y?p=1");
 		assertTrue(ip.withPegRev(null).equals(i));
 		assertTrue(i.equals(ip.withPegRev(null)));
-		assertTrue(i.withRelPath(null).equals(new CmsItemIdArg("x-svn://local.test/r/")));
+		assertTrue(i.withRelPath(null).equals(new CmsItemIdArg("x-svn://local.test/svn/r/")));
 	}
 	
 	@Test
 	public void testEqualsAndHashCode() {
-		CmsItemIdArg id1 = new CmsItemIdArg("x-svn://local.test/r/x");
-		CmsItemIdArg id2 = new CmsItemIdArg("x-svn://local.test/r/x");
+		CmsItemIdArg id1 = new CmsItemIdArg("x-svn://local.test/svn/r/x");
+		CmsItemIdArg id2 = new CmsItemIdArg("x-svn://local.test/svn/r/x");
 		assertTrue(id1.equals(id2));
 		Set<CmsItemId> hashSet = new HashSet<CmsItemId>();
 		hashSet.add(id1);
 		assertTrue("Equal ids must have the same hash code or collections may fail to note the equality",
 				hashSet.contains(id2));
 		assertFalse("Different path should in general result in different hash code",
-				id1.hashCode() == new CmsItemIdArg("x-svn://local.test/r/y").hashCode());
+				id1.hashCode() == new CmsItemIdArg("x-svn://local.test/svn/r/y").hashCode());
 		assertTrue("hashCode is allowed to ignore hostname", // SvnLogicalId does the same through toString ecluding hostname
-				id1.hashCode() == new CmsItemIdArg("x-svn:///r/x").hashCode());
+				id1.hashCode() == new CmsItemIdArg("x-svn:/svn/r/x").hashCode());
 	}
 
 	@Test
 	public void testNoHostRepo() {
-		CmsItemIdArg i = new CmsItemIdArg("x-svn:///parent/repo/x");
+		CmsItemIdArg i = new CmsItemIdArg("x-svn:/parent/repo/x");
 		assertEquals("repo", i.getRepository().getName());
 		assertEquals("/parent", i.getRepository().getParentPath());
 		try {
@@ -312,7 +354,7 @@ public class CmsItemIdArgTest {
 	@Test
 	public void testUris() {
 		assertEquals("/svn/demo1/v/ab/c.xml", new CmsItemIdArg("x-svn:/svn/demo1/v/ab/c.xml").getUrlAtHost());
-		assertEquals("/parent/demo2/v/a%20b/c.xml", new CmsItemIdArg("x-svn:///parent/demo2/v/a%20b/c.xml").getUrlAtHost());
+		assertEquals("/parent/demo2/v/a%20b/c.xml", new CmsItemIdArg("x-svn:/parent/demo2/v/a%20b/c.xml").getUrlAtHost());
 		assertEquals("/svn/r2/v/a%20b/c.xml", new CmsItemIdArg("x-svn://host.x/svn/r2/v/a%20b/c.xml").getUrlAtHost());
 		assertEquals("/s/r2/v/a%20b/c.xml", new CmsItemIdArg("x-svn://host.x/s/r2/v/a%20b/c.xml?p=123").getUrlAtHost());
 		assertEquals("not expecting parent path or repo name to be encoded, should not be allowed",
@@ -351,14 +393,6 @@ public class CmsItemIdArgTest {
 				id.getRelPath() == id.getRelPath());
 	}
 	
-	@Test
-	public void testValidateRelPathAtCreation() {
-		try {
-			new CmsItemIdArg("x-svn:/svn/demo1^whot");
-		} catch (IllegalArgumentException e) {
-			assertEquals("Invalid path: 'whot'", e.getMessage());
-		}
-	}
 	
 	@Test
 	public void testRepositoryNameNeedsEncoding() {

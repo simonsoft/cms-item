@@ -60,7 +60,7 @@ public class CmsExportItemCmsFileTest {
         exportItem.prepare();
 
         } catch (IllegalArgumentException e) {
-            assertEquals("Item has to be a file. x-svn:///svn/demo1^/vvab/xml/documents", e.getMessage());
+            assertEquals("Item has to be a file. x-svn:/svn/demo1/vvab/xml/documents", e.getMessage());
         }
     }
 
@@ -76,7 +76,7 @@ public class CmsExportItemCmsFileTest {
         try {
             exportItem.prepare();
         } catch (IllegalStateException e) {
-            assertEquals("Item: x-svn:///svn/demo1^/vvab/xml/documents/chapter1.xml is already prepared for export", e.getMessage());
+            assertEquals("Item: x-svn:/svn/demo1/vvab/xml/documents/chapter1.xml is already prepared for export", e.getMessage());
         }
 
     }
@@ -90,7 +90,7 @@ public class CmsExportItemCmsFileTest {
         try {
             exportItem.getResultStream(null);
         } catch (IllegalStateException e) {
-            assertEquals("Export item: x-svn:///svn/demo1^/vvab/xml/documents/chapter1.xml, is not ready for export", e.getMessage());
+            assertEquals("Export item: x-svn:/svn/demo1/vvab/xml/documents/chapter1.xml, is not ready for export", e.getMessage());
         }
     }
 
