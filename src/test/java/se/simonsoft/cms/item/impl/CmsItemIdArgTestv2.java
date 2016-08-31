@@ -29,6 +29,49 @@ import se.simonsoft.cms.item.CmsRepository;
 
 public class CmsItemIdArgTestv2 {
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testValidateColonInRepov2() {
+		new CmsItemIdArg("x-svn:///svn/d:mo1^/vvab/graphics/0001.tif");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testValidateColonInPath() {
+		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/grap:ics/0001.tif");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testValidateQuestionInPath() {
+		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/grap?ics/0001.tif");
+	}
+	
+	@Test //Ampersand is actually allowed in URL path. Related to the differences in encoding rules btw path and query.
+	public void testValidateAmpersandInPath() {
+		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/grap&ics/0001.tif");
+	}
+	
+	@Test(expected=IllegalArgumentException.class) // Fragment id should be parsed with CmsItemIdFragment
+	public void testValidateFragment() {
+		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testValidateFragmentRev() {
+		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/xml/topic.dita?p=123#topic1/para1");
+	}
+	
+	@Test
+	public void testEqualsv2() {
+		CmsItemIdArg idv2 = new CmsItemIdArg("x-svn:/svn/demo1^/vvab/xml/Docs/Sa%20s.xml?p=9");
+		CmsItemIdArg idv3 = new CmsItemIdArg("x-svn:/svn/demo1/vvab/xml/Docs/Sa%20s.xml?p=9");
+		CmsItemIdArg idHostv2 = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1^/vvab/xml/Docs/Sa%20s.xml?p=9");
+		CmsItemIdArg idHostv3 = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1/vvab/xml/Docs/Sa%20s.xml?p=9");
+		assertTrue(idv2.equals(idv3));
+		assertTrue(idv3.equals(idv2));
+		assertTrue(idHostv2.equals(idHostv3));
+		assertTrue(idv2.equals(idHostv3));
+		assertTrue(idHostv2.equals(idv3));
+	}
+	
 	@Test
 	public void testPegHost() {
 		CmsItemIdArg p = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1^/vvab/xml/Docs/Sa%20s.xml?p=9");
