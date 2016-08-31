@@ -308,8 +308,8 @@ public class CmsRepositoryTest {
 		CmsItemId id1_0 = repo1.getItemId("http://host.n/svn/d1");
 		assertEquals(repo1, id1_0.getRepository());
 		assertEquals(url1, id1_0.getRepository().getUrl());
-		assertEquals("x-svn:/svn/d1/", id1_0.getLogicalId());
-		assertEquals("x-svn://host.n/svn/d1/", id1_0.getLogicalIdFull());
+		assertEquals("x-svn:/svn/d1", id1_0.getLogicalId());
+		assertEquals("x-svn://host.n/svn/d1", id1_0.getLogicalIdFull());
 		assertNull(id1_0.getRelPath());
 		
 		CmsItemId id1_1 = repo1.getItemId("http://host.n/svn/d1/vv/xml/8.xml");

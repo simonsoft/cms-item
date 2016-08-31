@@ -45,10 +45,9 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	
 	public static final String DEFAULT_PROTOCOL = "http";
 	public static final String PEG = "?p=";
-	// ([^/]*)
 	public static final Pattern NICEv2 = Pattern.compile(PROTO + "://" + "([^/]*)/([^/]*)/([^:^]*)\\^(/|[^:?#]+[^/])/?(?:\\?p=(\\d+))?");
-	public static final Pattern NICEv3_SHORT = Pattern.compile(PROTO + ":" + "(/)([^/:]*)/([^/:]*)(/|[^:?#]+[^/])/?(?:\\?p=(\\d+))?");
-	public static final Pattern NICEv3_FULL  = Pattern.compile(PROTO + "://" + "([^/]*)/([^/:]*)/([^/:]*)(/|[^:?#]+[^/])/?(?:\\?p=(\\d+))?");
+	public static final Pattern NICEv3_SHORT = Pattern.compile(PROTO + ":" + "(/)([^/:]+)/([^/:]+)(/|[^:?#]+[^/])?/?(?:\\?p=(\\d+))?");
+	public static final Pattern NICEv3_FULL  = Pattern.compile(PROTO + "://" + "([^/]+)/([^/:]+)/([^/:]+)(/|[^:?#]+[^/])?/?(?:\\?p=(\\d+))?");
 	
 	/**
 	 * Root path is not represented in CmsItemPath so we need to define
@@ -97,7 +96,9 @@ public class CmsItemIdArg extends CmsItemIdBase {
 			this.repository = new CmsRepository(DEFAULT_PROTOCOL, host, "/" + parent, repo);
 			this.orgfull = true;
 		}
-		setRelPathEncoded(m.group(4), repository); // this is obviously not a configured repository so we'll get default encoding
+		if (m.group(4) != null) {
+			setRelPathEncoded(m.group(4), repository);
+		}
 		if (m.group(5) != null) {
 			this.pegRev  = Long.parseLong(m.group(5));
 		}
@@ -223,14 +224,6 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	public CmsRepository getRepository() {
 		return repository;
 	}
-
-	/**
-	 * Used for example when separating object and revision fields in a form.
-	 * @return Location part of the id, no peg rev.
-	public String getLogicalIdPath() {
-		return PROTO_PREFIX + parent + repo + "^" + relpath;
-	}
-	 */	
 	
 	@Override
 	public String getUrl() {
@@ -278,9 +271,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		} else {
 			return PROTO + ":"
 					+ end;
-		}
-		
-						
+		}				
 	}
 
 	@Override

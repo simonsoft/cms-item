@@ -197,12 +197,12 @@ public class CmsItemIdArgTestv2 {
 	public void testWithRelPathToRepoRoot() {
 		CmsItemId i1 = new CmsItemIdArg("x-svn://x.y/parent/repo^/a/b.xml");
 		CmsItemId repoId = i1.withRelPath(null);
-		assertEquals("x-svn:/parent/repo/", repoId.getLogicalId());
+		assertEquals("x-svn:/parent/repo", repoId.getLogicalId());
 		assertEquals("For consistency, URLs can not have traling slash",
 				"http://x.y/parent/repo", repoId.getUrl());
 		CmsItemId i2 = new CmsItemIdArg("x-svn://x.y/p/r^/a?p=9");
 		CmsItemId repoRootRev = i2.withRelPath(null);
-		assertEquals("x-svn:/p/r/?p=9", repoRootRev.getLogicalId());
+		assertEquals("x-svn:/p/r?p=9", repoRootRev.getLogicalId());
 		// We have not path to represent root
 		//CmsItemId repoAlso = i1.withRelPath(new CmsItemPath("/"));
 		//assertEquals("x-svn://x.y/parent/repo^/", repoAlso.getLogicalIdFull());

@@ -247,7 +247,7 @@ public class CmsItemIdArgTest {
 				"http://x.y/parent/repo", repoId.getUrl());
 		CmsItemId i2 = new CmsItemIdArg("x-svn://x.y/p/r/a?p=9");
 		CmsItemId repoRootRev = i2.withRelPath(null);
-		assertEquals("x-svn:/p/r/?p=9", repoRootRev.getLogicalId());
+		assertEquals("x-svn:/p/r?p=9", repoRootRev.getLogicalId());
 		// We have not path to represent root
 		//CmsItemId repoAlso = i1.withRelPath(new CmsItemPath("/"));
 		//assertEquals("x-svn://x.y/parent/repo/", repoAlso.getLogicalIdFull());
