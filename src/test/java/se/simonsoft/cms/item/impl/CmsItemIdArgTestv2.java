@@ -100,7 +100,7 @@ public class CmsItemIdArgTestv2 {
 		assertFalse(p.getRepository().isHostKnown());
 		assertFalse(p.isFullyQualifiedOriginally());
 		assertFalse(p.isPegged());
-		assertEquals("x-svn:///svn/demo1^/vvab/graphics/0001.tif", p.getLogicalId());
+		assertEquals("x-svn:/svn/demo1/vvab/graphics/0001.tif", p.getLogicalId());
 		assertEquals("/vvab/graphics/0001.tif", p.getRelPath().toString());
 		assertNull(p.getPegRev());
 		try {
@@ -122,8 +122,8 @@ public class CmsItemIdArgTestv2 {
 		p.setHostname("x.y.z");
 		assertTrue(p.getRepository().isHostKnown());
 		assertFalse(p.isFullyQualifiedOriginally());
-		assertEquals("x-svn:///svn/demo1^/vvab/graphics/0001.tif", p.getLogicalId());
-		assertEquals("x-svn://x.y.z/svn/demo1^/vvab/graphics/0001.tif", p.getLogicalIdFull());
+		assertEquals("x-svn:/svn/demo1/vvab/graphics/0001.tif", p.getLogicalId());
+		assertEquals("x-svn://x.y.z/svn/demo1/vvab/graphics/0001.tif", p.getLogicalIdFull());
 		assertEquals("http://x.y.z/svn/demo1/vvab/graphics/0001.tif", p.getUrl());
 		assertEquals("http://x.y.z/svn/demo1", p.getRepositoryUrl());
 		assertFalse(p.isPegged());
@@ -131,8 +131,8 @@ public class CmsItemIdArgTestv2 {
 		p.setPegRev(1234567);
 		assertTrue(p.isPegged());
 		assertEquals(1234567, p.getPegRev().longValue());
-		assertEquals("x-svn:///svn/demo1^/vvab/graphics/0001.tif?p=1234567", p.getLogicalId());
-		assertEquals("x-svn://x.y.z/svn/demo1^/vvab/graphics/0001.tif?p=1234567", p.getLogicalIdFull());
+		assertEquals("x-svn:/svn/demo1/vvab/graphics/0001.tif?p=1234567", p.getLogicalId());
+		assertEquals("x-svn://x.y.z/svn/demo1/vvab/graphics/0001.tif?p=1234567", p.getLogicalIdFull());
 		assertEquals("http://x.y.z/svn/demo1/vvab/graphics/0001.tif", p.getUrl());
 		assertEquals("http://x.y.z/svn/demo1", p.getRepositoryUrl());
 		try {
@@ -146,7 +146,7 @@ public class CmsItemIdArgTestv2 {
 			p.setHostnameOrValidate("xx.y.z");
 			fail("Expected exception");
 		} catch (IllegalArgumentException e) {
-			assertEquals("Unexpected hostname in x-svn://x.y.z/svn/demo1^/vvab/graphics/0001.tif?p=1234567, expected xx.y.z",
+			assertEquals("Unexpected hostname in x-svn://x.y.z/svn/demo1/vvab/graphics/0001.tif?p=1234567, expected xx.y.z",
 					e.getMessage());
 		}
 	}
@@ -176,8 +176,8 @@ public class CmsItemIdArgTestv2 {
 	public void testWithRelPath() {
 		CmsItemId i1 = new CmsItemIdArg("x-svn://x.y/svn/r1^/vv/xml/8.xml?p=7");
 		CmsItemId parent = i1.withRelPath(new CmsItemPath("/vv")); // actually parent's parent
-		assertEquals("x-svn:///svn/r1^/vv?p=7", parent.getLogicalId());
-		assertEquals("x-svn://x.y/svn/r1^/vv?p=7", parent.getLogicalIdFull());
+		assertEquals("x-svn:/svn/r1/vv?p=7", parent.getLogicalId());
+		assertEquals("x-svn://x.y/svn/r1/vv?p=7", parent.getLogicalIdFull());
 		assertEquals("For consistency, URLs can not have traling slash", 
 				"http://x.y/svn/r1/vv", parent.getUrl());
 	}
@@ -192,43 +192,23 @@ public class CmsItemIdArgTestv2 {
 	public void testWithRelPathToRepoRoot() {
 		CmsItemId i1 = new CmsItemIdArg("x-svn://x.y/parent/repo^/a/b.xml");
 		CmsItemId repoId = i1.withRelPath(null);
-		assertEquals("x-svn:///parent/repo^/", repoId.getLogicalId());
+		assertEquals("x-svn:/parent/repo/", repoId.getLogicalId());
 		assertEquals("For consistency, URLs can not have traling slash",
 				"http://x.y/parent/repo", repoId.getUrl());
 		CmsItemId i2 = new CmsItemIdArg("x-svn://x.y/p/r^/a?p=9");
 		CmsItemId repoRootRev = i2.withRelPath(null);
-		assertEquals("x-svn:///p/r^/?p=9", repoRootRev.getLogicalId());
+		assertEquals("x-svn:/p/r/?p=9", repoRootRev.getLogicalId());
 		// We have not path to represent root
 		//CmsItemId repoAlso = i1.withRelPath(new CmsItemPath("/"));
 		//assertEquals("x-svn://x.y/parent/repo^/", repoAlso.getLogicalIdFull());
 		assertEquals("CmsItemPath can not represent root", null, repoId.getRelPath());
 	}
 	
-	@Test
-	public void testWithRelPathEncoding() {
-		CmsItemId i1 = new CmsItemIdArg("x-svn:///svn/demo1^/v/a%20b/c.xml");
-		assertEquals("Should preserve logicalId encoding (from constructor)", 
-				"x-svn:///svn/demo1^/v/a%20b", i1.withRelPath(new CmsItemPath("/v/a b")).getLogicalId());
-		
-		assertEquals("Should now be able to do logicalId encoding", 
-				"x-svn:///svn/demo1^/v%20(copy)/a%20b", i1.withRelPath(new CmsItemPath("/v (copy)/a b")).getLogicalId());
-		
-		
-		// The preservation can be discussed. Should it normalize even via constructor? Will impact equals(..)?
-		CmsItemId i2 = new CmsItemIdArg("x-svn:///svn/demo1^/v%20%28copy%29/a%20b/fä.xml");
-		assertEquals("Should preserve logicalId encoding (from constructor)", 
-				"x-svn:///svn/demo1^/v%20%28copy%29/a%20b/fä.xml", i2.getLogicalId());
-		
-		// Important to ensure that new paths are freshly encoded with normalizing code. (new in cms-item 2.3)
-		assertEquals("Should normalize logicalId encoding (when changing relpath)", 
-				"x-svn:///svn/demo1^/v%20(copy)/a%20b/f%C3%A4.xml", i2.withRelPath(new CmsItemPath("/v (copy)/a b/fä.xml")).getLogicalId());
-		
-	}
 	
 	@Test
 	public void testWithPegRev() {
 		CmsItemId i1 = new CmsItemIdArg("x-svn://x.y/svn/r^/a/b.xml");
-		assertEquals("x-svn://x.y/svn/r^/a/b.xml?p=9", i1.withPegRev(9L).getLogicalIdFull());
+		assertEquals("x-svn://x.y/svn/r/a/b.xml?p=9", i1.withPegRev(9L).getLogicalIdFull());
 		assertEquals(i1, i1.withPegRev(1234L).withPegRev(null));
 	}
 	
@@ -344,7 +324,7 @@ public class CmsItemIdArgTestv2 {
 		CmsItemId id2 = new CmsItemIdArg("x-svn:///s%20vn/demo1^/ab.xml");
 		CmsItemId id3a = new CmsItemIdArg("x-svn:///s%20vn/de%20mo1^/a%20b.xml");
 		CmsItemId id3b = new CmsItemIdArg("x-svn://host.a:987/s%20vn/de%20mo1^/a%20b.xml");
-		assertEquals("x-svn:///svn/de%20mo1^/ab.xml", id1.getLogicalId());
+		assertEquals("x-svn:/svn/de%20mo1/ab.xml", id1.getLogicalId());
 		assertEquals("/svn", id1.getRepository().getParentPath());
 		//assertEquals("de mo1", id1.getRepository().getName());
 		assertEquals("/svn/de%20mo1", id1.getRepository().getUrlAtHost());
