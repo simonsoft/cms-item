@@ -17,6 +17,8 @@ package se.simonsoft.cms.item.impl;
 
 import static org.junit.Assert.*;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -417,6 +419,13 @@ public class CmsItemIdArgTest {
 		assertEquals("http://host.a:987/s%20vn/de%20mo1/a%20b.xml", id3b.getUrl());
 	}
 	
+	
+	@Test // Tests the issue with v2 format and Java URL, no longer a problem in v3.
+	public void testJavaUrl() throws MalformedURLException {
+		CmsItemIdArg p = new CmsItemIdArg("x-svn:/svn/demo1/vvab/xml/Docs/Sa%20s.xml?p=9");
+		URL url = new URL(p.getLogicalId().replace("x-svn:", "http:"));
+		assertEquals(p.getLogicalId().replace("x-svn:", "http:"), url.toString());
+	}
 
 	
 }
