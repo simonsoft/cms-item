@@ -18,6 +18,7 @@ package se.simonsoft.cms.item.export;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -80,11 +81,15 @@ public class CmsExportJob {
      */
     public void addExportItem(CmsExportItem exportItem) {
 
+        if (exportItem == null) {
+            throw new IllegalArgumentException("Export item can't be null.");
+        }
+
         if (isPrepared) {
             throw new ConcurrentModificationException("It's not allowed to modify the CmsExportItem list when preparation is started.");
         }
 
-        if (getExportItems().contains(exportItem)) {
+        if (this.getExportItems().contains(exportItem)) {
             throw new IllegalArgumentException("Duplicated CmsExportItem, this item is already in the list");
         }
         logger.info("Adding: {} to the CmsExportJob", exportItem);
@@ -167,4 +172,8 @@ public class CmsExportJob {
 
     }
 
+    public interface SingleItem {
+
+        void getResultStream(OutputStream out);
+    }
 }

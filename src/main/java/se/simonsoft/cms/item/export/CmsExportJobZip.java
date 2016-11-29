@@ -20,52 +20,21 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class CmsExportJobZip {
+public class CmsExportJobZip extends CmsExportJob implements CmsExportJob.SingleItem{
 
     private ZipOutputStream zipOutputStream;
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
-    private CmsExportJob exportJob;
-    private List<CmsExportItem> exportItems;
-    private Boolean isReady;
 
-    public CmsExportJobZip(CmsExportJob exportJob) {
-
-        if (exportJob == null) {
-            throw new IllegalArgumentException("CmsExportJob must not be null");
-        }
-
-        if (!exportJob.isReady()) {
-            throw new IllegalStateException("The export job is not prepared to be sent to a writer");
-        }
-
-        this.exportJob = exportJob;
-        this.isReady = false;
-    }
-
-    public void prepare() {
-
-        this.exportItems = exportJob.getExportItems();
-
-        if (exportItems.size() < 1) {
-            throw new IllegalArgumentException("There's nothing to export in the exportJob, need at least one prepared CmsExportItem");
-        }
-
-        this.isReady = true;
-
-    }
-
-    public boolean isReady() {
-        return this.isReady;
-    }
-
+    @Override
     public void getResultStream(OutputStream out) {
 
-        if (!isReady) {
-            throw new IllegalStateException("The writer is not prepared to write.");
+        if (!isReady()) {
+            throw new IllegalStateException("The Job is not prepared to be written.");
         }
 
         if (out == null) {
@@ -75,7 +44,7 @@ public class CmsExportJobZip {
         try {
             zipOutputStream = new ZipOutputStream(out);
 
-            for (CmsExportItem item: getExportItems()) {
+            for (CmsExportItem item : getExportItems()) {
                 String path = item.getResultPath().getPath();
                 //Path's first "/" must be removed for zips on windows should work.
                 ZipEntry entry = new ZipEntry(path.substring(1, path.length()));
@@ -90,10 +59,7 @@ public class CmsExportJobZip {
         } catch (IOException e) {
             logger.error("Could not compress to file: {}", e.getMessage());
         }
-    }
 
-    private List<CmsExportItem> getExportItems() {
-        return this.exportItems;
     }
 
 }
