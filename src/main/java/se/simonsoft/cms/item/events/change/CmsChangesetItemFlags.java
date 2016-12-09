@@ -33,7 +33,7 @@ public interface CmsChangesetItemFlags {
 	 * For copies with untouched source there might be no copy source in the same changeset.
 	 * There might be multiple copy targets of the same source so this method can not return a path,
 	 * and even if we returned all paths the information is a bit useless when some sources are never reported.
-	 * @return true if there is, in the same commit, an copy with this item as {@link #getCopyFromPath()}
+	 * @return true if there is, in the same commit, an copy with this item as {@link CmsChangesetItem#getCopyFromPath()}
 	 */
 	boolean isCopySource();	
 	
@@ -64,7 +64,7 @@ public interface CmsChangesetItemFlags {
 	 * (relaxation: it is ok for backend to not match copy-from revision because
 	 *              it requires complex lookup and is unlikely to mismatch for moves)
 	 * 
-	 * Obviously flags true for move targets. Those have {@link #getCopyFromPath()}.
+	 * Obviously flags true for move targets. Those have {@link CmsChangesetItem#getCopyFromPath()}.
 	 * 
 	 * A reason for not making move atomic is that a deleted file may have multiple copy destinations,
 	 * which are indistinguishable unless server knows about atomic moves.

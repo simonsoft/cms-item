@@ -116,7 +116,7 @@ public class CmsPatchset extends LinkedList<CmsPatchItem>
 	 * releasing the lock after commit or keeping all locks if {@link #isKeepLocks()}.
 	 * 
 	 * For folder move/delete when there are multiple locks under the folder,
-	 * use {@link #add(CmsPatchItem)} follwed by multiple {@link #addLock(CmsItemPath, CmsItemLock)}.
+	 * use {@link #add(CmsPatchItem)} follwed by multiple {@link #addLock(CmsItemLock)}.
 	 * 
 	 * @param change like in {@link #add(CmsPatchItem)}
 	 * @param lock Lock matching the item's current lock, lock ID being the token needed by backend

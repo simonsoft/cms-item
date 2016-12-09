@@ -151,7 +151,7 @@ public class CmsRepository implements Serializable {
 	}
 	
 	/**
-	 * Returns {@link CmsItemIdEncoderBase}.
+	 * Returns {@link CmsItemIdArg}.
 	 * @return item id for use in path based operations, with relpath null,
 	 * 	can encode URLs but default impl has no knowledge of backend's {@link CmsItemId#getLogicalId()}
 	 */

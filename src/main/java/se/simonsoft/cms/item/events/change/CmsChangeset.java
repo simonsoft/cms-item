@@ -33,7 +33,7 @@ import se.simonsoft.cms.item.inspection.CmsContentsReader;
 public interface CmsChangeset {
 
 	/**
-	 * Note to implementer: don't return a {@link CmsRepositoryInspection}
+	 * Note to implementer: don't return a {@link se.simonsoft.cms.item.inspection.CmsRepositoryInspection}
 	 * @return repository
 	 */
 	CmsRepository getRepository();

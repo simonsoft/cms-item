@@ -35,7 +35,7 @@ import org.json.simple.parser.ParseException;
  * The contained value is immutable.
  * This means that the method {@link #isModified()}
  * just keeps the state from the constructor (useful in SvnPropertyMap) but
- * {@link #equals(Object)} becomes very important for {@link SvnPropertyMap#putProperty(String, SvnPropertyValue)}.
+ * {@link #equals(Object)} becomes very important for {@link SvnPropertyMap#putProperty(String, String)}.
  * <p>
  * For newline separated values, i.e. Subversion style multi-value,
  * see {@link SvnPropertyValueString#getValueNewlineSeparated()}.

@@ -49,7 +49,7 @@ public interface IdStrategy {
 	public String getIdHead(CmsItemId itemId);
 
 	/**
-	 * @return prefix to both {@link #getIdCommit(CmsRepository, RepoRevision)} and {@link #getId(CmsItemId)}
+	 * @return prefix to both {@link #getIdCommit(CmsRepository, RepoRevision)} and {@link #getId(CmsItemId, RepoRevision)}
 	 */
 	public String getIdRepository(CmsRepository repository);
 	

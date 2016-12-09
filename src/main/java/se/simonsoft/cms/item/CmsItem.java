@@ -92,9 +92,6 @@ public interface CmsItem {
 	 * Opens a connection to a file and writes its content to a stream.
 	 * @param receiver accepts contents of arbitrary length at arbitrary speed
 	 * @return access to contents, opened and closed by caller
-	 * @throws {@link se.simonsoft.cms.item.info.CmsConnectionException} if repository connection failed
-	 * @throws {@link se.simonsoft.cms.item.info.CmsTransferException} instead of checked IOException and the like
-	 * @throws IOException if transport failed
 	 * @throws UnsupportedOperationException if item is folder or backend does not support content reading
 	 */
 	void getContents(OutputStream receiver) throws UnsupportedOperationException;

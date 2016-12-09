@@ -20,7 +20,7 @@ import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
 /**
- * Propset on an item with no other changes, see also for example {@link FileModification#getProp}.
+ * Propset on an item with no other changes, see also for example {@link FileModification#getPropertyChange()}.
  * 
  * Svnkit SVNEditor differentiates between file property change and folder property change.
  */

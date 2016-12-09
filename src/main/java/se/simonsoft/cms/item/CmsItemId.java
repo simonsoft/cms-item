@@ -31,7 +31,7 @@ package se.simonsoft.cms.item;
  * Can <em>not</em> be used to distinguish between files and folders.
  * The rationale for this is that these ids often come as string input from user operations,
  * where there is no such metadata and a convention on trailing slash is difficult to enforce.
- * Full item information is provided through {@link CmsItem}, for example from {@link CmsItemLookup}.
+ * Full item information is provided through {@link CmsItem}, for example from {@link se.simonsoft.cms.item.info.CmsItemLookup}.
  * Services that return lists of ids may instead provide method variants returning only files,
  * only folders and both.
  */
