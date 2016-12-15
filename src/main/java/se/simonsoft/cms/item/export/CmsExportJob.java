@@ -31,6 +31,7 @@ public class CmsExportJob {
     private boolean isPrepared = false;
     private List<MetaTuple> metaList;
     private String jobName;
+    private String jobPrefix;
 
 
     /**
@@ -102,13 +103,14 @@ public class CmsExportJob {
 
 
     public List<MetaTuple> getMetaList() {
-        return metaList;
+        return this.metaList;
     }
 
     public void setMeta(String key, String value) {
 
         if (getMetaList() == null) {
-            metaList = new ArrayList<MetaTuple>();
+            logger.debug("No meta data list exist creating new instance");
+            this.metaList = new ArrayList<MetaTuple>();
         }
 
         MetaTuple metaTuple = new MetaTuple();
@@ -130,6 +132,8 @@ public class CmsExportJob {
             }
         }
 
+        metaList.add(metaTuple);
+
     }
 
     public void setMeta(String key) {
@@ -149,7 +153,15 @@ public class CmsExportJob {
         this.jobName = jobName;
     }
 
-    private class MetaTuple {
+    public String getJobPrefix() {
+        return jobPrefix;
+    }
+
+    public void setJobPrefix(String jobPrefix) {
+        this.jobPrefix = jobPrefix;
+    }
+
+    public class MetaTuple {
 
         private String key;
         private String value;
