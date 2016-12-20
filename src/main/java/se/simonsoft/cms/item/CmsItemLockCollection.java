@@ -17,9 +17,11 @@ package se.simonsoft.cms.item;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 import se.simonsoft.cms.item.info.CmsLockQuery;
 
@@ -92,8 +94,14 @@ public abstract class CmsItemLockCollection implements Serializable, Iterable<Cm
 	 * Returns items that are currently locked.
 	 * @param query Filtering
 	 */
-	CmsItemLockCollection getLocked(CmsLockQuery query) {
-		throw new UnsupportedOperationException("Lock query filtering not implemented");
+	Set<CmsItemLock> getLocked(CmsLockQuery query) {
+		//Set<CmsItemLock> filtered = new HashSet<CmsItemLock>();
+		
+		if (query != null) {
+			throw new UnsupportedOperationException("Lock query filtering not implemented");
+		}
+		
+		return new HashSet<CmsItemLock>(this.map.values());
 	}
 
 	/**
