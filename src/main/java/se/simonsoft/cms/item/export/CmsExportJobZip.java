@@ -15,21 +15,28 @@
  */
 package se.simonsoft.cms.item.export;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CmsExportJobZip extends CmsExportJob implements CmsExportJob.SingleItem{
 
     private ZipOutputStream zipOutputStream;
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
+    
+	public CmsExportJobZip(CmsExportPrefix jobPrefix, String jobName, String jobExtension) {	
+		super(jobPrefix, jobName, jobExtension);
+	}
+	
+	public CmsExportJobZip(CmsExportPrefix jobPrefix, String jobName) {	
+		super(jobPrefix, jobName, "zip");
+	}
+    
     @Override
     public void getResultStream(OutputStream out) {
 

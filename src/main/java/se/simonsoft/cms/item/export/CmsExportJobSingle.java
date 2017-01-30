@@ -18,6 +18,10 @@ package se.simonsoft.cms.item.export;
 import java.io.OutputStream;
 
 public class CmsExportJobSingle extends CmsExportJob implements CmsExportJob.SingleItem {
+	
+	public CmsExportJobSingle(CmsExportPrefix jobPrefix, String jobName, String jobExtension) {
+		super(jobPrefix, jobName, jobExtension);
+	}
 
     @Override
     public void getResultStream(OutputStream out) {

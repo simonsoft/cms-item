@@ -24,16 +24,19 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 
 
-public class CmsExportJob {
+public class CmsExportJob extends CmsExportJobBase {
 
     private Logger logger = LoggerFactory.getLogger(CmsExportJob.class);
     private List<CmsExportItem> exportItems = new ArrayList<CmsExportItem>();
     private boolean isPrepared = false;
-    private List<MetaTuple> metaList;
-    private String jobName;
-    private String jobPrefix;
+    private List<MetaTuple> metaList; // TODO: Refactor into a Map<CmsExportMetaKey, String>. Move to CmsExportJobBase.
 
 
+	public CmsExportJob(CmsExportPrefix jobPrefix, String jobName, String jobExtension) {
+		super(jobPrefix, jobName, jobExtension);
+	}
+
+    
     /**
      * Starts the preparation of the CmsExportItem's. Is only allowed to be called on once.
      */
@@ -143,22 +146,6 @@ public class CmsExportJob {
         }
 
         setMeta(key, null);
-    }
-
-    public String getJobName() {
-        return jobName;
-    }
-
-    public void setJobName(String jobName) {
-        this.jobName = jobName;
-    }
-
-    public String getJobPrefix() {
-        return jobPrefix;
-    }
-
-    public void setJobPrefix(String jobPrefix) {
-        this.jobPrefix = jobPrefix;
     }
 
     public class MetaTuple {
