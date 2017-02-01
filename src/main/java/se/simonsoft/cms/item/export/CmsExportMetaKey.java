@@ -15,6 +15,9 @@
  */
 package se.simonsoft.cms.item.export;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * The name of a single metadata item.
  *
@@ -22,12 +25,19 @@ package se.simonsoft.cms.item.export;
 public class CmsExportMetaKey {
 
 	private final String key;
+	private static final Pattern NICE = Pattern.compile("[a-z0-9]+");
 	
 	public CmsExportMetaKey(String key) {
-		
-		// TODO Validate null.
-		// TODO Validate key with regex, see CmsItemArg.
-		
+
+		if (key == null) {
+			throw new IllegalArgumentException("MetaKey must not be null.");
+		}
+
+		Matcher matcher = NICE.matcher(key);
+		if (!matcher.matches()) {
+			throw new IllegalArgumentException("Not a valid MetaKey: "+ key);
+		}
+
 		this.key = key;
 	}
 
