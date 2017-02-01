@@ -28,6 +28,8 @@ public abstract class CmsExportJobBase {
 			throw new IllegalArgumentException("Not a valid export job name: " + jobName);
 		}
 		
+	    // TODO: Regex validating the export name. No slashes allowed etc.
+		
 		if (jobExtension.isEmpty()) {
 			throw new IllegalArgumentException("Export job extension must not be empty, null is allowed.");
 		}
