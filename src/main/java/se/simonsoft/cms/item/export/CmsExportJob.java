@@ -19,17 +19,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
-import java.util.List;
+import java.util.*;
 
 
 public class CmsExportJob extends CmsExportJobBase {
 
     private Logger logger = LoggerFactory.getLogger(CmsExportJob.class);
-    private List<CmsExportItem> exportItems = new ArrayList<CmsExportItem>();
+    private List<CmsExportItem> exportItems = new ArrayList<>();
     private boolean isPrepared = false;
-    private List<MetaTuple> metaList; // TODO: Refactor into a Map<CmsExportMetaKey, String>. Move to CmsExportJobBase.
+    private Map<CmsExportMetaKey, String> metaMap = new HashMap<>();
 
 
 	public CmsExportJob(CmsExportPrefix jobPrefix, String jobName, String jobExtension) {
@@ -105,69 +103,25 @@ public class CmsExportJob extends CmsExportJobBase {
     }
 
 
-    public List<MetaTuple> getMetaList() {
-        return this.metaList;
+    public Map<CmsExportMetaKey, String> getMeta() {
+        return Collections.unmodifiableMap(this.metaMap);
     }
 
-    public void setMeta(String key, String value) {
+    public CmsExportJob withMeta(String key, String value) {
 
-        if (getMetaList() == null) {
-            logger.debug("No meta data list exist creating new instance");
-            this.metaList = new ArrayList<MetaTuple>();
+        CmsExportMetaKey cmsExportMetaKey = new CmsExportMetaKey(key);
+
+        if (value == null || value.isEmpty()) {
+            throw new IllegalArgumentException("Can not add empty or null value as meta");
         }
 
-        MetaTuple metaTuple = new MetaTuple();
-        metaTuple.setKey(key);
-
-        if (value != null) {
-            metaTuple.setValue(value);
+        if (metaMap.containsKey(cmsExportMetaKey)) {
+            throw new IllegalArgumentException("The meta key already exist in map. Key: " + key);
         }
 
-        //Should we allow 2 occurrence's of same meta values?
-        if (getMetaList().contains(metaTuple)) {
-            throw new IllegalArgumentException("The meta value is already in the list.");
-        }
+        metaMap.put(cmsExportMetaKey, value);
 
-        for(MetaTuple meta: getMetaList()) {
-            if (meta.getKey() == key ){
-                //Should we allow meta to be overwritten?
-                throw new IllegalArgumentException("Key already exists");
-            }
-        }
-
-        metaList.add(metaTuple);
-
-    }
-
-    public void setMeta(String key) {
-
-        if (key == null) {
-            throw new IllegalArgumentException("Key already exist in the metalist.");
-        }
-
-        setMeta(key, null);
-    }
-
-    public class MetaTuple {
-
-        private String key;
-        private String value;
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-
-        public String getKey() {
-            return key;
-        }
-
-        public void setKey(String key) {
-            this.key = key;
-        }
+        return this;
 
     }
 
@@ -175,4 +129,7 @@ public class CmsExportJob extends CmsExportJobBase {
 
         void getResultStream(OutputStream out);
     }
+
+
+
 }
