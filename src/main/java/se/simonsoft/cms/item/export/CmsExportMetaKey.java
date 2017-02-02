@@ -48,14 +48,14 @@ public class CmsExportMetaKey {
 	
 	@Override
 	public boolean equals(Object anObject) {
-		return this.key.equals(anObject);
+		return this.key.equals(anObject.toString());
 	}
 	
 	@Override
 	public int hashCode() {
 		return this.key.hashCode();
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.key.toString();

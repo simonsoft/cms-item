@@ -17,6 +17,9 @@ package se.simonsoft.cms.item.export;
 
 import org.junit.Test;
 
+import java.util.HashMap;
+
+import static junit.framework.Assert.assertTrue;
 import static junit.framework.Assert.fail;
 import static junit.framework.TestCase.assertEquals;
 
@@ -77,6 +80,25 @@ public class CmsExportMetaKeyTest {
     public void testAlphaNumericsWithDashShouldPass() {
         CmsExportMetaKey cmsExportMetaKey = new CmsExportMetaKey("cms-pass");
         assertEquals("cms-pass", cmsExportMetaKey.toString());
+
+    }
+
+    @Test
+    public void testGetObjectFromMapWithMetaKey() {
+
+        HashMap<CmsExportMetaKey, String> map = new HashMap<>();
+        map.put(new CmsExportMetaKey("abc"), "123");
+        map.put(new CmsExportMetaKey("qwe"), "asd");
+
+        assertTrue(map.size() == 2);
+
+        CmsExportMetaKey abc = new CmsExportMetaKey("abc");
+        CmsExportMetaKey qwe = new CmsExportMetaKey("qwe");
+
+        assertEquals("123" ,map.get(abc));
+        assertEquals("asd" ,map.get(qwe));
+
+
 
     }
 }
