@@ -24,36 +24,33 @@ import java.io.OutputStream;
 
 public class CmsExportItemCmsFile implements CmsExportItem {
 
-    private final CmsItem translationItem;
+    private final CmsItem item;
     private Logger logger = LoggerFactory.getLogger(CmsExportItemCmsFile.class);
     private Boolean ready = false;
-    private CmsExportPath resultPath;
+    private CmsExportPath exportPath;
 
 
-    public CmsExportItemCmsFile(CmsItem translationItem, String exportPath) {
+    public CmsExportItemCmsFile(CmsItem item, CmsExportPath exportPath) {
 
-        if (translationItem == null) {
+        if (item == null) {
             throw new IllegalArgumentException("Can't prepare null item for export");
         }
-        this.translationItem = translationItem;
-
-        if (exportPath != null) {
-            setResultPath(exportPath);
-        }
+        this.item = item;
+        this.exportPath = exportPath;
     }
 
     @Override
     public void prepare() {
 
         if (ready) {
-            throw new IllegalStateException("Item: " + translationItem.getId().getLogicalId() + " is already prepared for export");
+            throw new IllegalStateException("Item: " + item.getId().getLogicalId() + " is already prepared for export");
         }
 
-        if (translationItem.getKind().isFolder()) {
-            throw new IllegalArgumentException("Item has to be a file. " + translationItem.getId().getLogicalId());
+        if (item.getKind().isFolder()) {
+            throw new IllegalArgumentException("Item has to be a file. " + item.getId().getLogicalId());
         }
 
-        logger.info("Starting preperation for export of item: {}", this.translationItem.getId().getLogicalId());
+        logger.info("Starting preperation for export of item: {}", this.item.getId().getLogicalId());
         setReady(true);
     }
 
@@ -65,27 +62,15 @@ public class CmsExportItemCmsFile implements CmsExportItem {
     @Override
     public void getResultStream(OutputStream stream) {
         if (!ready) {
-            throw new IllegalStateException("Export item: " + this.translationItem.getId().getLogicalId() + ", is not ready for export");
+            throw new IllegalStateException("Export item: " + this.item.getId().getLogicalId() + ", is not ready for export");
         }
-            this.translationItem.getContents(stream);
+            this.item.getContents(stream);
     }
 
     @Override
     public CmsExportPath getResultPath() {
-
-        CmsExportPath path = this.resultPath;
-        if (path == null) {
-            path = new CmsExportPath("/".concat(this.translationItem.getId().getRelPath().getName()));
-        }
-
-        return path;
+        return this.exportPath;
     }
-
-    public void setResultPath(String path) {
-        CmsItemId id = this.translationItem.getId();
-        this.resultPath =  new CmsExportPath(path.concat(id.getRelPath().getName()));
-    }
-
 
     private void setReady(Boolean ready) {
         logger.info("Export item's ready flag is set to: {}", ready);

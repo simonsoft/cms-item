@@ -36,7 +36,7 @@ public class CmsExportItemCmsFileTest {
 
         setUpValidCmsItem();
 
-        CmsExportItemCmsFile exportItem = new CmsExportItemCmsFile(translation, "/path/");
+        CmsExportItemCmsFile exportItem = new CmsExportItemCmsFile(translation, new CmsExportPath("/path/chapter1.xml"));
 
         exportItem.prepare();
         assertTrue(exportItem.isReady());
