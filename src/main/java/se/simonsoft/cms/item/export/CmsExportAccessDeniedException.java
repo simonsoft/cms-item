@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package se.simonsoft.cms.item.info;
+package se.simonsoft.cms.item.export;
 
 public class CmsExportAccessDeniedException extends RuntimeException {
 
