@@ -15,22 +15,15 @@
  */
 package se.simonsoft.cms.item.structure;
 
-import java.util.regex.Pattern;
-
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import se.simonsoft.cms.item.CmsItemId;
 
 /**
  * Uses filename extensions to classify item, 
  * throwing {@link UnsupportedOperationException} on anything that would require lookup.
  */
-public class CmsItemClassificationAdapterFiletypes implements
-		CmsItemClassification {
-	
-	private Pattern patternXml;
-	private Pattern patternGraphics;
+public class CmsItemClassificationAdapterFiletypes extends CmsItemClassificationExtension {
+
 	
 	/**
 	 * synchronized with cms_adapter.xml and javascript
@@ -69,25 +62,4 @@ public class CmsItemClassificationAdapterFiletypes implements
 		this.patternGraphics = setPattern(filetypesGraphic);
 	}
 	
-	private Pattern setPattern(String config) {
-		return Pattern.compile(".*\\.(" + config + ")$");
-	};
-	
-	
-	@Override
-	public boolean isXml(CmsItemId item) {
-		return patternXml.matcher(item.getRelPath().getName()).matches();
-	}	
-	
-	@Override
-	public boolean isGraphic(CmsItemId item) {
-		return patternGraphics.matcher(item.getRelPath().getName()).matches();
-	}
-
-	@Override
-	public boolean isPublishable(CmsItemId item) {
-		// We should use a separate impl or subclass to implement this, keeping filetype logic isolated
-		throw new UnsupportedOperationException("Detection of publishable documents requires lookup");
-	}
-
 }
