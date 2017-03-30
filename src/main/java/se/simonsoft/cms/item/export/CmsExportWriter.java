@@ -15,7 +15,6 @@
  */
 package se.simonsoft.cms.item.export;
 
-import java.net.URL;
 import java.nio.file.Path;
 
 public interface CmsExportWriter {
@@ -33,6 +32,9 @@ public interface CmsExportWriter {
     
     public interface ResultUrl extends CmsExportWriter {
         
-    	URL getExportUrl();
+    	/**
+    	 * @return an href to the exported file, must be String to support a server-relative reference.
+    	 */
+    	String getExportUrl();
     }
 }
