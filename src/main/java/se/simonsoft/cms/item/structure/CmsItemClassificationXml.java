@@ -29,6 +29,7 @@ public class CmsItemClassificationXml extends CmsItemClassificationExtension {
 
 	public static final String VALID_XML_DEFAULT = 
 			"xml|dita|ditamap" + 
+			"|xliff|xlf" +
 					"";	// dummy line - keep.
 
 	
