@@ -48,5 +48,9 @@ public abstract class CmsItemBase implements CmsItem {
 	public Map<String, Object> getMeta() {
 		throw new UnsupportedOperationException("getMeta not implemented");
 	}
+	
+	// #1133
+	// TODO: Implement standardized way of checking if item has a class. 
+	// Not sure about naming convention when boolean method has parameter: isCmsClass(String class) or hasCmsClass(String class)
 
 }
