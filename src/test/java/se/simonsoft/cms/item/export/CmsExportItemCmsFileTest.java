@@ -54,7 +54,7 @@ public class CmsExportItemCmsFileTest {
 
         setUpValidCmsItemAsFolder();
 
-        CmsExportItemCmsFile exportItem = new CmsExportItemCmsFile(translation, null);
+        CmsExportItemCmsFile exportItem = new CmsExportItemCmsFile(translation, new CmsExportPath("/some/path"));
 
         try {
         exportItem.prepare();
@@ -69,7 +69,7 @@ public class CmsExportItemCmsFileTest {
 
         setUpValidCmsItem();
 
-        CmsExportItemCmsFile exportItem = new CmsExportItemCmsFile(translation, null);
+        CmsExportItemCmsFile exportItem = new CmsExportItemCmsFile(translation, new CmsExportPath("/some/path"));
         exportItem.prepare();
         assertTrue(exportItem.isReady());
 
@@ -83,9 +83,9 @@ public class CmsExportItemCmsFileTest {
 
     @Test
     public void getResultStreamWithoutPreperation() {
-        setUpValidCmsItem();;
+        setUpValidCmsItem();
 
-        CmsExportItemCmsFile exportItem = new CmsExportItemCmsFile(translation, null);
+        CmsExportItemCmsFile exportItem = new CmsExportItemCmsFile(translation, new CmsExportPath("/some/path"));
 
         try {
             exportItem.getResultStream(null);
