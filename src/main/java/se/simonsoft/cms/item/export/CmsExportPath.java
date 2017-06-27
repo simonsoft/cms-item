@@ -19,7 +19,9 @@ import se.simonsoft.cms.item.CmsItemPath;
 
 public class CmsExportPath extends CmsItemPath {
 
-    public CmsExportPath(String path) {
+	private static final long serialVersionUID = 1L;
+
+	public CmsExportPath(String path) {
         super(path);
     };
 

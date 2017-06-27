@@ -33,11 +33,11 @@ public class CmsExportItemInputStream implements CmsExportItem {
     public CmsExportItemInputStream(InputStream inputStream, CmsExportPath exportPath) {
 
         if (inputStream == null) {
-            throw new IllegalArgumentException("Can't prepare null InputStream for export");
+            throw new IllegalArgumentException("The export InputStream must not be null");
         }
 
         if (exportPath == null) {
-            throw new IllegalArgumentException("The export path can not be null");
+            throw new IllegalArgumentException("The export path must not be null");
         }
 
         this.inputStream = inputStream;

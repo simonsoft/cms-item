@@ -15,12 +15,12 @@
  */
 package se.simonsoft.cms.item.export;
 
+import java.io.OutputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import se.simonsoft.cms.item.CmsItem;
-import se.simonsoft.cms.item.CmsItemId;
 
-import java.io.OutputStream;
+import se.simonsoft.cms.item.CmsItem;
 
 public class CmsExportItemCmsFile implements CmsExportItem {
 
@@ -33,8 +33,13 @@ public class CmsExportItemCmsFile implements CmsExportItem {
     public CmsExportItemCmsFile(CmsItem item, CmsExportPath exportPath) {
 
         if (item == null) {
-            throw new IllegalArgumentException("Can't prepare null item for export");
+            throw new IllegalArgumentException("The export item must not be null");
         }
+        
+        if (exportPath == null) {
+            throw new IllegalArgumentException("The export path must not be null");
+        }
+        
         this.item = item;
         this.exportPath = exportPath;
     }
@@ -50,8 +55,8 @@ public class CmsExportItemCmsFile implements CmsExportItem {
             throw new IllegalArgumentException("Item has to be a file. " + item.getId().getLogicalId());
         }
 
-        logger.info("Starting preperation for export of item: {}", this.item.getId().getLogicalId());
-        setReady(true);
+        logger.info("Prepared export of item: {}", this.item.getId().getLogicalId());
+        this.ready = true;
     }
 
     @Override
@@ -72,12 +77,5 @@ public class CmsExportItemCmsFile implements CmsExportItem {
         return this.exportPath;
     }
 
-    private void setReady(Boolean ready) {
-        logger.info("Export item's ready flag is set to: {}", ready);
-        this.ready = ready;
-    }
 
-    private boolean isTranslation(CmsItem translation) {
-        return translation.getProperties().containsProperty("abx:TranslationLocale");
-    }
 }

@@ -15,6 +15,10 @@
  */
 package se.simonsoft.cms.item.export;
 
+/**
+ * Abstract Job suitable as basis for both import and export jobs.
+ *
+ */
 public abstract class CmsExportJobBase {
 	
 	protected final CmsExportPrefix jobPrefix;

@@ -17,6 +17,8 @@ package se.simonsoft.cms.item.export;
 
 public class CmsExportAccessDeniedException extends RuntimeException {
 
+	private static final long serialVersionUID = 1L;
+
 	public CmsExportAccessDeniedException(String message, Throwable cause) {
 		super(message, cause);
 	}
