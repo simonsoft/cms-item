@@ -53,6 +53,14 @@ public interface CmsRepositoryLookup {
 			throws IllegalArgumentException, CmsConnectionException, CmsItemNotFoundException;
 	
 	
+	/* Draft of adding API for revision properties to CmsRepositoryLookup.
+	 * 
+	 * Returning CmsItemProperties even though the name is slightly misleading.
+	 * 
+	CmsItemProperties getRevisionProperties(CmsRepository repository, RepoRevision revision) throws CmsConnectionException, CmsItemNotFoundException;
+	*/
+	
+	
 	/**
 	 * Returns items that are currently locked in the repository.
 	 * 
