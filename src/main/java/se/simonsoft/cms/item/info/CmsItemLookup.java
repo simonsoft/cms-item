@@ -89,6 +89,7 @@ public interface CmsItemLookup {
 	 * TODO: Debate whether this call should return CmsItem or CmsItemId. Perhaps both are needed due to the different performance profiles of backends.
 	 * @param parent
 	 * @return
+	 * @deprecated Awaiting updated specification, likely in an extended interface. Most implementations have not implemented this method, not even backend-svnkit. Newer methods return Set instead.
 	 */
 	Iterable<CmsItemId> getDescendants(CmsItemId parent);
 	
