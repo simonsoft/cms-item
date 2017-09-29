@@ -15,16 +15,17 @@
  */
 package se.simonsoft.cms.item.events;
 
+import java.util.Map;
+
+import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.events.change.CmsChangesetItem;
+import se.simonsoft.cms.item.events.change.CmsChangesetItemFlags;
 import se.simonsoft.cms.item.inspection.CmsChangesetReader;
 
 /**
  * Gets notified when a commit is done to the CMS.
- * 
- * Only privileged services can use this to access the repository,
- * because there is no authentication available.
  * 
  * Any service might be interested in the event, for caching etc,
  * because between these events nothing changes in the repositories
@@ -44,5 +45,15 @@ import se.simonsoft.cms.item.inspection.CmsChangesetReader;
 public interface PostCommitEventListener {
 
 	public void onPostCommit(CmsRepository repository, RepoRevision revision);
+	
+	
+	/**
+	 * Post commit notification with basic information about changed paths in the repository, as provided by svnpubsub.
+	 * 
+	 * @param repository
+	 * @param revision
+	 * @param changed
+	 */
+	public void onPostCommit(CmsRepository repository, RepoRevision revision, Map<CmsItemPath, CmsChangesetItemFlags> changed);
 	
 }
