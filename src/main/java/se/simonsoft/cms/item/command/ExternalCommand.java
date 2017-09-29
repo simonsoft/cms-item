@@ -19,9 +19,9 @@ import se.simonsoft.cms.item.CmsItemId;
 
 public class ExternalCommand {
 
-	private CmsItemId itemId;
-	private String action;
-	private String jsonargs = null;
+	protected CmsItemId itemId;
+	protected String action;
+	protected String jsonargs = null;
 	
 	public ExternalCommand(CmsItemId itemId, String action, String jsonArgs) {
 		this.itemId = itemId;
