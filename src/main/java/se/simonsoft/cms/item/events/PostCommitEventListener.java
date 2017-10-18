@@ -38,6 +38,8 @@ import se.simonsoft.cms.item.inspection.CmsChangesetReader;
  * access to content of the committed files (no {@link CmsChangesetReader} calls).
  * A framework that publishes {@link CmsChangesetItem} must be used to avoid
  * multiple reads of the same content. Such a framework exists in indexing.
+ * 
+ * @deprecated Services should listen to changeset events using {@link ChangesetEventListener}.
  */
 public interface PostCommitEventListener {
 

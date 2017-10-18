@@ -16,7 +16,26 @@
 package se.simonsoft.cms.item.events;
 
 import se.simonsoft.cms.item.events.change.CmsChangeset;
+import se.simonsoft.cms.item.events.change.CmsChangesetItem;
+import se.simonsoft.cms.item.inspection.CmsChangesetReader;
 
+/**
+ * Gets notified when a commit is done to the CMS.
+ * 
+ * Any service might be interested in the event, for caching etc,
+ * because between these events nothing changes in the repositories
+ * except locks and exceptionally revprops.
+ * 
+ * Listeners are registered by binding to a set of this interface
+ * using the multibinder feature.
+ * Hooks are executed in the order they are bound.
+ * 
+ * Note that this should not be used for changeset access or
+ * access to content of the committed files (no {@link CmsChangesetReader} calls).
+ * A framework that publishes {@link CmsChangesetItem} must be used to avoid
+ * multiple reads of the same content. Such a framework exists in indexing.
+ * See also {@link ItemEventListener}.
+ */
 public interface ChangesetEventListener {
 
 	/**
