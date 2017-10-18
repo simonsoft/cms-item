@@ -18,11 +18,9 @@ package se.simonsoft.cms.item.events.change;
 import java.util.List;
 import java.util.Map;
 
-import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
-import se.simonsoft.cms.item.events.ItemEventListener;
 import se.simonsoft.cms.item.inspection.CmsContentsReader;
 
 /**
@@ -45,22 +43,6 @@ public interface CmsChangeset {
 	
 	//CmsItemProperties getRevisionProperties(); // unlike changeset items revision properties can be updated after the commit and should be accessed through CmsContentsReader 
 	
-	/**
-	 * Supports the most common use case - services listening for changes to a specific item.
-	 * @param item 
-	 * @return true if the item is affected directly
-	 * @deprecated Not used yet, and we should consider an event system instead like {@link ItemEventListener}
-	 */
-	boolean affects(CmsItemId item);
-	
-	/**
-	 * Tells if modified date on the item should be considered touched,
-	 * on most file systems a folder would be if a file somewhere under it is modified.
-	 * @param item
-	 * @return true if for example the item is a parent/ancestor folder of an affected file or folder
-	 * @deprecated Not used yet, and we should consider an event system instead like {@link ItemEventListener}
-	 */
-	boolean affectsIndirectly(CmsItemId item);
 	
 	/**
 	 * Services that don't analyze changes may not return
