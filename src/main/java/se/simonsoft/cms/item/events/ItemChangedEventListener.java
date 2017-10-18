@@ -15,39 +15,31 @@
  */
 package se.simonsoft.cms.item.events;
 
-import se.simonsoft.cms.item.CmsItemId;
-import se.simonsoft.cms.item.RepoRevision;
-import se.simonsoft.cms.item.events.change.CmsChangeset;
+import se.simonsoft.cms.item.CmsItem;
 import se.simonsoft.cms.item.events.change.CmsChangesetItem;
-import se.simonsoft.cms.item.events.change.CmsChangesetItemFlags;
 
 /**
- * Tentative interface, outlining future event model.
+ * Tentative!
  * 
- * TODO Global, or per repository? Global right?
+ * Gets notified when a CmsItem has changed in the CMS (e.g. post-commit).
  * 
- * TODO decide how to handle the difference between pre- and post-notification.
+ * These events happen after {@link ChangesetEventListener}, potentially after other
+ * services have completed processing the commit (e.g. Indexing have completed).
+ * This aspect is implementation dependent and there might even be multiple stages.
  * 
- * TODO how to filter on repository and path,
- * including items anywhere under a specific folder
- * (see {@link CmsChangeset#affectsIndirectly(CmsItemId)}.
  */
-public interface ItemEventListener {
+public interface ItemChangedEventListener {
 
-	/**
-	 * @return the filter for which events this handler wants to be notified about
-	 */
-	CmsChangesetItemFlags getItemFilter();
 	
 	/**
-	 * @param revision items only carry commit revision
-	 * @param event
-	 * @throws ItemChangeReject
+	 * Tentative: Would like just a CmsItem as parameter. 
+	 * This might not contain change-related information like {@link CmsChangesetItem}.
+	 * Preferred solution: CmsChangesetItem interface should extend CmsItem interface.
+	 * 
+	 * The item might not support {@link CmsItem#getContents(java.io.OutputStream)}, implementation dependent.
+	 * 
+	 * @param changed item
 	 */
-	void onItemChange(RepoRevision revision, CmsChangesetItem event) throws ItemChangeReject;
-	
-	class ItemChangeReject extends Exception {
-		private static final long serialVersionUID = 1L;
-	}
+	void onItemChange(CmsItem item);
 	
 }
