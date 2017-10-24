@@ -29,6 +29,11 @@ public class ExternalCommand {
 		this.jsonargs = jsonArgs;
 	}
 	
+	public ExternalCommand(CmsItemId itemId, String action) {
+		this.itemId = itemId;
+		this.action = action;
+	}
+	
 	
 	public String getAction() {
 		return action;
