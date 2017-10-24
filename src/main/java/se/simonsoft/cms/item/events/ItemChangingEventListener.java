@@ -22,17 +22,14 @@ import se.simonsoft.cms.item.events.change.CmsChangesetItem;
 import se.simonsoft.cms.item.events.change.CmsChangesetItemFlags;
 
 /**
- * Tentative interface, outlining future event model.
+ * Tentative interface, outlining future event model for item changes that can be prevented.
  * 
- * TODO Global, or per repository? Global right?
- * 
- * TODO decide how to handle the difference between pre- and post-notification.
  * 
  * TODO how to filter on repository and path,
  * including items anywhere under a specific folder
  * (see {@link CmsChangeset#affectsIndirectly(CmsItemId)}.
  */
-public interface ItemEventListener {
+public interface ItemChangingEventListener {
 
 	/**
 	 * @return the filter for which events this handler wants to be notified about
