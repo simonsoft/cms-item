@@ -17,6 +17,10 @@ package se.simonsoft.cms.item.command;
 
 import se.simonsoft.cms.item.CmsItemId;
 
+/**
+ * @deprecated use ExternalCommandHandler<Void>
+ *
+ */
 public interface ExternalCommandHandlerNoArgs extends ExternalCommandHandler<Object> {
 	
 	/**

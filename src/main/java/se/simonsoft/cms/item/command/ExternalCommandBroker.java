@@ -43,6 +43,11 @@ public interface ExternalCommandBroker {
 	 */
 	<T> void registerHandler(String action, ExternalCommandHandler<T> handler, Class<T> argumentsClass);
 	
+	/**
+	 * @param action
+	 * @param handler
+	 * @deprecated Replaced with ExternalCommandHandler<Void>.
+	 */
 	void registerHandler(String action, ExternalCommandHandlerNoArgs handler);
 	
 	/**
@@ -56,6 +61,9 @@ public interface ExternalCommandBroker {
 	 */
 	boolean expectsArguments(String action);
 	
+	
+	Class<?> getArgumentsClass(String action);
+	
 	/**
 	 * Translates external invocations to events.
 	 * @param command The invocation parameters
@@ -64,7 +72,7 @@ public interface ExternalCommandBroker {
 	 *  or if jsonargs is set but creation of the arguments wrapper object failed.
 	 * @throws RuntimeException if the handler runs into an unrecoverable exceptions
 	 */
-	void execute(ExternalCommand command) 
-			throws UnknownActionException, ArgsValidationException, RuntimeException;
+	<T> void execute(ExternalCommand<T> command) 
+			throws UnknownActionException, ArgsValidationException;
 	
 }
