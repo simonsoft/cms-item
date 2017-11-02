@@ -27,6 +27,6 @@ public interface ExternalCommandHandlerNoArgs extends ExternalCommandHandler<Obj
 	 * Handle known action with id as only input.
 	 */
 	@Override
-	public void handleExternalCommand(CmsItemId item, Object isNull);
+	public String handleExternalCommand(CmsItemId item, Object isNull);
 	
 }

@@ -67,12 +67,13 @@ public interface ExternalCommandBroker {
 	/**
 	 * Translates external invocations to events.
 	 * @param command The invocation parameters
+	 * @return command result as String, potentially serialized JSON, often null
 	 * @throws UnknownActionException if the action name has not been registered
 	 * @throws ArgsValidationException if the handler is noargs but jsonargs is not null or vice versa,
 	 *  or if jsonargs is set but creation of the arguments wrapper object failed.
 	 * @throws RuntimeException if the handler runs into an unrecoverable exceptions
 	 */
-	<T> void execute(ExternalCommand<T> command) 
+	<T> String execute(ExternalCommand<T> command) 
 			throws UnknownActionException, ArgsValidationException;
 	
 }

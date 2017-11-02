@@ -19,6 +19,6 @@ import se.simonsoft.cms.item.CmsItemId;
 
 public interface ExternalCommandHandler<T> {
 
-	void handleExternalCommand(CmsItemId item, T arguments);
+	String handleExternalCommand(CmsItemId item, T arguments);
 	
 }
