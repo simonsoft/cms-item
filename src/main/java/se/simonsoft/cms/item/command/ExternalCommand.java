@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2009-2017 Simonsoft Nordic AB
+ * Copyright (C) 2009-2016 Simonsoft Nordic AB
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
  */
 package se.simonsoft.cms.item.command;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import se.simonsoft.cms.item.CmsItemId;
 
 public class ExternalCommand<T> {
@@ -22,6 +25,9 @@ public class ExternalCommand<T> {
 	protected CmsItemId itemId;
 	protected String action;
 	protected T args = null;
+	
+	
+	private static final Logger logger = LoggerFactory.getLogger(ExternalCommand.class);
 	
 	
 	public ExternalCommand(CmsItemId itemId, String action) {
@@ -52,16 +58,19 @@ public class ExternalCommand<T> {
 	
 	// The Class<?> parameter is intended for subclasses that actually do parsing in this method.
 	public T getArgs(Class<?> argumentsClass) throws ArgsValidationException {
+		if (args == null && argumentsClass == Void.class) {
+			return null;
+		}
 		
-		// Should calling this method be allowed when args == null if class is Void.class?
 		if (args == null) {
+			logger.error("Requested arguments when command does not have arguments.");
 			throw new ArgsValidationException("Requested arguments when command does not have arguments.");
 		}
 		
 		if (!argumentsClass.isInstance(args)) {
+			logger.error("Requested arguments class does not match. {}", args.getClass());
 			throw new ArgsValidationException("Requested arguments class does not match: " + args.getClass());
 		}
-		
 		return args;
 	}
 }
