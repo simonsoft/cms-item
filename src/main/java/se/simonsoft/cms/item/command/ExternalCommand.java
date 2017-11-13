@@ -20,11 +20,11 @@ import org.slf4j.LoggerFactory;
 
 import se.simonsoft.cms.item.CmsItemId;
 
-public class ExternalCommand<T> {
+public class ExternalCommand {
 
 	protected CmsItemId itemId;
 	protected String action;
-	protected T args = null;
+	protected Object args = null;
 	
 	
 	private static final Logger logger = LoggerFactory.getLogger(ExternalCommand.class);
@@ -35,7 +35,7 @@ public class ExternalCommand<T> {
 		this.action = action;
 	}
 	
-	public ExternalCommand(CmsItemId itemId, String action, T args) {
+	public ExternalCommand(CmsItemId itemId, String action, Object args) {
 		this.itemId = itemId;
 		this.action = action;
 		this.args = args;
@@ -56,8 +56,7 @@ public class ExternalCommand<T> {
 	}
 	
 	
-	// The Class<?> parameter is intended for subclasses that actually do parsing in this method.
-	public T getArgs(Class<?> argumentsClass) throws ArgsValidationException {
+	public <T> T getArgs(Class<T> argumentsClass) throws ArgsValidationException {
 		if (args == null && argumentsClass == Void.class) {
 			return null;
 		}
@@ -71,6 +70,13 @@ public class ExternalCommand<T> {
 			logger.error("Requested arguments class does not match. {}", args.getClass());
 			throw new ArgsValidationException("Requested arguments class does not match: " + args.getClass());
 		}
-		return args;
+		return getArgsCast(args, argumentsClass);
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	private <T> T getArgsCast(Object args, Class<T> argumentsClass) {
+		// This is the only method that should need SuppressWarnings for type safety.
+		return (T) args;
 	}
 }

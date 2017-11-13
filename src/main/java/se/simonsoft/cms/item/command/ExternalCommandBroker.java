@@ -73,7 +73,7 @@ public interface ExternalCommandBroker {
 	 *  or if jsonargs is set but creation of the arguments wrapper object failed.
 	 * @throws RuntimeException if the handler runs into an unrecoverable exceptions
 	 */
-	<T> String execute(ExternalCommand<T> command) 
+	String execute(ExternalCommand command) 
 			throws UnknownActionException, ArgsValidationException;
 	
 }
