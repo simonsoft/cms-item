@@ -22,7 +22,7 @@ public class CmsExportPrefix {
 
 	private final String prefix;
 	
-	private static final Pattern NICE = Pattern.compile("[a-z0-9]+");
+	private static final Pattern NICE = Pattern.compile("[a-z0-9-]+");
 	
 	public CmsExportPrefix(String prefix) {
 		Matcher m = NICE.matcher(prefix);
