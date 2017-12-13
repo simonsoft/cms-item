@@ -45,11 +45,18 @@ public class CmsExportJob extends CmsExportJobBase {
         }
 
         logger.info("Preparing: {} CmsExportItems for export.", getExportItems().size());
-
-        isPrepared = true;
+        
+        if (getExportItems().isEmpty()) {
+            throw new IllegalArgumentException("There's no items in the export job to prepare");
+        }
+        boolean itemsPrepared = false;
         for (CmsExportItem item : getExportItems()) {
             item.prepare();
+            if (!item.isReady()) {
+            	itemsPrepared = false;
+            }
         }
+        isPrepared = itemsPrepared;
     }
 
     /**
@@ -57,14 +64,15 @@ public class CmsExportJob extends CmsExportJobBase {
      * @return Boolean set to true if al items is ready.
      */
     public Boolean isReady() {
-
-        if (getExportItems().isEmpty()) {
-            throw new IllegalArgumentException("There's no items in the export job to prepare");
-        }
+    	
+    	if (getExportItems().isEmpty()) {
+    		throw new IllegalArgumentException("There's no items in the export job.");
+    	}
 
         if (isPrepared) {
             return isPrepared;
         }
+        
 
         //TODO: We should remember if an ExportItem is ready, so we don't have to check again do it again.
         for (CmsExportItem item: getExportItems()) {
