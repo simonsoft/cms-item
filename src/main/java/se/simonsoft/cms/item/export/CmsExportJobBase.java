@@ -65,7 +65,11 @@ public abstract class CmsExportJobBase {
             sb.append(getJobPrefix());
             sb.append("/");
         }
-    	sb.append(getJobName());
+    	String name = getJobName();
+    	if (name.startsWith("/")) {
+    		name = name.replaceFirst("/", "");
+    	}
+    	sb.append(name);
         if (getJobExtension() != null) {
         	sb.append('.');
         	sb.append(getJobExtension());
