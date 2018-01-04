@@ -45,6 +45,10 @@ public class CmsExportJob extends CmsExportJobBase {
         }
 
         logger.info("Preparing: {} CmsExportItems for export.", getExportItems().size());
+        
+        if (getExportItems().isEmpty()) {
+            throw new IllegalArgumentException("There are no items in the export job.");
+        }
 
         isPrepared = true;
         for (CmsExportItem item : getExportItems()) {
@@ -59,7 +63,7 @@ public class CmsExportJob extends CmsExportJobBase {
     public Boolean isReady() {
 
         if (getExportItems().isEmpty()) {
-            throw new IllegalArgumentException("There's no items in the export job to prepare");
+            throw new IllegalArgumentException("There are no items in the export job.");
         }
 
         if (isPrepared) {
