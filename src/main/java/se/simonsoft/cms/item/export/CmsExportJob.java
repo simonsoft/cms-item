@@ -50,10 +50,11 @@ public class CmsExportJob extends CmsExportJobBase {
             throw new IllegalArgumentException("There are no items in the export job.");
         }
 
-        isPrepared = true;
         for (CmsExportItem item : getExportItems()) {
             item.prepare();
         }
+        
+        isPrepared = true;
     }
 
     /**
