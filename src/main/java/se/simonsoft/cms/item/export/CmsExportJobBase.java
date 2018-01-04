@@ -37,7 +37,7 @@ public abstract class CmsExportJobBase {
 		}
 		
 		if (jobName.isEmpty()) {
-			throw new IllegalArgumentException("job name can not be empty: " + jobName);
+			throw new IllegalArgumentException("Job name can not be empty: " + jobName);
 		}
 		
 		if (jobExtension.isEmpty()) {
