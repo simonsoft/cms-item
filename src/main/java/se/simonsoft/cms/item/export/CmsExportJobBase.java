@@ -29,16 +29,17 @@ public abstract class CmsExportJobBase {
 	public CmsExportJobBase(CmsExportPrefix jobPrefix, String jobName, String jobExtension) {
 		
 		if (jobName == null) {
-			throw new IllegalArgumentException("Job name can not be null: " + jobName);
+			throw new IllegalArgumentException("Job name can not be null");
+		}
+		
+		if (jobName.isEmpty()) {
+			throw new IllegalArgumentException("Job name can not be empty: " + jobName);
 		}
 		
 		if (jobName.startsWith("/")) {
 			throw new IllegalArgumentException("Job name can not be prefixed with slash: " + jobName);
 		}
 		
-		if (jobName.isEmpty()) {
-			throw new IllegalArgumentException("Job name can not be empty: " + jobName);
-		}
 		
 		if (jobExtension.isEmpty()) {
 			throw new IllegalArgumentException("Export job extension must not be empty, null is allowed.");
