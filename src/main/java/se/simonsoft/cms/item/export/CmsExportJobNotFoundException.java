@@ -18,7 +18,7 @@ package se.simonsoft.cms.item.export;
 public class CmsExportJobNotFoundException extends RuntimeException {
 
 	/**
-	 * Takes a CmsExportJob and presents the name of the job in the message.
+	 * Takes a CmsExportJob and sets it as a field so that the receiver of the exception may access it.  
 	 */
 	private static final long serialVersionUID = 1L;
 	private final CmsExportJob exportJob;
