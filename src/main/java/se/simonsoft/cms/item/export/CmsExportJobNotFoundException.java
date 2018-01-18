@@ -21,15 +21,15 @@ public class CmsExportJobNotFoundException extends RuntimeException {
 	 * Takes a CmsExportJob and sets it as a field so that the receiver of the exception may access it.  
 	 */
 	private static final long serialVersionUID = 1L;
-	private final CmsExportJob exportJob;
+	private final CmsExportImportJob exportJob;
 	
 	
-	public CmsExportJobNotFoundException(CmsExportJob exportJob, String message, Throwable cause) {
+	public CmsExportJobNotFoundException(CmsExportImportJob exportJob, String message, Throwable cause) {
 		super(message, cause);
 		this.exportJob = exportJob;
 	}
 	
-	public CmsExportJob getExportJob() {
+	public CmsExportImportJob getExportJob() {
 		return this.exportJob;
 	}
 	

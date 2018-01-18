@@ -88,10 +88,23 @@ public class CmsExportJob extends CmsExportJobBase {
      */
     public void addExportItem(CmsExportItem exportItem) {
 
-        if (exportItem == null) {
-            throw new IllegalArgumentException("Export item can't be null.");
+    	if (exportItem == null) {
+            throw new IllegalArgumentException("Export item must not be null.");
         }
+        
+        if (exportItem.getResultPath() == null) {
+            throw new IllegalArgumentException("The export path must not be null");
+        }
+        
+    	addExportItemInternal(exportItem);
+    }
+    
+    protected void addExportItemInternal(CmsExportItem exportItem) {
 
+    	if (exportItem == null) {
+            throw new IllegalArgumentException("Export item must not be null.");
+        }
+    	
         if (isPrepared) {
             throw new ConcurrentModificationException("It's not allowed to modify the CmsExportItem list when preparation is started.");
         }
@@ -99,7 +112,7 @@ public class CmsExportJob extends CmsExportJobBase {
         if (this.getExportItems().contains(exportItem)) {
             throw new IllegalArgumentException("Duplicated CmsExportItem, this item is already in the list");
         }
-        logger.info("Adding: {} to the CmsExportJob", exportItem);
+        logger.debug("Adding: {} to the CmsExportJob", exportItem);
         getExportItems().add(exportItem);
     }
 

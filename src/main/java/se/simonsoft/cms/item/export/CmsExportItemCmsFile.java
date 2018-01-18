@@ -30,20 +30,22 @@ public class CmsExportItemCmsFile implements CmsExportItem {
     private CmsExportPath exportPath;
 
 
+    public CmsExportItemCmsFile(CmsItem item) {
+    	this(item, null);
+    }
+
+    
     public CmsExportItemCmsFile(CmsItem item, CmsExportPath exportPath) {
 
         if (item == null) {
             throw new IllegalArgumentException("The export item must not be null");
         }
         
-        if (exportPath == null) {
-            throw new IllegalArgumentException("The export path must not be null");
-        }
-        
         this.item = item;
         this.exportPath = exportPath;
     }
 
+    
     @Override
     public void prepare() {
 

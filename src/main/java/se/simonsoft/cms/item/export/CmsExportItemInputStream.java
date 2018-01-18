@@ -30,19 +30,19 @@ public class CmsExportItemInputStream implements CmsExportItem {
     private Boolean ready = false;
     private Logger logger = LoggerFactory.getLogger(CmsExportItemInputStream.class);
 
+    
+    public CmsExportItemInputStream(InputStream inputStream) {
+    	this(inputStream, null);
+    }
+    
     public CmsExportItemInputStream(InputStream inputStream, CmsExportPath exportPath) {
 
         if (inputStream == null) {
             throw new IllegalArgumentException("The export InputStream must not be null");
         }
 
-        if (exportPath == null) {
-            throw new IllegalArgumentException("The export path must not be null");
-        }
-
         this.inputStream = inputStream;
         this.exportPath = exportPath;
-
     }
 
 
@@ -82,7 +82,5 @@ public class CmsExportItemInputStream implements CmsExportItem {
         return this.exportPath;
     }
 
-    //TODO: Skall vara ett exportitem som tar en input stream. Skall användas i testet för reconcile review.
-    // Vi behöver ladda upp en string som blir fil så att den sedan kan hämtas.
 
 }
