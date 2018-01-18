@@ -19,12 +19,16 @@ package se.simonsoft.cms.item.export;
  * Abstract Job suitable as basis for both import and export jobs.
  *
  */
-public abstract class CmsExportJobBase {
+public abstract class CmsExportJobBase implements CmsExportImportJob {
 	
 	protected final CmsExportPrefix jobPrefix;
     protected final String jobName;
     protected final String jobExtension;
+
     
+    public CmsExportJobBase(String jobName) {
+    	this(null, jobName, null);
+    }
 
 	public CmsExportJobBase(CmsExportPrefix jobPrefix, String jobName, String jobExtension) {
 		
@@ -58,6 +62,7 @@ public abstract class CmsExportJobBase {
         return jobPrefix;
     }
 	
+	@Override
     public String getJobName() {
         return jobName;
     }
@@ -66,6 +71,7 @@ public abstract class CmsExportJobBase {
         return jobExtension;
     }
     
+    @Override
     public String getJobPath() {
     	StringBuilder sb = new StringBuilder();
     	if (getJobPrefix() != null) {

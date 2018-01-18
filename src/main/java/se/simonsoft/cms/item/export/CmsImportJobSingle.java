@@ -15,23 +15,12 @@
  */
 package se.simonsoft.cms.item.export;
 
-public class CmsExportJobNotFoundException extends RuntimeException {
 
-	/**
-	 * Takes a CmsExportJob and sets it as a field so that the receiver of the exception may access it.  
-	 */
-	private static final long serialVersionUID = 1L;
-	private final CmsExportImportJob exportJob;
+public class CmsImportJobSingle extends CmsExportJobBase implements CmsImportJob {
 	
 	
-	public CmsExportJobNotFoundException(CmsExportImportJob exportJob, String message, Throwable cause) {
-		super(message, cause);
-		this.exportJob = exportJob;
+	public CmsImportJobSingle(CmsExportPrefix jobPrefix, String jobName, String jobExtension) {
+		super(jobPrefix, jobName, jobExtension);
 	}
-	
-	public CmsExportImportJob getExportJob() {
-		return this.exportJob;
-	}
-	
-	
+
 }
