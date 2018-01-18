@@ -18,6 +18,11 @@ package se.simonsoft.cms.item.export;
 import java.io.OutputStream;
 
 
+/**
+ * Represents one stream / file in an export job.
+ * 
+ * The resultPath is required by multi-item jobs and disallowed by single-item jobs.
+ */
 public interface CmsExportItem {
 
     void prepare();

@@ -35,6 +35,10 @@ public class CmsExportJobSingle extends CmsExportJob implements CmsExportJob.Sin
                     .concat(" The maximum number of items allowed is already reached: " + getExportItems().size()));
         }
 
-        super.addExportItem(exportItem);
+        if (exportItem.getResultPath() != null) {
+            throw new IllegalArgumentException("The export path must be null in a single-item job");
+        }
+        
+        super.addExportItemInternal(exportItem);
     }
 }
