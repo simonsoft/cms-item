@@ -19,7 +19,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,9 +33,8 @@ public class CmsExportFsWriterSingle implements CmsExportWriter, CmsExportWriter
 
     private File fsParent;
     private CmsExportJob exportJob;
-    private File folder;
     private boolean ready = false;
-    private File exportPath;
+    private Path exportPath;
     private Logger logger = LoggerFactory.getLogger(CmsExportFsWriterSingle.class);
 
 
@@ -60,22 +61,9 @@ public class CmsExportFsWriterSingle implements CmsExportWriter, CmsExportWriter
 
         this.exportJob = job;
 
-
-        try {
-        	logger.debug("Creating parent directory...");
-            folder = getFolder();
-        } catch (IOException e) {
-            logger.error("Error when trying to create folder at Fs: {}", fsParent.getAbsolutePath());
-        }
+        logger.debug("Creating parent directory for the export job...");
+        createFolder();
         
-        File parentFolder = this.exportPath.getParentFile();
-    	if (!parentFolder.exists()) {
-    		logger.debug("Complete export path: {} do no exist, creating it.", exportPath);
-    		parentFolder.mkdirs();
-    	} else {
-    		logger.debug("A job with the same name already exists, it will be overwritten, path: {}", this.exportPath);
-    	}
-
         this.ready = true;
     }
 
@@ -90,11 +78,15 @@ public class CmsExportFsWriterSingle implements CmsExportWriter, CmsExportWriter
         if (!isReady()) {
             throw new IllegalStateException("The writer is not prepared to write.");
         }
+        
+        if (this.exportPath == null) {
+        	throw new IllegalStateException("Export path must not be null. Writer has to be prepared.");
+        }
 
         logger.info("Writing file: {} ", this.exportPath);
         try {
         	        	
-            FileOutputStream stream = new FileOutputStream(this.exportPath);
+            FileOutputStream stream = new FileOutputStream(this.exportPath.toFile());
             CmsExportJob.SingleItem jobSingle = (CmsExportJob.SingleItem) this.exportJob;
             jobSingle.getResultStream(stream);
 
@@ -110,24 +102,29 @@ public class CmsExportFsWriterSingle implements CmsExportWriter, CmsExportWriter
     }
 
 
-    protected File getFolder() throws IOException {
+    protected void createFolder() {
     	
-    	String completeJobPath = fsParent.getPath().concat("/").concat(this.exportJob.getJobPath());
-        exportPath = new File(completeJobPath);
+    	final String pathStr = fsParent.getPath().concat(File.separator).concat(this.exportJob.getJobPath());
+    	final Path completePath = Paths.get(pathStr);
+    	final Path parentPath = completePath.getParent();
     	
-    	boolean mkdirs = exportPath.getParentFile().mkdirs();
-    	if (mkdirs) {
-    		logger.debug("Created missing directories {}", fsParent.getPath());
-    	} else {
-    		logger.debug("Parent folder {} already exists.", fsParent.getAbsolutePath());
+    	if (Files.exists(completePath)) {
+    		logger.warn("File with name: {} at path: {} already exists, it will be overwritten", completePath.getFileName(), parentPath.toString());
     	}
     	
-    	return exportPath; 
-    }
-
-    protected boolean mkdir(File dir) {
-        boolean ok = dir.mkdir();
-        return ok;
+    	boolean writable = Files.isWritable(Paths.get(fsParent.getAbsolutePath()));
+    	if (!writable) {
+    		throw new RuntimeException("Can not write to directory: " + fsParent.getAbsolutePath());
+    	}
+    	
+    	try {
+			Files.createDirectories(parentPath);
+		} catch (IOException e) {
+			logger.error("Could not create directories in: {}, even though it passed isWritable check.", fsParent.getAbsolutePath());
+			throw new RuntimeException("Could not create directories.",e);
+		}
+    	
+    	this.exportPath = completePath;
     }
 
     @Override
@@ -135,6 +132,6 @@ public class CmsExportFsWriterSingle implements CmsExportWriter, CmsExportWriter
     	if (!isReady()) {
             throw new IllegalStateException("The writer is not prepared to write.");
         }
-        return this.exportPath.toPath();
+        return this.exportPath;
     }
 }
