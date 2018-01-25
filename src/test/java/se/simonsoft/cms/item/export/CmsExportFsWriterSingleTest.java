@@ -108,8 +108,7 @@ public class CmsExportFsWriterSingleTest {
 
 		CmsExportFsReaderSingle fsReaderSingle = new CmsExportFsReaderSingle(tempDir.toFile());
 		
-		
-		final String patternString = "Provided import path:.*do not exist";
+		final String patternString = "Provided import path:.*, do not exist";
         Pattern pattern = Pattern.compile(patternString);
         
 		try {
