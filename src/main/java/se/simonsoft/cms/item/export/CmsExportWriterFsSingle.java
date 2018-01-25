@@ -43,6 +43,10 @@ public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter
 		}
 		
 		this.fsParent = Paths.get(fsParent.getAbsolutePath());
+		
+    	if (!Files.isWritable(this.fsParent)) {
+    		throw new RuntimeException("Can not write to directory: " + fsParent.toString());
+    	}
         
     }
 
@@ -67,6 +71,12 @@ public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter
 
         logger.debug("Creating parent directory for the export job...");
         createFolder();
+        
+        Path completePath = getCompletePath(job);
+        
+        if (Files.exists(completePath)) {
+    		logger.warn("File with name: {} at path: {} already exists, it will be overwritten", completePath.getFileName(), completePath.getParent().toString());
+    	}
         
         this.ready = true;
     }
@@ -110,17 +120,7 @@ public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter
 
     protected void createFolder() {
     	
-    	Path completePath = getCompletePath(exportJob);
-    	final Path parentPath = completePath.getParent();
-    	
-    	if (Files.exists(completePath)) {
-    		logger.warn("File with name: {} at path: {} already exists, it will be overwritten", completePath.getFileName(), parentPath.toString());
-    	}
-    	
-    	boolean writable = Files.isWritable(fsParent);
-    	if (!writable) {
-    		throw new RuntimeException("Can not write to directory: " + fsParent.toString());
-    	}
+    	final Path parentPath = getCompletePath(exportJob).getParent();
     	
     	try {
 			Files.createDirectories(parentPath);
