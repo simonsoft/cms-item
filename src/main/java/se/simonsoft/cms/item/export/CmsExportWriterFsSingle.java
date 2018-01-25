@@ -75,7 +75,7 @@ public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter
         Path completePath = getCompletePath(job);
         
         if (Files.exists(completePath)) {
-    		logger.warn("File with name: {} at path: {} already exists, it will be overwritten", completePath.getFileName(), completePath.getParent().toString());
+    		logger.warn("File: {} already exists it will be overwritten", completePath.toString());
     	}
         
         this.ready = true;
