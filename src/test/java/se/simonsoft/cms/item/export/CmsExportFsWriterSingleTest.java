@@ -38,7 +38,7 @@ public class CmsExportFsWriterSingleTest {
 		InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(testFilePath);
 		
 		
-		CmsExportFsWriterSingle writer = new CmsExportFsWriterSingle(parentFolder);
+		CmsExportWriterFsSingle writer = new CmsExportWriterFsSingle(parentFolder);
 		CmsExportJobZip j = new CmsExportJobZip(new CmsExportPrefix("jandersson"), "DOC_900108_Released", "zip");
 		
 		CmsExportItemInputStream exportItem = new CmsExportItemInputStream(resourceAsStream, new CmsExportPath("/some/awsome/path.pdf"));

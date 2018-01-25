@@ -29,16 +29,16 @@ import org.slf4j.LoggerFactory;
 import se.simonsoft.cms.item.export.CmsExportJob;
 import se.simonsoft.cms.item.export.CmsExportWriter;
 
-public class CmsExportFsWriterSingle implements CmsExportWriter, CmsExportWriter.LocalFileSystem {
+public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter.LocalFileSystem {
 
     private File fsParent;
     private CmsExportJob exportJob;
     private boolean ready = false;
     private Path exportPath;
-    private Logger logger = LoggerFactory.getLogger(CmsExportFsWriterSingle.class);
+    private Logger logger = LoggerFactory.getLogger(CmsExportWriterFsSingle.class);
 
 
-    public CmsExportFsWriterSingle(File fsParent) {
+    public CmsExportWriterFsSingle(File fsParent) {
         this.fsParent = fsParent;
     }
 
