@@ -31,15 +31,19 @@ import se.simonsoft.cms.item.export.CmsExportWriter;
 
 public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter.LocalFileSystem {
 
-    private File fsParent;
+    private Path fsParent;
     private CmsExportJob exportJob;
     private boolean ready = false;
-    private Path exportPath;
-    private Logger logger = LoggerFactory.getLogger(CmsExportWriterFsSingle.class);
-
+    
+    private static final Logger logger = LoggerFactory.getLogger(CmsExportWriterFsSingle.class);
 
     public CmsExportWriterFsSingle(File fsParent) {
-        this.fsParent = fsParent;
+    	if (fsParent == null) {
+			throw new IllegalArgumentException("The fsParent must not be null.");
+		}
+		
+		this.fsParent = Paths.get(fsParent.getAbsolutePath());
+        
     }
 
     @Override
@@ -79,21 +83,23 @@ public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter
             throw new IllegalStateException("The writer is not prepared to write.");
         }
         
-        if (this.exportPath == null) {
+        final Path completePath = getCompletePath(exportJob);
+        
+        if (completePath == null) {
         	throw new IllegalStateException("Export path must not be null. Writer has to be prepared.");
         }
 
-        logger.info("Writing file: {} ", this.exportPath);
+        logger.info("Writing file: {} ", completePath.toString());
         try {
         	        	
-            FileOutputStream stream = new FileOutputStream(this.exportPath.toFile());
+            FileOutputStream stream = new FileOutputStream(completePath.toFile());
             CmsExportJob.SingleItem jobSingle = (CmsExportJob.SingleItem) this.exportJob;
             jobSingle.getResultStream(stream);
 
             stream.close();
 
         } catch (FileNotFoundException e) {
-            logger.error("Failed when trying to initialize a outputStream with path: {}, {}", this.exportPath, e.getMessage());
+            logger.error("Failed when trying to initialize a outputStream with path: {}, {}", completePath, e.getMessage());
             throw new RuntimeException(e);
         } catch (IOException e) {
             logger.error("Failed to close stream", e.getMessage());
@@ -104,27 +110,24 @@ public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter
 
     protected void createFolder() {
     	
-    	final String pathStr = fsParent.getPath().concat(File.separator).concat(this.exportJob.getJobPath());
-    	final Path completePath = Paths.get(pathStr);
+    	Path completePath = getCompletePath(exportJob);
     	final Path parentPath = completePath.getParent();
     	
     	if (Files.exists(completePath)) {
     		logger.warn("File with name: {} at path: {} already exists, it will be overwritten", completePath.getFileName(), parentPath.toString());
     	}
     	
-    	boolean writable = Files.isWritable(Paths.get(fsParent.getAbsolutePath()));
+    	boolean writable = Files.isWritable(fsParent);
     	if (!writable) {
-    		throw new RuntimeException("Can not write to directory: " + fsParent.getAbsolutePath());
+    		throw new RuntimeException("Can not write to directory: " + fsParent.toString());
     	}
     	
     	try {
 			Files.createDirectories(parentPath);
 		} catch (IOException e) {
-			logger.error("Could not create directories in: {}, even though it passed isWritable check.", fsParent.getAbsolutePath());
+			logger.error("Could not create directories in: {}, even though it passed isWritable check.", fsParent.toString());
 			throw new RuntimeException("Could not create directories.",e);
 		}
-    	
-    	this.exportPath = completePath;
     }
     
 	private Path getCompletePath(CmsExportJob job) {
@@ -138,6 +141,6 @@ public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter
     	if (!isReady()) {
             throw new IllegalStateException("The writer is not prepared to write.");
         }
-        return this.exportPath;
+        return getCompletePath(exportJob);
     }
 }
