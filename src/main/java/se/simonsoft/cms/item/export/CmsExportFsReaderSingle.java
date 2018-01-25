@@ -67,34 +67,21 @@ public class CmsExportFsReaderSingle implements CmsExportReader {
 			throw new IllegalArgumentException("Can not prepare a null job.");
 		}
 		
-		createImportPath(job);
-		
 		this.importJob = job;
 		
-	}
-
-	private void createImportPath(CmsImportJob job) {
-		
-		Path fsParentPath = Paths.get(fsParent.getAbsolutePath());
-		StringBuilder sb = new StringBuilder();
-		sb.append(fsParentPath.toString());
-		
-		if (!fsParentPath.endsWith(File.separator)) {
-			sb.append(File.separator);
-		}
-		sb.append(job.getJobPath());
-		
-		Path completeImportPath = Paths.get(sb.toString());
-		
-		if (!Files.exists(completeImportPath)) {
-			throw new IllegalStateException("Provided import path: " + completeImportPath + ", do not exist");
+		Path completePath = getCompletePath(job);
+		if (!Files.exists(completePath)) {
+			throw new IllegalStateException("Import path does not exist: " + completePath);
 		}
 		
-		if (!Files.isReadable(completeImportPath)) {
-			throw new IllegalStateException("Provided import path: " + completeImportPath + ", exists but is not readable.");
+		if (!Files.isReadable(completePath)) {
+			throw new IllegalStateException("Import path does exist but is not readable: " + completePath);
 		}
 		
-		importPath = completeImportPath;
+		this.ready = true;
+		
+		logger.debug("Reader is prepared.");
+		
 	}
 
 	@Override
@@ -106,15 +93,16 @@ public class CmsExportFsReaderSingle implements CmsExportReader {
 	@Override
 	public InputStream getContents() {
 		
-		if (this.importPath == null) {
-			throw new IllegalStateException("Reader is missing a valid import path, the reader has to be prepared");
+		if (!isReady()) {
+			throw new IllegalStateException("CmsExportFsReaderSingle has to be prepared before getting content.");
 		}
 		
 		InputStream is = null;
+		Path completePath = getCompletePath(importJob);
 		try {
-			is = Files.newInputStream(this.importPath);
+			is = Files.newInputStream(completePath);
 		} catch (IOException e) {
-			throw new RuntimeException("Could not read file at path: " + importPath, e);
+			throw new RuntimeException("Could not read file at path: " + completePath, e);
 		}
 		
 		return is;
