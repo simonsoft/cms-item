@@ -31,7 +31,7 @@ public class CmsExportFsWriterSingleTest {
 
 	
 	@Test
-	public void testExportSingelFile() throws Exception {
+	public void testExportSingleFile() throws Exception {
 		
 		File parentFolder = new File("/Users/jonand/Desktop/test");
 		String testFilePath = "se/simonsoft/cms/item/export/DOC_900108_sv-SE_Released.pdf";
