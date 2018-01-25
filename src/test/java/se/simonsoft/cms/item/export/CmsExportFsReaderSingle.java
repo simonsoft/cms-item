@@ -30,7 +30,7 @@ public class CmsExportFsReaderSingle implements CmsExportReader {
 		logger.debug("Preparing reader");
 		
 		if (importJob != null) {
-			throw new IllegalStateException("Writer already consumed, initialize a new reader for each job.");
+			throw new IllegalStateException("Reader already consumed, initialize a new reader for each job.");
 		}
 		
 		if (!(job instanceof CmsImportJobSingle)) {
@@ -77,7 +77,7 @@ public class CmsExportFsReaderSingle implements CmsExportReader {
 	public InputStream getContents() {
 		
 		if (this.importPath == null) {
-			throw new IllegalStateException("Reader is missing a valid importPath, the reader has to be prepared");
+			throw new IllegalStateException("Reader is missing a valid import path, the reader has to be prepared");
 		}
 		
 		InputStream is = null;
@@ -86,7 +86,6 @@ public class CmsExportFsReaderSingle implements CmsExportReader {
 		} catch (IOException e) {
 			throw new RuntimeException("Could not read file at path: " + importPath, e);
 		}
-		
 		
 		return is;
 	}
