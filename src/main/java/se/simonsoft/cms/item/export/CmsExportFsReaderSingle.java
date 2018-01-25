@@ -57,7 +57,7 @@ public class CmsExportFsReaderSingle implements CmsExportReader {
 
 	@Override
 	public void prepare(CmsImportJob job) {
-		logger.debug("Preparing reader");
+		logger.debug("Preparing reader...");
 		
 		if (importJob != null) {
 			throw new IllegalStateException("Reader already consumed, initialize a new reader for each job.");
@@ -99,7 +99,7 @@ public class CmsExportFsReaderSingle implements CmsExportReader {
 
 	@Override
 	public Map<CmsExportMetaKey, String> getMeta() {
-		logger.warn("Reader do not support meta data returning null");
+		logger.warn("Reader does not support metadata, returning null");
 		return null;
 	}
 
