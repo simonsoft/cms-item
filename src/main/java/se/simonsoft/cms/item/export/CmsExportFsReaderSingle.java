@@ -37,7 +37,6 @@ public class CmsExportFsReaderSingle implements CmsExportReader {
 	private static final Logger logger = LoggerFactory.getLogger(CmsExportFsReaderSingle.class);
 
 	public CmsExportFsReaderSingle(File fsParent) {
-		
 		if (fsParent == null) {
 			throw new IllegalArgumentException("The fsParent must not be null.");
 		}
