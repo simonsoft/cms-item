@@ -16,34 +16,38 @@
 package se.simonsoft.cms.item.export;
 
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.junit.Test;
 
-import se.simonsoft.cms.item.export.CmsExportItemInputStream;
-import se.simonsoft.cms.item.export.CmsExportPath;
-import se.simonsoft.cms.item.export.CmsExportPrefix;
-
 public class CmsExportFsWriterSingleTest {
 	
-	public static String TEST_FILE_PATH = "se/simonsoft/cms/item/export/export-test.txt";
-	
+	private final static Path TEST_EXPORT_FILE_PATH = Paths.get("se/simonsoft/cms/item/export/export-test.txt");
+	private final static int TEST_EXPORT_FILE_SIZE = 19;
 	
 	@Test
 	public void testExportSingleFileAsZip() throws Exception {
 		
 		Path tempDir = Files.createTempDirectory("tempFsExportArea");
-		InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(TEST_FILE_PATH);
+		InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(TEST_EXPORT_FILE_PATH.toString());
 		
 		CmsExportWriterFsSingle writer = new CmsExportWriterFsSingle(tempDir.toFile());
 		CmsExportJobZip j = new CmsExportJobZip(new CmsExportPrefix("jandersson"), "export-test", "zip");
 		
-		CmsExportItemInputStream exportItem = new CmsExportItemInputStream(resourceAsStream, new CmsExportPath("/some/awsome/path.txt"));
+		CmsExportPath cmsExportPath = new CmsExportPath("/test/export-test.txt");
+		CmsExportItemInputStream exportItem = new CmsExportItemInputStream(resourceAsStream, cmsExportPath);
 		
 		j.addExportItem(exportItem);
 		j.prepare();
@@ -54,5 +58,42 @@ public class CmsExportFsWriterSingleTest {
 		File resultFile = new File(tempDir.toAbsolutePath().toString().concat("/" + j.getJobPath()));
 		assertTrue(resultFile.exists());
 		
+		unzipPackage(resultFile.getAbsolutePath());
+		
+		Path unzipPackagePath = Paths.get(resultFile.getParent().concat(cmsExportPath.getPath()));
+		assertTrue(Files.exists(unzipPackagePath));
+		assertEquals(TEST_EXPORT_FILE_SIZE, Files.size(unzipPackagePath));
 	}
+	
+	public void unzipPackage(String exportPath) throws IOException {
+
+        ZipInputStream unzip = new ZipInputStream(new FileInputStream(exportPath));
+        ZipEntry ze = unzip.getNextEntry();
+        File newFile = null;
+
+        while (ze != null) {
+            String fileName = ze.getName();
+
+            String parentFolder = exportPath.substring(0 ,exportPath.lastIndexOf("/"));
+
+            newFile = new File(parentFolder + File.separator + fileName);
+
+            new File(newFile.getParent()).mkdirs();
+
+            FileOutputStream fos = new FileOutputStream(newFile);
+
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = unzip.read(buffer)) > 0) {
+                fos.write(buffer, 0, len);
+            }
+
+            fos.close();
+            ze = unzip.getNextEntry();
+        }
+
+        unzip.closeEntry();
+        unzip.close();
+
+    }
 }
