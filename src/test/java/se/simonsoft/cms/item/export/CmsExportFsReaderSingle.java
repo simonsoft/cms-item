@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.MessageFormat;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -57,11 +58,11 @@ public class CmsExportFsReaderSingle implements CmsExportReader {
 		Path completeImportPath = Paths.get(sb.toString());
 		
 		if (!Files.exists(completeImportPath)) {
-			throw new IllegalStateException("Provided import path: " + completeImportPath + " do not exist");
+			throw new IllegalStateException("Provided import path: " + completeImportPath + ", do not exist");
 		}
 		
 		if (!Files.isReadable(completeImportPath)) {
-			throw new IllegalStateException("Provided import path: " + completeImportPath + " exists but is not readable.");
+			throw new IllegalStateException("Provided import path: " + completeImportPath + ", exists but is not readable.");
 		}
 		
 		importPath = completeImportPath;
