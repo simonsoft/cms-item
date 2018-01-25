@@ -124,15 +124,8 @@ public class CmsExportReaderFsSingle implements CmsExportReader {
 	}
 	
 	private Path getCompletePath(CmsImportJob job) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(fsParent.toString());
-
-		if (!fsParent.endsWith(File.separator)) {
-			sb.append(File.separator);
-		}
-		sb.append(job.getJobPath());
-
-		return Paths.get(sb.toString());
+		Path completePath = fsParent.resolve(job.getJobPath());
+		completePath = Paths.get(completePath.toString().replaceAll("/", File.separator));
+		return completePath;
 	}
-
 }

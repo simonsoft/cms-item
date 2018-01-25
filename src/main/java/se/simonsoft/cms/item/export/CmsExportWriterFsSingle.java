@@ -126,6 +126,12 @@ public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter
     	
     	this.exportPath = completePath;
     }
+    
+	private Path getCompletePath(CmsExportJob job) {
+		Path completePath = fsParent.resolve(job.getJobPath());
+		completePath = Paths.get(completePath.toString().replaceAll("/", File.separator));
+		return completePath;
+	}
 
     @Override
     public Path getExportPath() {
