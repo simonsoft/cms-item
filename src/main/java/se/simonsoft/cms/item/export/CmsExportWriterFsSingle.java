@@ -45,7 +45,7 @@ public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter
     @Override
     public void prepare(CmsExportJob job) {
     	
-    	logger.debug("Prepearing writer");
+    	logger.debug("Preparing writer");
     	
     	if (exportJob != null) {
 			throw new IllegalStateException("Writer already consumed, initialize a new reader for each job.");
