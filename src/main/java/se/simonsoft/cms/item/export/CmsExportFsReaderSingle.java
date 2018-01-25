@@ -131,5 +131,21 @@ public class CmsExportFsReaderSingle implements CmsExportReader {
 
 		contents.close();
 	}
+	
+	private boolean isReady() {
+		return this.ready;
+	}
+	
+	private Path getCompletePath(CmsImportJob job) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(fsParent.toString());
+
+		if (!fsParent.endsWith(File.separator)) {
+			sb.append(File.separator);
+		}
+		sb.append(job.getJobPath());
+
+		return Paths.get(sb.toString());
+	}
 
 }
