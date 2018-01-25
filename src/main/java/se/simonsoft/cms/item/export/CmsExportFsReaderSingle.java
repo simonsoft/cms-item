@@ -29,15 +29,30 @@ import org.slf4j.LoggerFactory;
 
 public class CmsExportFsReaderSingle implements CmsExportReader {
 	
-	private CmsImportJob importJob;
-	private Path importPath;
+	private final Path fsParent;
 	
-	private final File fsParent;
+	private CmsImportJob importJob;
+	private boolean ready = false;
 	
 	private static final Logger logger = LoggerFactory.getLogger(CmsExportFsReaderSingle.class);
 
 	public CmsExportFsReaderSingle(File fsParent) {
-		this.fsParent = fsParent;
+		
+		if (fsParent == null) {
+			throw new IllegalArgumentException("The fsParent must not be null.");
+		}
+		
+		Path fsParentPath = Paths.get(fsParent.getAbsolutePath());
+		
+		if (!Files.exists(fsParentPath)) {
+			throw new IllegalStateException("The fsParent does not exist on file system");
+		}
+		
+		if (!Files.isReadable(fsParentPath)) {
+			throw new IllegalStateException("The fsParent exists but is not readable.");
+		}
+		
+		this.fsParent = fsParentPath;
 	}
 
 	@Override
