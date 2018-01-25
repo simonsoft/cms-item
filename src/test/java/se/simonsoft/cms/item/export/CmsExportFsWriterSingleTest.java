@@ -20,6 +20,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.junit.Test;
 
@@ -28,20 +30,20 @@ import se.simonsoft.cms.item.export.CmsExportPath;
 import se.simonsoft.cms.item.export.CmsExportPrefix;
 
 public class CmsExportFsWriterSingleTest {
-
+	
+	public static String TEST_FILE_PATH = "se/simonsoft/cms/item/export/export-test.txt";
+	
 	
 	@Test
-	public void testExportSingleFile() throws Exception {
+	public void testExportSingleFileAsZip() throws Exception {
 		
-		File parentFolder = new File("/Users/jonand/Desktop/test");
-		String testFilePath = "se/simonsoft/cms/item/export/DOC_900108_sv-SE_Released.pdf";
-		InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(testFilePath);
+		Path tempDir = Files.createTempDirectory("tempFsExportArea");
+		InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(TEST_FILE_PATH);
 		
+		CmsExportWriterFsSingle writer = new CmsExportWriterFsSingle(tempDir.toFile());
+		CmsExportJobZip j = new CmsExportJobZip(new CmsExportPrefix("jandersson"), "export-test", "zip");
 		
-		CmsExportWriterFsSingle writer = new CmsExportWriterFsSingle(parentFolder);
-		CmsExportJobZip j = new CmsExportJobZip(new CmsExportPrefix("jandersson"), "DOC_900108_Released", "zip");
-		
-		CmsExportItemInputStream exportItem = new CmsExportItemInputStream(resourceAsStream, new CmsExportPath("/some/awsome/path.pdf"));
+		CmsExportItemInputStream exportItem = new CmsExportItemInputStream(resourceAsStream, new CmsExportPath("/some/awsome/path.txt"));
 		
 		j.addExportItem(exportItem);
 		j.prepare();
@@ -49,9 +51,8 @@ public class CmsExportFsWriterSingleTest {
 		writer.prepare(j);
 		writer.write();
 		
-		
-		File file2 = new File(parentFolder.getAbsolutePath().concat("/" + j.getJobPath()));
-		assertTrue(file2.exists());
+		File resultFile = new File(tempDir.toAbsolutePath().toString().concat("/" + j.getJobPath()));
+		assertTrue(resultFile.exists());
 		
 	}
 }
