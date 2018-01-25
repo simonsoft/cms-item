@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 
 import org.junit.Test;
 
-public class CmsExportFsReaderSingleTest {
+public class CmsExportReaderFsSingleTest {
 	
 	
 	private final Path testExportFilePath = Paths.get("se/simonsoft/cms/item/export/export-test.txt");
@@ -42,7 +42,7 @@ public class CmsExportFsReaderSingleTest {
 		
 		CmsImportJobSingle importJob = new CmsImportJobSingle(new CmsExportPrefix("jandersson"), "export-test", "zip");
 		
-		CmsExportFsReaderSingle fsReaderSingle = new CmsExportFsReaderSingle(tempDir.toFile());
+		CmsExportReaderFsSingle fsReaderSingle = new CmsExportReaderFsSingle(tempDir.toFile());
 		fsReaderSingle.prepare(importJob);
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -59,7 +59,7 @@ public class CmsExportFsReaderSingleTest {
 		
 		CmsImportJobSingle importJob = new CmsImportJobSingle(new CmsExportPrefix("jandersson"), "export-test", "zip");
 
-		CmsExportFsReaderSingle fsReaderSingle = new CmsExportFsReaderSingle(tempDir.toFile());
+		CmsExportReaderFsSingle fsReaderSingle = new CmsExportReaderFsSingle(tempDir.toFile());
 		
 		final String patternString = "Import path does not exist:.*";
         Pattern pattern = Pattern.compile(patternString);
@@ -77,7 +77,7 @@ public class CmsExportFsReaderSingleTest {
 	public void testReaderIsNotPrepared() throws Exception {
 		
 		Path tempDir = Files.createTempDirectory(tmpDir);
-		CmsExportFsReaderSingle fsReaderSingle = new CmsExportFsReaderSingle(tempDir.toFile());
+		CmsExportReaderFsSingle fsReaderSingle = new CmsExportReaderFsSingle(tempDir.toFile());
 		
 		try {
 		fsReaderSingle.getContents();

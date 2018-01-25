@@ -27,16 +27,16 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CmsExportFsReaderSingle implements CmsExportReader {
+public class CmsExportReaderFsSingle implements CmsExportReader {
 	
 	private final Path fsParent;
 	
 	private CmsImportJob importJob;
 	private boolean ready = false;
 	
-	private static final Logger logger = LoggerFactory.getLogger(CmsExportFsReaderSingle.class);
+	private static final Logger logger = LoggerFactory.getLogger(CmsExportReaderFsSingle.class);
 
-	public CmsExportFsReaderSingle(File fsParent) {
+	public CmsExportReaderFsSingle(File fsParent) {
 		if (fsParent == null) {
 			throw new IllegalArgumentException("The fsParent must not be null.");
 		}

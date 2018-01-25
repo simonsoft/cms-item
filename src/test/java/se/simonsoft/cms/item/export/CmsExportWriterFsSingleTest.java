@@ -32,7 +32,7 @@ import java.util.zip.ZipInputStream;
 
 import org.junit.Test;
 
-public class CmsExportFsWriterSingleTest {
+public class CmsExportWriterFsSingleTest {
 	
 	private final Path testExportFilePath = Paths.get("se/simonsoft/cms/item/export/export-test.txt");
 	private final int testExportFileSize = 19;
