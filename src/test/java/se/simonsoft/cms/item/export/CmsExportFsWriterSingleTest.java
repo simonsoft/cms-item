@@ -16,9 +16,7 @@
 package se.simonsoft.cms.item.export;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -68,57 +66,6 @@ public class CmsExportFsWriterSingleTest {
 		Path unzipPackagePath = Paths.get(resultFile.getParent().concat(cmsExportPath.getPath()));
 		assertTrue(Files.exists(unzipPackagePath));
 		assertEquals(testExportFileSize, Files.size(unzipPackagePath));
-	}
-	
-	@Test
-	public void testImportSingleFileAsZip() throws Exception {
-		
-		Path tempDir = Files.createTempDirectory(tmpDir);
-		InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(testExportFilePath.toString());
-		
-		CmsExportWriterFsSingle writer = new CmsExportWriterFsSingle(tempDir.toFile());
-		CmsExportJobZip j = new CmsExportJobZip(new CmsExportPrefix("jandersson"), "export-test", "zip");
-		
-		CmsExportPath cmsExportPath = new CmsExportPath("/test/export-test.txt");
-		CmsExportItemInputStream exportItem = new CmsExportItemInputStream(resourceAsStream, cmsExportPath);
-		
-		j.addExportItem(exportItem);
-		j.prepare();
-		
-		writer.prepare(j);
-		writer.write();
-		
-		CmsImportJobSingle importJob = new CmsImportJobSingle(new CmsExportPrefix("jandersson"), "export-test", "zip");
-		
-		CmsExportFsReaderSingle fsReaderSingle = new CmsExportFsReaderSingle(tempDir.toFile());
-		fsReaderSingle.prepare(importJob);
-		
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		fsReaderSingle.getContents(baos);
-		
-		assertEquals("Zipped job size", 175, baos.size());
-		
-	}
-	
-	@Test
-	public void testImportJobDoNotExists() throws Exception {
-		
-		Path tempDir = Files.createTempDirectory(tmpDir);
-		
-		CmsImportJobSingle importJob = new CmsImportJobSingle(new CmsExportPrefix("jandersson"), "export-test", "zip");
-
-		CmsExportFsReaderSingle fsReaderSingle = new CmsExportFsReaderSingle(tempDir.toFile());
-		
-		final String patternString = "Provided import path:.*, do not exist";
-        Pattern pattern = Pattern.compile(patternString);
-        
-		try {
-			fsReaderSingle.prepare(importJob);
-			fail("Should fail provided path do not exist");
-		} catch (IllegalStateException e) {
-			Matcher matcher = pattern.matcher(e.getMessage());
-			assertTrue(matcher.matches());
-		}
 	}
 	
 	public void unzipPackage(String exportPath) throws IOException {
