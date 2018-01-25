@@ -47,9 +47,9 @@ public class CmsExportFsReaderSingle implements CmsExportReader {
 		if (importJob != null) {
 			throw new IllegalStateException("Reader already consumed, initialize a new reader for each job.");
 		}
-		
-		if (!(job instanceof CmsImportJobSingle)) {
-			throw new IllegalArgumentException("Single readers expects CmsimportJobs that is of type CmsImportJobSingle");
+
+		if (job == null) {
+			throw new IllegalArgumentException("Can not prepare a null job.");
 		}
 		
 		createImportPath(job);
