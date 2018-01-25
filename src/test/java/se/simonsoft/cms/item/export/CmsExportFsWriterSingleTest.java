@@ -28,6 +28,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -95,6 +97,28 @@ public class CmsExportFsWriterSingleTest {
 		
 		assertEquals("Zipped job size", 175, baos.size());
 		
+	}
+	
+	@Test
+	public void testImportJobDoNotExists() throws Exception {
+		
+		Path tempDir = Files.createTempDirectory(tmpDir);
+		
+		CmsImportJobSingle importJob = new CmsImportJobSingle(new CmsExportPrefix("jandersson"), "export-test", "zip");
+
+		CmsExportFsReaderSingle fsReaderSingle = new CmsExportFsReaderSingle(tempDir.toFile());
+		
+		
+		final String patternString = "Provided import path:.*do not exist";
+        Pattern pattern = Pattern.compile(patternString);
+        
+		try {
+			fsReaderSingle.prepare(importJob);
+			fail("Should fail provided path do not exist");
+		} catch (IllegalStateException e) {
+			Matcher matcher = pattern.matcher(e.getMessage());
+			assertTrue(matcher.matches());
+		}
 	}
 	
 	public void unzipPackage(String exportPath) throws IOException {
