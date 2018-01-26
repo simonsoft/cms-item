@@ -26,6 +26,11 @@ public class CmsExportProviderFsSingle implements CmsExportProvider {
 	
 	@Inject
 	public CmsExportProviderFsSingle(@Named("config:se.simonsoft.cms.export.fs.parent") File fsParent) {
+		
+		if (fsParent == null) {
+			throw new IllegalStateException("Filesystem export is not configured");
+		}
+		
 		this.fsParent = fsParent;
 	}
 
