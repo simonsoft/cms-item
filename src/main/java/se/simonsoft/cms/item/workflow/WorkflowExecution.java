@@ -31,14 +31,14 @@ public final class WorkflowExecution {
 				String status,
 				Date startDate,
 				Date stopDate,
-				WorkflowItemInput itemInput
+				WorkflowItemInput input
 					) {
 		
 		this.id = id;
 		this.status = status;
 		this.startDate = startDate;
 		this.stopDate = stopDate;
-		this.input = itemInput;
+		this.input = input;
 	}
 
 	public String getId() {
