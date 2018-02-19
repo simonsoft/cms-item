@@ -23,7 +23,7 @@ public final class WorkflowExecution {
 	private final String status;
 	private final Date startDate;
 	private final Date stopDate;
-	private final WorkflowItemInput itemInput;
+	private final WorkflowItemInput input;
 	
 	
 	public WorkflowExecution(
@@ -38,7 +38,7 @@ public final class WorkflowExecution {
 		this.status = status;
 		this.startDate = startDate;
 		this.stopDate = stopDate;
-		this.itemInput = itemInput;
+		this.input = itemInput;
 	}
 
 	public String getId() {
@@ -61,7 +61,7 @@ public final class WorkflowExecution {
 	}
 
 
-	public WorkflowItemInput getItemInput() {
-		return itemInput;
+	public WorkflowItemInput getInput() {
+		return input;
 	}
 }
