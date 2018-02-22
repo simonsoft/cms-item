@@ -19,11 +19,6 @@ public class WorkflowExecutionException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 	
-	/**
-	 * Will preserve Throwables message.
-	 * @param cause
-	 */
-	
 	public WorkflowExecutionException(String message, Throwable cause) {
 		super(message, cause);
 	}
