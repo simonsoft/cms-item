@@ -15,8 +15,11 @@
  */
 package se.simonsoft.cms.item.workflow;
 
-public interface WorkflowExecutor<T> {
-	
-	void startExecution(T input) throws WorkflowExecutionException;
+public class WorkflowExecutionException extends Exception {
 
+	private static final long serialVersionUID = 1L;
+	
+	public WorkflowExecutionException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }
