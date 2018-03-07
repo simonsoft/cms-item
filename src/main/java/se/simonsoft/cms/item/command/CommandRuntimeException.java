@@ -15,11 +15,17 @@
  */
 package se.simonsoft.cms.item.command;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 public class CommandRuntimeException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 	
 	private String errorName = null;
+	private String message = null;
+	
+	private static final int MESSAGE_MAX_LEN = 10000; 
 	
 	
 	public CommandRuntimeException(String errorName) {
@@ -29,6 +35,7 @@ public class CommandRuntimeException extends RuntimeException {
 	public CommandRuntimeException(String errorName, Throwable cause) {
 		super(cause);
 		this.errorName = errorName;
+		this.setMessage(cause);
 	}
 
 	/*
@@ -41,5 +48,22 @@ public class CommandRuntimeException extends RuntimeException {
 	public String getErrorName() {
 		return this.errorName;
 	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(Throwable cause) {
+		
+		StringWriter sw = new StringWriter();
+		cause.printStackTrace(new PrintWriter(sw));
+		
+		if (sw.toString().length() > MESSAGE_MAX_LEN) {
+			this.message = sw.toString().substring(0, MESSAGE_MAX_LEN);
+		} else {
+			this.message = sw.toString();
+		}
+	}
+	
 
 }
