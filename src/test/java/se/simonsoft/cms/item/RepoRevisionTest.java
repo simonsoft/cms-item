@@ -42,6 +42,8 @@ public class RepoRevisionTest {
 		assertEquals("1990-01-01T00:00:00Z", r.toString());
 		assertEquals("Must always provide a number, instead of changing API to return Long with null possible",
 				631152000000L, r.getNumber());
+		assertEquals("00000000631152000000", r.getNumberPadded());
+		
 		try {
 			new RepoRevision(parse.parse("1980-01-01T00:00:00.000+0000"));
 			fail("Should not allow date-only revisions with early dates because svn revision numbers could reach those highs");
@@ -133,6 +135,7 @@ public class RepoRevisionTest {
 	public void testParseComplete() {
 		RepoRevision revision = RepoRevision.parse("987/1970-01-01T00:00:59Z");
 		assertEquals(987, revision.getNumber());
+		assertEquals("0000000987", revision.getNumberPadded());
 		assertEquals(59000, revision.getDate().getTime());
 	}
 
@@ -140,6 +143,7 @@ public class RepoRevisionTest {
 	public void testParseNumber() {
 		RepoRevision revision = RepoRevision.parse("999987");
 		assertEquals(999987, revision.getNumber());
+		assertEquals("0000999987", revision.getNumberPadded());
 		assertEquals(null, revision.getDate());
 	}	
 	
