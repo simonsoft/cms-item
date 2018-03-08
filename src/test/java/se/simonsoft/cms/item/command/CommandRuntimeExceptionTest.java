@@ -1,6 +1,8 @@
 package se.simonsoft.cms.item.command;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -36,7 +38,23 @@ public class CommandRuntimeExceptionTest {
 		} catch (IllegalArgumentException e) {
 			CommandRuntimeException cre = new CommandRuntimeException("IAE", e);
 			String message = cre.getMessage();
-			assertTrue("Conatins underlying exceptions message", message.contains("Message: Underlying exceptions message"));
+			assertTrue("Contains underlying exceptions message", message.contains("Message: Underlying exceptions message"));
+		}
+		
+	}
+	
+	
+	@Test
+	public void testUnderlyingExceptionMessageIsNull() {
+		try {
+			throw new IllegalArgumentException();
+		} catch (IllegalArgumentException iae) {
+			
+			assertNull(iae.getMessage());
+			
+			CommandRuntimeException cre = new CommandRuntimeException("IAE", iae);
+			String message = cre.getMessage();
+			assertTrue("Contains underlying exceptions message", message.contains("Message: null"));
 		}
 		
 	}
