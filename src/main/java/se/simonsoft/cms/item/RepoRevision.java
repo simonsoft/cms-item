@@ -92,6 +92,23 @@ public class RepoRevision implements Comparable<RepoRevision> {
 		return this.number;
 	}
 	
+	
+	/**
+	 * Returns the ordinal of the commit as a zero-padded string.
+	 * 
+	 * For backends with no native ordinal this method can return the timestamp's milliseconds value.
+	 * 
+	 * @return The commit revision as zero-padded string.
+	 */
+	public String getNumberPadded() {
+		if (this.numberIsTimestamp) {
+			return String.format("%020d", this.number);
+		} else {
+			return String.format("%010d", this.number);
+		}
+	}
+	
+	
 	/**
 	 * An intrinsic property of a version control repository is that it has a well defined
 	 * state at any historic timestamp.
