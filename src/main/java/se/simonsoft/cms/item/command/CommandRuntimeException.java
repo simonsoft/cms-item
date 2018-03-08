@@ -56,6 +56,10 @@ public class CommandRuntimeException extends RuntimeException {
 	public void setMessage(Throwable cause) {
 		
 		StringWriter sw = new StringWriter();
+		sw.write("Message: ");
+		sw.write(cause.getMessage());
+		sw.write("\n");
+		
 		cause.printStackTrace(new PrintWriter(sw));
 		
 		if (sw.toString().length() > MESSAGE_MAX_LEN) {
