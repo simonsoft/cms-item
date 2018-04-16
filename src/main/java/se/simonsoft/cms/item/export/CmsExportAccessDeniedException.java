@@ -18,8 +18,18 @@ package se.simonsoft.cms.item.export;
 public class CmsExportAccessDeniedException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
+	private final CmsExportImportJob exportJob;
 
 	public CmsExportAccessDeniedException(String message, Throwable cause) {
+		this(null, message, cause);
+	}
+	
+	public CmsExportAccessDeniedException(CmsExportImportJob exportJob, String message, Throwable cause) {
 		super(message, cause);
+		this.exportJob = exportJob;
+	}
+	
+	public CmsExportImportJob getExportJob() {
+		return this.exportJob;
 	}
 }
