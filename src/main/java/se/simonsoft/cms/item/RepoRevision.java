@@ -123,6 +123,9 @@ public class RepoRevision implements Comparable<RepoRevision> {
 	 * @return ISO 8601 formatted date, no millis, UTC time without timezone identifyer, append Z to clarify UTC
 	 */
 	public String getDateIso() {
+		if (getDate() == null) {
+			throw new IllegalStateException("revision lacks timestamp");
+		}
 		return ISO_FORMAT.format(getDate());
 	}
 	
