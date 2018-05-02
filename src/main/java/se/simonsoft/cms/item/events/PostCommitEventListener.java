@@ -15,13 +15,9 @@
  */
 package se.simonsoft.cms.item.events;
 
-import java.util.Map;
-
-import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.events.change.CmsChangesetItem;
-import se.simonsoft.cms.item.events.change.CmsChangesetItemFlags;
 import se.simonsoft.cms.item.inspection.CmsChangesetReader;
 
 /**
@@ -45,15 +41,5 @@ import se.simonsoft.cms.item.inspection.CmsChangesetReader;
 public interface PostCommitEventListener {
 
 	public void onPostCommit(CmsRepository repository, RepoRevision revision);
-	
-	
-	/**
-	 * Post commit notification with basic information about changed paths in the repository, as provided by svnpubsub.
-	 * 
-	 * @param repository
-	 * @param revision
-	 * @param changed
-	 */
-	public void onPostCommit(CmsRepository repository, RepoRevision revision, Map<CmsItemPath, CmsChangesetItemFlags> changed);
 	
 }
