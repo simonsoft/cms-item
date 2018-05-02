@@ -19,8 +19,6 @@ import se.simonsoft.cms.item.CmsItem;
 import se.simonsoft.cms.item.events.change.CmsChangesetItem;
 
 /**
- * Tentative!
- * 
  * Gets notified when a CmsItem has changed in the CMS (e.g. post-commit).
  * 
  * These events happen after {@link ChangesetEventListener}, potentially after other
@@ -35,6 +33,7 @@ public interface ItemChangedEventListener {
 	 * Tentative: Would like just a CmsItem as parameter. 
 	 * This might not contain change-related information like {@link CmsChangesetItem}.
 	 * Preferred solution: CmsChangesetItem interface should extend CmsItem interface.
+	 * (potentially 'CmsItemChanged' should extend CmsItem with CmsChangesetItemFlags)
 	 * 
 	 * The item might not support {@link CmsItem#getContents(java.io.OutputStream)}, implementation dependent.
 	 * 
