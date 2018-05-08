@@ -54,7 +54,7 @@ public class CmsConfigOptionBase<T> implements CmsConfigOption {
 
 	@Override
 	public String getValueString() {
-		return (String) value;
+		return ((String) value).trim();
 	}
 
 	@Override

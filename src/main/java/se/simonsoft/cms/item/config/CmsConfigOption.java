@@ -38,7 +38,7 @@ public interface CmsConfigOption {
 	public String getKey();
 	
 	/**
-	 * @return the value of the config option as String, where inherited properties are resolved by override.
+	 * @return the value of the config option as String, trimmed. Inherited properties are resolved by override.
 	 */
 	public String getValueString();
 	
