@@ -28,12 +28,21 @@ public class CmsItemClassificationFiletypesHardcodedTest {
 		CmsItemClassification c = new CmsItemClassificationAdapterFiletypes();
 		assertFalse(c.isGraphic(new CmsItemIdArg("x-svn://y.y/svn/r^/f/file.xml")));
 		assertTrue(c.isGraphic(new CmsItemIdArg("x-svn://y.y/svn/r^/f/file.png")));
+		// File extension matching is currently case sensitive.
+		//assertTrue(c.isGraphic(new CmsItemIdArg("x-svn://y.y/svn/r^/f/file.PNG")));
+	}
+	
+	@Test
+	public void testIsGraphicNot() {
+		CmsItemClassification c = new CmsItemClassificationAdapterFiletypes();
+		assertFalse(c.isGraphic(new CmsItemIdArg("x-svn://y.y/svn/r^/f/png.xml")));
 	}
 
 	@Test
 	public void testIsXml() {
 		CmsItemClassification c = new CmsItemClassificationAdapterFiletypes();
 		assertTrue(c.isXml(new CmsItemIdArg("x-svn://y.y/svn/r^/f/file.xml")));
+		assertFalse(c.isXml(new CmsItemIdArg("x-svn://y.y/svn/r^/f/file.XML"))); // Require lowercase extension for Xml
 		assertFalse(c.isXml(new CmsItemIdArg("x-svn://y.y/svn/r^/f/file.png")));
 	}
 
