@@ -10,16 +10,9 @@ public class MessageRuntimeException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public MessageRuntimeException() {
-		super();
-	}
 
 	public MessageRuntimeException(String message) {
 		super(message);
-	}
-
-	public MessageRuntimeException(Throwable cause) {
-		super(cause);
 	}
 
 	public MessageRuntimeException(String message, Throwable cause) {
