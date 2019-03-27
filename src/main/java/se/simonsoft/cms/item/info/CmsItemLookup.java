@@ -93,6 +93,13 @@ public interface CmsItemLookup {
 	 */
 	Iterable<CmsItemId> getDescendants(CmsItemId parent);
 	
+	/*
+	 * Draft of API for getting history.
+	 * Alternatively, defining a ChangeSet object, basically adapting CmsChangeset. Many reasons to make CmsChangesetItem a sub-interface of CmsItem.
+	 */
+	//Map<RepoRevision, Set<CmsItem>> getHistory(CmsItemId item);
+	//Set<CmsChangeset> getHistory(CmsItemId item);
+	
 	/**
 	 * Query the server whether the item is locked.
 	 * @return The lock or null if no lock is known.
