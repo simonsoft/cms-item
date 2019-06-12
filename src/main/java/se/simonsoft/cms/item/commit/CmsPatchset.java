@@ -25,6 +25,8 @@ import se.simonsoft.cms.item.CmsItemLockCollection;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
+import se.simonsoft.cms.item.properties.CmsItemProperties;
+import se.simonsoft.cms.item.properties.CmsItemPropertiesMap;
 
 /**
  * Item modifications in a single transaction.
@@ -41,7 +43,8 @@ public class CmsPatchset extends LinkedList<CmsPatchItem>
 	private CmsRepository repository;	
 	private RepoRevision base;
 	
-	private String historyMessage = null;
+	private String historyMessage = null; // The history message is NOT stored in revisionProperties, considered an implementation detail of some backends.
+	private CmsItemPropertiesMap revisionProperties = new CmsItemPropertiesMap();
 	private boolean keepLocks = false;
 	private Map<CmsItemPath, CmsPatchItem> map = new HashMap<CmsItemPath, CmsPatchItem>(); // to simplify validation, may waste a bit of memory but probably negligible
 	private Locks locks;
@@ -132,6 +135,14 @@ public class CmsPatchset extends LinkedList<CmsPatchItem>
 
 	public void setHistoryMessage(String historyMessage) {
 		this.historyMessage = historyMessage;
+	}
+	
+	public CmsItemProperties getRevisionProperties() {
+		return this.revisionProperties;
+	}
+	
+	public void setRevisionProperty(String key, String value) {
+		this.revisionProperties.put(key, value);
 	}
 
 	public boolean isKeepLocks() {
