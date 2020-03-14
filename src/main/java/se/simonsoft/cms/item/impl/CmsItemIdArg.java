@@ -18,6 +18,8 @@ package se.simonsoft.cms.item.impl;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
@@ -301,6 +303,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	}
 
 	@Override
+	@JsonValue
 	public String toString() {
 		if (repository.isHostKnown()) {
 			return getLogicalIdFull();
