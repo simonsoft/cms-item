@@ -15,11 +15,14 @@
  */
 package se.simonsoft.cms.item.workflow;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
+
 import se.simonsoft.cms.item.CmsItemId;
 
 public interface WorkflowItemInput {
 	
 	String getAction();
 	
+	@JsonGetter("itemid")
 	CmsItemId getItemId();
 }
