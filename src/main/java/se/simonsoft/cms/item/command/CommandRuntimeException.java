@@ -31,6 +31,11 @@ public class CommandRuntimeException extends RuntimeException {
 	public CommandRuntimeException(String errorName) {
 		this.errorName = errorName;
 	}
+	
+	public CommandRuntimeException(String errorName, String message) {
+		this.errorName = errorName;
+		this.message = message;
+	}
 
 	public CommandRuntimeException(String errorName, Throwable cause) {
 		super(cause);
