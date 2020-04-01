@@ -16,6 +16,10 @@ import java.io.ByteArrayOutputStream;
  * @author Nick Russler
  */
 public class ByteArrayInOutStream extends ByteArrayOutputStream {
+	
+	private byte[] bufRead = null;
+	private int countRead;
+	
 	/**
 	 * Creates a new ByteArrayInOutStream. The buffer capacity is
 	 * initially 32 bytes, though its size increases if necessary.
@@ -48,12 +52,23 @@ public class ByteArrayInOutStream extends ByteArrayOutputStream {
 	 * @return the ByteArrayInputStream instance
 	 */
 	public ByteArrayInputStream getInputStream() {
+		
+		if (this.bufRead == null && this.buf == null) {
+			throw new IllegalStateException();
+		}
+		
+		// Store the buffer so we can return multiple InputStreams based on a single buffer.
+		if (this.bufRead == null) {
+			this.bufRead = this.buf;
+			this.countRead = this.count;
+			
+			// set the buffer of the ByteArrayOutputStream 
+			// to null so it can't be altered anymore
+			this.buf = null;
+		}
+		
 		// create new ByteArrayInputStream that respects the current count
-		ByteArrayInputStream in = new ByteArrayInputStream(this.buf, 0, this.count);
-
-		// set the buffer of the ByteArrayOutputStream 
-		// to null so it can't be altered anymore
-		this.buf = null;
+		ByteArrayInputStream in = new ByteArrayInputStream(this.bufRead, 0, this.countRead);
 
 		return in;
 	}
