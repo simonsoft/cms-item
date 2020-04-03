@@ -109,7 +109,7 @@ public class CmsExportReaderFsSingle implements CmsExportReader {
 
 	@Override
 	public void getContents(OutputStream receiver) throws IOException {
-		byte[] buffer = new byte[1024];
+		byte[] buffer = new byte[1024 * 32];
 		int length;
 		final InputStream contents = getContents();
 		while ((length = contents.read(buffer)) != -1) {
