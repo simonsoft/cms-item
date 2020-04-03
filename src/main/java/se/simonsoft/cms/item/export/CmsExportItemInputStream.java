@@ -65,7 +65,7 @@ public class CmsExportItemInputStream implements CmsExportItem {
     @Override
     public void getResultStream(OutputStream stream) {
 
-        byte[] buffer = new byte[1024];
+        byte[] buffer = new byte[1024 * 32];
         int length;
         final InputStream content = this.inputStream;
         try {

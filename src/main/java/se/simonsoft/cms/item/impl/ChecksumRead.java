@@ -46,7 +46,7 @@ import se.simonsoft.cms.item.Checksum;
 public class ChecksumRead extends ChecksumBase implements Checksum {
 
 	private Map<Algorithm, MessageDigest> d;
-	private byte[] buffer = new byte[1024];
+	private byte[] buffer = new byte[1024 * 32];
 	
 	private boolean done = false;
 	private Map<Algorithm, byte[]> f;
