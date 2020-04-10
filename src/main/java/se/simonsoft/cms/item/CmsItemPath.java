@@ -51,7 +51,11 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 
 	public static final String URL_ENCODING_CHARSET = "UTF-8";
 
-	private static final String INVALID_CHARS = "/*\\\\"; // TODO add more strictly prohibited chars
+	private static final String INVALID_CHARS = 
+			"/" 		// Forward slash, path separator
+			+ "*"		// Asterisk, filesystem wildcard
+			+ "\\\\"	// Back-slash, path separator and escape character
+			;
 	private static final String VALID_SEGMENT = "[^" + INVALID_CHARS + "]*[^" + INVALID_CHARS + "\\s]+"; 
 	private static final Pattern VALID_SEGMENT_PATTERN = Pattern.compile('^' + VALID_SEGMENT + '$');
 	private static final String VALID_PATH = "(/" + VALID_SEGMENT + ")+";
