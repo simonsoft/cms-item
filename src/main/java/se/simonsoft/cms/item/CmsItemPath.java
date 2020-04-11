@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
- * Represents a path (not-encoded) from a repository root as a stack of path segments 
+ * Represents a path (not-encoded) from a repository root as a stack of path segments
  * separated by slash, prohibiting filesystem specific syntax such as "../".
  * <p>
  * Leading slash is required for consistency, as it precedes every path segment.
@@ -43,7 +43,7 @@ import java.util.regex.Pattern;
  * Thus, empty string or slash only is not allowed in the constructor,
  * and {@link #getParent()} returns null if the path has only one segment.
  * On a higher level, root path can be represented with null. This is to Subversion's
- * special handling of repository root, i.e. most operations are not allowed.  
+ * special handling of repository root, i.e. most operations are not allowed.
  */
 public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 
@@ -51,26 +51,37 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 
 	public static final String URL_ENCODING_CHARSET = "UTF-8";
 
-	private static final String INVALID_CHARS = "/*\\\\"; // TODO add more strictly prohibited chars
-	private static final String VALID_SEGMENT = "[^" + INVALID_CHARS + "]*[^" + INVALID_CHARS + "\\s]+"; 
+	// Absolute minimum of prohibited chars.
+	// Adding additional chars here is not the right place to enforce such rules beyond backend prohibited chars.
+	// Items added/existing would then trigger very low level failures (e.g. indexing) and prohibit deletion/recovery. 
+	private static final String INVALID_CHARS = "/" // Forward slash, path separator
+			+ "*" // Asterisk, filesystem wildcard (forbidden in Windows filesystem)
+			+ "\\\\" // Back-slash, path separator and escape character
+	;
+
+	private static final String VALID_SEGMENT = "[^" + INVALID_CHARS + "]*[^" + INVALID_CHARS + "\\s]+";
 	private static final Pattern VALID_SEGMENT_PATTERN = Pattern.compile('^' + VALID_SEGMENT + '$');
 	private static final String VALID_PATH = "(/" + VALID_SEGMENT + ")+";
 	private static final Pattern VALID_PATH_PATTERN = Pattern.compile('^' + VALID_PATH + '$');
-	
+
 	private String path;
-	
+
 	// simple performance improvement for repeated list operations
 	private transient List<String> pathList = null;
-	
+
 	/**
 	 * This empty constructor only exist to please kryo de-serialization which needs an no arg constructor
 	 * Do not initialize with this constructor
 	 */
 	@SuppressWarnings("unused")
-	private CmsItemPath() {}
+	private CmsItemPath() {
+	}
+
 	/**
-	 * @param path with leading slash, trailing slash will be trimmed
-	 * @throws IllegalArgumentException for invalid path such as containing double slashes
+	 * @param path
+	 *            with leading slash, trailing slash will be trimmed
+	 * @throws IllegalArgumentException
+	 *             for invalid path such as containing double slashes
 	 */
 	public CmsItemPath(String path) {
 		if (path.endsWith("/")) {
@@ -81,11 +92,11 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 		}
 		this.path = path;
 	}
-	
+
 	public String getPath() {
 		return path;
 	}
-	
+
 	public String getPathTrimmed() {
 		return getPathTrimmed(true, true);
 	}
@@ -102,72 +113,82 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 		}
 		return path.substring(start, end);
 	}
-	
-	/** Provides the last component of the path, i.e. the file name or the folder name.
+
+	/**
+	 * Provides the last component of the path, i.e. the file name or the folder name.
+	 * 
 	 * @return the name
 	 */
 	public String getName() {
 		return getName(-1);
 	}
-	
-	/** 
+
+	/**
 	 * Provides a component of the relative path.
 	 * Request Integer.MAX_VALUE to get that last one (deprecated behavior).
-	 * @param segmentPosition, >0 to count from left and <0 from right.
+	 * 
+	 * @param segmentPosition,
+	 *            >0 to count from left and <0 from right.
 	 * @return
-	 * @throws IllegalArgumentException if segmentPosition is 0.
+	 * @throws IllegalArgumentException
+	 *             if segmentPosition is 0.
 	 */
 	public String getName(int segmentPosition) {
 		// SvnLogicalId.getRelPathComponent
 		String result = null;
-		
+
 		String comp[] = getPathSegmentsArray();
-		
+
 		if (segmentPosition == 0) {
 			throw new IllegalArgumentException("Path segment position must be >0 or <0");
 		}
-		
+
 		int index;
 		if (segmentPosition == Integer.MAX_VALUE) {
-			index = comp.length-1;
+			index = comp.length - 1;
 		} else if (segmentPosition < 0) {
 			index = comp.length + segmentPosition;
 		} else {
 			index = segmentPosition - 1; // new argument definition
 		}
-		
+
 		try {
 			result = comp[index];
 		} catch (IndexOutOfBoundsException e) {
 			return null;
 		}
-		
+
 		return result;
 	}
-	
+
 	/**
 	 * Alias for {@link #getPathSegmentsCount()}
+	 * 
 	 * @return the number of paths segments, 1 or more
 	 */
 	public int getSize() {
 		return getPathSegmentsCount();
 	}
-	
+
 	/**
 	 * @return the number of parth segments, 1 or more
 	 */
 	public int getPathSegmentsCount() {
 		return getPathSegments().size();
 	}
-	
-	/** Provides the whole path as an array of path segments.
+
+	/**
+	 * Provides the whole path as an array of path segments.
+	 * 
 	 * @return
 	 */
 	private String[] getPathSegmentsArray() {
 		return getPathTrimmed().split("/");
 	}
-	
-	/** Provides the whole path as a list of path segments.
+
+	/**
+	 * Provides the whole path as a list of path segments.
+	 * 
 	 * @return immutable list of path segments
 	 */
 	public List<String> getPathSegments() {
@@ -175,37 +196,59 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 			pathList = new ArrayList<String>(Arrays.asList(this.getPathSegmentsArray())) {
 				private static final long serialVersionUID = 1L;
 				private static final String MSG = "Immutable path segments list from CmsItemPath";
-				@Override public String set(int index, String element) {
+
+				@Override
+				public String set(int index, String element) {
 					throw new UnsupportedOperationException(MSG);
 				}
-				@Override public boolean add(String element) {
+
+				@Override
+				public boolean add(String element) {
 					throw new UnsupportedOperationException(MSG);
 				}
-				@Override public void add(int index, String element) {
+
+				@Override
+				public void add(int index, String element) {
 					throw new UnsupportedOperationException(MSG);
 				}
-				@Override public boolean addAll(Collection<? extends String> c) {
+
+				@Override
+				public boolean addAll(Collection<? extends String> c) {
 					throw new UnsupportedOperationException(MSG);
 				}
-				@Override public boolean addAll(int index, Collection<? extends String> c) {
+
+				@Override
+				public boolean addAll(int index, Collection<? extends String> c) {
 					throw new UnsupportedOperationException(MSG);
 				}
-				@Override public String remove(int index) {
+
+				@Override
+				public String remove(int index) {
 					throw new UnsupportedOperationException(MSG);
 				}
-				@Override public boolean remove(Object o) {
+
+				@Override
+				public boolean remove(Object o) {
 					throw new UnsupportedOperationException(MSG);
 				}
-				@Override public boolean removeAll(Collection<?> c) {
+
+				@Override
+				public boolean removeAll(Collection<?> c) {
 					throw new UnsupportedOperationException(MSG);
 				}
-				@Override protected void removeRange(int fromIndex, int toIndex) {
+
+				@Override
+				protected void removeRange(int fromIndex, int toIndex) {
 					throw new UnsupportedOperationException(MSG);
 				}
-				@Override public void clear() {
+
+				@Override
+				public void clear() {
 					throw new UnsupportedOperationException(MSG);
 				}
-				@Override public boolean retainAll(Collection<?> c) {
+
+				@Override
+				public boolean retainAll(Collection<?> c) {
 					throw new UnsupportedOperationException(MSG);
 				}
 			};
@@ -213,7 +256,9 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 		return pathList;
 	}
 
-	/** The name without extension. See {@link #getExtension()} for definition of extension.
+	/**
+	 * The name without extension. See {@link #getExtension()} for definition of extension.
+	 * 
 	 * @return
 	 */
 	public String getNameBase() {
@@ -222,7 +267,7 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 			return null;
 		}
 		String ext = getExtension();
-		
+
 		int endIdx = n.length();
 		if (ext.length() > 0) {
 			endIdx -= ext.length();
@@ -231,11 +276,13 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 		}
 		return n.substring(0, endIdx);
 	}
-	
-	/** The extension of the name. 
+
+	/**
+	 * The extension of the name.
 	 * <p>
-	 * The extension is the part after the last dot, 
+	 * The extension is the part after the last dot,
 	 * unless the last dot is the first character, e.g. hidden files.
+	 * 
 	 * @return extension or empty string.
 	 */
 	public String getExtension() {
@@ -247,9 +294,9 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 		if (d == 0 || d == -1) {
 			return "";
 		}
-		return n.substring(d+1);
+		return n.substring(d + 1);
 	}
-	
+
 	/**
 	 * @return parent path or null if the path has only one segment (root is undefined)
 	 */
@@ -257,14 +304,14 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 		// BrowseEntry.getPathParent
 		String noslashPath = getPathTrimmed();
 		int lastIdx = noslashPath.lastIndexOf('/');
-		
+
 		if (lastIdx == -1 || lastIdx == 0) {
 			return null;
-		} 
-		
-		return new CmsItemPath('/' + noslashPath.substring(0, lastIdx));		
+		}
+
+		return new CmsItemPath('/' + noslashPath.substring(0, lastIdx));
 	}
-	
+
 	/**
 	 * @return all paths in order from top level to immediate parent
 	 */
@@ -278,11 +325,15 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 		Collections.reverse(list);
 		return list;
 	}
-	
-	/** Appends a single path segment to the path.
-	 * @param path segment
-	 * @throws IllegalArgumentException if invalid segment, such as containing slash
-	 */	
+
+	/**
+	 * Appends a single path segment to the path.
+	 * 
+	 * @param path
+	 *            segment
+	 * @throws IllegalArgumentException
+	 *             if invalid segment, such as containing slash
+	 */
 	public CmsItemPath append(String pathSegment) {
 		if (!VALID_SEGMENT_PATTERN.matcher(pathSegment).matches()) {
 			throw new IllegalArgumentException("Invalid path segment: " + pathSegment);
@@ -290,21 +341,28 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 		return new CmsItemPath(path + '/' + pathSegment);
 	}
 
-	/** Append path segments to the end of the CmsItemPath.
-	 * @param list of path segments to append
-	 */	
+	/**
+	 * Append path segments to the end of the CmsItemPath.
+	 * 
+	 * @param list
+	 *            of path segments to append
+	 */
 	public CmsItemPath append(List<String> list) {
-		
+
 		CmsItemPath result = new CmsItemPath(this.path);
-		for (String segment: list) {
+		for (String segment : list) {
 			result = result.append(segment);
 		}
 		return result;
-	}	
-	
-	/** Returns a portion of this path as a list. See List.subList(...)
-	 * @param fromIndex - low endpoint (inclusive) of the subList
-	 * @param toIndex - high endpoint (exclusive) of the subList 
+	}
+
+	/**
+	 * Returns a portion of this path as a list. See List.subList(...)
+	 * 
+	 * @param fromIndex
+	 *            - low endpoint (inclusive) of the subList
+	 * @param toIndex
+	 *            - high endpoint (exclusive) of the subList
 	 * @return
 	 */
 	public List<String> subPath(int fromIndex, int toIndex) {
@@ -313,63 +371,74 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 		if (fromIndex < 0) {
 			fromAbs = plist.size() + fromIndex;
 		}
-		
+
 		int toAbs = toIndex;
 		if (toIndex < 0) {
 			toAbs = plist.size() + toIndex;
 		}
-		
+
 		return this.getPathSegments().subList(fromAbs, toAbs);
 	}
-	/** Returns a portion of this path as a list, from fromIndex to the end of the path.
-	 * @param fromIndex - low endpoint (inclusive) of the subList
-	 */ 
+
+	/**
+	 * Returns a portion of this path as a list, from fromIndex to the end of the path.
+	 * 
+	 * @param fromIndex
+	 *            - low endpoint (inclusive) of the subList
+	 */
 	public List<String> subPath(int fromIndex) {
-		
+
 		List<String> plist = this.getPathSegments();
 		return this.subPath(fromIndex, plist.size());
 	}
-	
-	/** Determines if this path is an ancestor of child.
+
+	/**
+	 * Determines if this path is an ancestor of child.
+	 * 
 	 * @param child
 	 * @return
 	 */
 	public boolean isAncestorOf(CmsItemPath child) {
-		
+
 		return isAncestorOf(child, false);
 	}
-	
-	/** Determines if this path is a direct parent of child.
+
+	/**
+	 * Determines if this path is a direct parent of child.
+	 * 
 	 * @param child
 	 * @return
 	 */
 	public boolean isParentOf(CmsItemPath child) {
-		
+
 		return isAncestorOf(child, true);
 	}
-	
-	/** Determines if this path is an ancestor/parent of child.
+
+	/**
+	 * Determines if this path is an ancestor/parent of child.
+	 * 
 	 * @param child
-	 * @param parentOnly requires that this path is a direct parent.
+	 * @param parentOnly
+	 *            requires that this path is a direct parent.
 	 * @return
 	 */
 	private boolean isAncestorOf(CmsItemPath child, boolean parentOnly) {
-		
+
 		List<String> thisList = this.getPathSegments();
 		List<String> childList = child.getPathSegments();
-		
+
 		if (thisList.size() >= childList.size()) {
 			return false;
 		}
-		
-		if (parentOnly && thisList.size()+1 != childList.size()) {
+
+		if (parentOnly && thisList.size() + 1 != childList.size()) {
 			// Strict requirement on direct parent
 			return false;
 		}
-		
+
 		return thisList.equals(childList.subList(0, thisList.size()));
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		return obj instanceof CmsItemPath && path.equals(((CmsItemPath) obj).getPath());
@@ -393,5 +462,5 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 		}
 		return toString().toLowerCase().compareTo(path.toString().toLowerCase());
 	}
-	
+
 }
