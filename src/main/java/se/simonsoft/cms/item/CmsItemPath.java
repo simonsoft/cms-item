@@ -51,8 +51,11 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 
 	public static final String URL_ENCODING_CHARSET = "UTF-8";
 
+	// Absolute minimum of prohibited chars.
+	// Adding additional chars here is not the right place to enforce such rules beyond backend prohibited chars.
+	// Items added/existing would then trigger very low level failures (e.g. indexing) and prohibit deletion/recovery. 
 	private static final String INVALID_CHARS = "/" // Forward slash, path separator
-			+ "*" // Asterisk, filesystem wildcard
+			+ "*" // Asterisk, filesystem wildcard (forbidden in Windows filesystem)
 			+ "\\\\" // Back-slash, path separator and escape character
 	;
 
