@@ -15,7 +15,7 @@
  */
 package se.simonsoft.cms.item.workflow;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.Set;
 
 import se.simonsoft.cms.item.CmsItemId;
@@ -24,8 +24,8 @@ public interface WorkflowExecutionStatus {
 	
 	Set<WorkflowExecution> getWorkflowExecutions(CmsItemId itemId, boolean refresh);
 	
-	void onStartRunning(String id, Date startDate, WorkflowItemInput input);
+	void onStartRunning(String id, Instant startDate, WorkflowItemInput input);
 	
-	void onStartFailed(Date startDate, WorkflowItemInput input);
+	void onStartFailed(Instant startDate, WorkflowItemInput input);
 	
 }

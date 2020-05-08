@@ -15,22 +15,22 @@
  */
 package se.simonsoft.cms.item.workflow;
 
-import java.util.Date;
+import java.time.Instant;
 
 public final class WorkflowExecution {
 
 	private final String id;
 	private final String status;
-	private final Date startDate;
-	private final Date stopDate;
+	private final Instant startDate;
+	private final Instant stopDate;
 	private final WorkflowItemInput input;
 	
 	
 	public WorkflowExecution(
 				String id,
 				String status,
-				Date startDate,
-				Date stopDate,
+				Instant startDate,
+				Instant stopDate,
 				WorkflowItemInput input
 					) {
 		
@@ -51,12 +51,12 @@ public final class WorkflowExecution {
 	}
 
 
-	public Date getStartDate() {
+	public Instant getStartDate() {
 		return startDate;
 	}
 
 
-	public Date getStopDate() {
+	public Instant getStopDate() {
 		return stopDate;
 	}
 
