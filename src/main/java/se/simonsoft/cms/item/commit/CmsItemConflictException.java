@@ -38,7 +38,7 @@ public class CmsItemConflictException extends RuntimeException {
 	private RepoRevision base;
 
 	public CmsItemConflictException(CmsRepository repository, CmsItemPath path, RepoRevision base) {
-		super("Detected conflict at '" + path + "'. Item has changed since base reivision " + base.getNumber());
+		super("Detected conflict at '" + path + "'. Item has changed since base revision " + base.getNumber() + ".");
 		this.repository = repository;
 		this.path = path;
 		this.base = base;
