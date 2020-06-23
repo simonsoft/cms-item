@@ -15,16 +15,15 @@
  */
 package se.simonsoft.cms.item.commit;
 
-import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
 /**
- * Propset on an item with no other changes, see also for example {@link FileModification#getPropertyChange()}.
+ * Propset on an item with no other changes.
  * 
  * Svnkit SVNEditor differentiates between file property change and folder property change.
  */
-public final class FilePropertyChange implements CmsPatchItem, CmsPatchItem.SupportsProp {
+public final class FolderPropertyChange implements CmsPatchItem, CmsPatchItem.SupportsProp {
 
 	private CmsItemPath path;
 	private CmsItemProperties properties;
@@ -34,18 +33,11 @@ public final class FilePropertyChange implements CmsPatchItem, CmsPatchItem.Supp
 	 * @param properties property changes as returned by {@link CmsItemProperties#getKeySet()} to be executed on the item, while other properties are left unchanged,
 	 *  null value means delete the property, empty value means set or keep it but make it empty
 	 */
-	public FilePropertyChange(CmsItemPath path, CmsItemProperties properties) {
+	public FolderPropertyChange(CmsItemPath path, CmsItemProperties properties) {
 		this.path = path;
 		this.properties = properties;
 	}
 	
-	/**
-	 * @param lock to allow commit to locked file, will be unlocked after commit
-	 * @return instance for chaining
-	 */
-	public FileModification setLock(CmsItemLock lock) {
-		throw new UnsupportedOperationException("Not implemented");
-	}	
 	
 	/**
 	 * @return property changes as returned by {@link CmsItemProperties#getKeySet()} to be executed on the item, while other properties are left unchanged,
@@ -61,10 +53,11 @@ public final class FilePropertyChange implements CmsPatchItem, CmsPatchItem.Supp
 		return path;
 	}
 	
+	
 	@Override
 	public String toString() {
 		// modified props
 		return "_M__" + getPath().getPath();
 	}
-
+	
 }
