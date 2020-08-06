@@ -74,7 +74,13 @@ public class CmsExportItemInputStream implements CmsExportItem {
             }
         } catch (IOException e) {
             throw new RuntimeException("Could not read InputStream", e);
-        }
+        } finally {
+        	try {
+        		this.inputStream.close();
+        	} catch (Exception e) {
+				logger.warn("Failed to close inputstream: {}", this.inputStream);
+			}
+		}
     }
 
     @Override
