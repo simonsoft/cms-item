@@ -31,20 +31,16 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
  * 
  * In particular we must support reading of {@link CmsChangesetItem}
  * followed by the item from {@link CmsChangesetItem#getPreviousChange()}.
+ * 
+ * TODO: #919 Consider deprecating since CmsItemLookup can provide contents and props.
+ * TODO: #919 Alternatively to avoid refactoring in repos-indexing; build CmsContentsReaderShim using CmsItemLookup and a caffeine cache of items (no content).
+ * TODO: #919 Consider implementing getRevisionProperties in CmsRepositoryLookup for http.
  */
 public interface CmsContentsReader {
 
-	/**
-	 * @deprecated the service is per-repository, use {@link #getContents(RepoRevision, CmsItemPath, OutputStream)}
-	 */
-	void getContents(CmsRepositoryInspection repository, RepoRevision revision, CmsItemPath path, OutputStream out);
 
 	void getContents(RepoRevision revision, CmsItemPath path, OutputStream out);
 
-	/**
-	 * @deprecated the service is per-repository, use {@link #getProperties(RepoRevision, CmsItemPath)}
-	 */
-	CmsItemProperties getProperties(CmsRepositoryInspection repository, RepoRevision revision, CmsItemPath path);
 	
 	CmsItemProperties getProperties(RepoRevision revision, CmsItemPath path);
 	
@@ -58,8 +54,9 @@ public interface CmsContentsReader {
 	 * supporting a changeset viewer like the one in Trac.
 	 * 
 	 * Diff might be a Map&lt;CmsItemPath, Iterable&lt;? extends DiffLine&gt;&gt; with context, added, removed.
+	 * 
+	 * @deprecated never implemented
 	 */
-	//void getDiff(CmsRepositoryInspection repository, RepoRevision revision, OutputStream out);
 	void getDiff(RepoRevision revision, OutputStream out);
 	
 	
