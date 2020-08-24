@@ -45,8 +45,7 @@ public interface CmsExportReader {
  	// Transforming with cms-xmlsource using contents as parameter: Typically need a String. 
  	
  	// Converting to String:
- 	// http://stackoverflow.com/questions/309424/read-convert-an-inputstream-to-a-string
- 	// Conclusion: Should use ByteArrayOutputStream and perform the read loop.
+ 	// Now have the slightly optimized ByteArrayInOutStream in cms-item (avoids a second copy on heap).
     
     public InputStream getContents();
     
