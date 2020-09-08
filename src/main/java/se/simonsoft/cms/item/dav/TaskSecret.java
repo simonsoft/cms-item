@@ -24,6 +24,7 @@ import java.util.Date;
  * it impossible to guess the URL without listing parent folder contents
  * or spying on requests.
  */
+@Deprecated
 public interface TaskSecret {
 
 	/**

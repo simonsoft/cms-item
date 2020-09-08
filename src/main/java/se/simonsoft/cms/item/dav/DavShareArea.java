@@ -20,6 +20,7 @@ package se.simonsoft.cms.item.dav;
  * 
 
  */
+@Deprecated
 public interface DavShareArea extends TaskFolderParent {
 
 }

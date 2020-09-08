@@ -29,6 +29,7 @@ import se.simonsoft.cms.item.CmsItemPath;
  * 
  * No actual local paths should be exposed.
  */
+@Deprecated
 public interface TaskFolder {
 
 	/**

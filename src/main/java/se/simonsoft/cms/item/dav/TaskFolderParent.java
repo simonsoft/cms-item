@@ -22,6 +22,7 @@ package se.simonsoft.cms.item.dav;
  * These parent folders will only work as expected, secrecy etc,
  * if accompanied by matching access rules on the DAV server.
  */
+@Deprecated
 public interface TaskFolderParent {
 
 	/**
