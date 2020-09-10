@@ -15,6 +15,8 @@
  */
 package se.simonsoft.cms.item;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+
 public enum CmsItemKind {
 
 	File,
@@ -42,10 +44,11 @@ public enum CmsItemKind {
 		}
 		return valueOf(kind.substring(0, 1).toUpperCase() + kind.substring(1).toLowerCase());
 	}
-	
+
 	/**
 	 * @return subversion's "kind" string (but maybe not for symlink)
 	 */
+	@JsonValue
 	public String getKind() {
 		if (isFolder()) {
 			return "dir";
