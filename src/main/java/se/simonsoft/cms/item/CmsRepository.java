@@ -43,7 +43,8 @@ public class CmsRepository implements Serializable {
 	private static final CmsItemURLEncoder urlEncoder = new CmsItemURLEncoder();
 	
 	private static final Pattern P_ROOT = Pattern.compile("(https?)://([^/]+)");
-	private static final Pattern P_URL = Pattern.compile("(https?)://([^/]+)(.*)/([^/]+)");
+	private static final Pattern P_URL =      Pattern.compile("(https?)://([^/]+)(/[^/]+)/([^/]+)");
+	private static final Pattern P_URL_ITEM = Pattern.compile("(https?)://([^/]+)(/[^/]+)/([^/]+)([^:?#]+[^/:?#])?(?:\\?p=(\\d+))?");
 	private String protocol;
 	private String host;
 	private String parent;
@@ -169,7 +170,7 @@ public class CmsRepository implements Serializable {
 	 * We could also detect non-http URLs and try {@link CmsItemIdArg#CmsItemIdArg(String)} for logical ID,
 	 * but we still need a single string CmsItemId constructor for REST methods.
 	 * 
-	 * @param url An item URL within the repository
+	 * @param url An item URL within the repository, optionally with pegrev as query parameter 'p'.
 	 * @return With path based on the given URL, supporting {@link CmsItemId#withPegRev(Long)} but not necessarily {@link CmsItemIdArg#withRelPath(CmsItemPath)}
 	 */
 	public CmsItemId getItemId(String url) {
@@ -181,15 +182,25 @@ public class CmsRepository implements Serializable {
 			throw new IllegalArgumentException("url must be within repository: " + url);
 		}
 		
-		int repoLen = repoUrl.length();
-		String relpathEncoded = url.substring(repoLen);
-		if (relpathEncoded.equals("")) {
+		Matcher m = P_URL_ITEM.matcher(url);
+		if (!m.matches()) {
+			throw new IllegalArgumentException("Failed to parse URL: " + url);
+		}
+
+		String relpathEncoded = m.group(5);
+		if (relpathEncoded == null || relpathEncoded.equals("")) {
 			relpath = null;
 		} else {
 			relpath = new CmsItemPath(urldecode(relpathEncoded));
 		}
 		
-		return new CmsItemIdArg(this, relpath, null);
+		String revStr = m.group(6);
+		Long rev = null;
+		if (revStr != null) {
+			rev = Long.parseLong(revStr);
+		}
+		
+		return new CmsItemIdArg(this, relpath, rev);
 	}
 	
 	/**

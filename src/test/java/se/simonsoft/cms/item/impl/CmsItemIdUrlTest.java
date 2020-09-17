@@ -141,9 +141,9 @@ public class CmsItemIdUrlTest {
 		assertEquals("" + repo1 + "/a&b", new CmsItemIdUrl(repo1, new CmsItemPath("/a&b")).getUrl()); // Note: not encoded by svn
 		assertEquals("" + repo1 + "/(a%20b)", new CmsItemIdUrl(repo1, new CmsItemPath("/(a b)")).getUrl());
 		assertEquals("" + repo1 + "/a+b", new CmsItemIdUrl(repo1, new CmsItemPath("/a+b")).getUrl()); // Note: not encoded by svn
-		CmsRepository renc = new CmsRepository("http://+&%/r1");
+		CmsRepository renc = new CmsRepository("http://+&%/svn/r1");
 		assertEquals("Don't touch repository, was given an encoded URL at creation",
-				"http://+&%/r1/p1", new CmsItemIdUrl(renc, p1).getUrl());
+				"http://+&%/svn/r1/p1", new CmsItemIdUrl(renc, p1).getUrl());
 	}
 	
 	@Test
