@@ -45,12 +45,12 @@ public class CmsRepositoryTest {
 	
 	@Test
 	public void testCustom() {
-		CmsRepository r = new CmsRepository("https://x.y.zz:32123/r");
-		assertEquals("https://x.y.zz:32123/r", r.getUrl());
+		CmsRepository r = new CmsRepository("https://x.y.zz:32123/svn/r");
+		assertEquals("https://x.y.zz:32123/svn/r", r.getUrl());
 		assertEquals("https://x.y.zz:32123", r.getServerRootUrl());
-		assertEquals("", r.getParentPath());
+		assertEquals("/svn", r.getParentPath());
 		assertEquals("r", r.getName());
-		assertEquals("https://x.y.zz:32123/r", r.toString());
+		assertEquals("https://x.y.zz:32123/svn/r", r.toString());
 		assertEquals("x.y.zz:32123", r.getHost());
 		assertEquals("x.y.zz", r.getHostname());
 	}
@@ -201,6 +201,7 @@ public class CmsRepositoryTest {
 	}
 	
 	@Test
+	@Ignore // Never really supported other depth than parentpath.
 	public void testRepositoryInServerRoot() {
 		CmsRepository r = new CmsRepository("http://myhost/repoN");
 		assertNotNull("Parent path starts with slash and does not need to be null if root", r.getParentPath());
@@ -228,6 +229,24 @@ public class CmsRepositoryTest {
 		CmsItemId item1 = repo1.getItemId("https://host/svn/repo1/fo%20a/file.txt");
 		assertEquals(repo1, item1.getRepository());
 		assertEquals("/fo a/file.txt", item1.getRelPath().toString());
+	}
+	
+	@Test
+	public void testGetItemIdTransferPegged() {
+		CmsRepository repo1 = new CmsRepository("https://host/svn/repo1");
+		CmsItemId item1 = repo1.getItemId("https://host/svn/repo1/fo%20a/file.txt?p=12");
+		assertEquals(repo1, item1.getRepository());
+		assertEquals("/fo a/file.txt", item1.getRelPath().toString());
+		assertEquals("", new Long(12), item1.getPegRev());
+	}
+	
+	@Test
+	public void testGetItemIdTransferRepo() {
+		CmsRepository repo1 = new CmsRepository("https://host/svn/repo1");
+		CmsItemId item1 = repo1.getItemId("https://host/svn/repo1");
+		assertEquals(repo1, item1.getRepository());
+		assertNull(item1.getRelPath());
+		assertNull(item1.getPegRev());
 	}
 	
 	@Test
@@ -311,7 +330,8 @@ public class CmsRepositoryTest {
 		assertEquals("x-svn://host.n/svn/d1^/v/a%20b/c.xml", id1_3.getLogicalIdFull());
 		assertEquals("/v/a b/c.xml", id1_3.getRelPath().toString());
 		
-		
+		// Never really supported deeper svn parent path.
+		/*
 		String url2 = "http://host.n/svn/svnparent/d1";
 		CmsRepository repo2 = new CmsRepository(url2);
 		
@@ -321,6 +341,15 @@ public class CmsRepositoryTest {
 		assertEquals("x-svn:///svn/svnparent/d1^/vv/xml/8.xml", id2_1.getLogicalId());
 		assertEquals("x-svn://host.n/svn/svnparent/d1^/vv/xml/8.xml", id2_1.getLogicalIdFull());
 		assertEquals("/vv/xml/8.xml", id2_1.getRelPath().toString());
+		*/
+		
+		try {
+			@SuppressWarnings("unused")
+			CmsItemId id1_illegal = repo1.getItemId("http://host.n/svn/svnparent/d1");
+			fail("should throw IAE");
+		} catch (IllegalArgumentException e) {
+			
+		}
 		
 		try {
 			@SuppressWarnings("unused")
