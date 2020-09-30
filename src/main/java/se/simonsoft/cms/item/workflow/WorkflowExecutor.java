@@ -17,6 +17,6 @@ package se.simonsoft.cms.item.workflow;
 
 public interface WorkflowExecutor<T> {
 	
-	void startExecution(T input) throws WorkflowExecutionException;
+	String startExecution(T input) throws WorkflowExecutionException;
 
 }
