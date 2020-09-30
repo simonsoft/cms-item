@@ -22,6 +22,8 @@ import se.simonsoft.cms.item.CmsItemId;
 
 public interface WorkflowExecutionStatus {
 	
+	WorkflowExecution getWorkflowExecution(String id);
+	
 	Set<WorkflowExecution> getWorkflowExecutions(CmsItemId itemId, boolean refresh);
 	
 	void onStartRunning(String id, Instant startDate, WorkflowItemInput input);
