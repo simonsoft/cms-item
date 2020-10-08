@@ -28,8 +28,8 @@ public class CmsItemClassificationFiletypesHardcodedTest {
 		CmsItemClassification c = new CmsItemClassificationAdapterFiletypes();
 		assertFalse(c.isGraphic(new CmsItemIdArg("x-svn://y.y/svn/r^/f/file.xml")));
 		assertTrue(c.isGraphic(new CmsItemIdArg("x-svn://y.y/svn/r^/f/file.png")));
-		// File extension matching is currently case sensitive.
-		//assertTrue(c.isGraphic(new CmsItemIdArg("x-svn://y.y/svn/r^/f/file.PNG")));
+		// File extension matching is now case insensitive for graphics.
+		assertTrue(c.isGraphic(new CmsItemIdArg("x-svn://y.y/svn/r^/f/file.PNG")));
 	}
 	
 	@Test
