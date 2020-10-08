@@ -66,18 +66,21 @@ public class CmsItemClassificationExtension implements
 	
 	
 	protected Pattern setPattern(String config) {
+		// Matching whole filename is more flexible, can likely support multi-extensions like '.tar.gz'
 		return Pattern.compile(".*\\.(" + config + ")$");
 	};
 	
 	
 	@Override
 	public boolean isXml(CmsItemId item) {
+		// Still case-sensitive for XML, keep the strict approach for now.
 		return patternXml != null && patternXml.matcher(item.getRelPath().getName()).matches();
 	}	
 	
 	@Override
 	public boolean isGraphic(CmsItemId item) {
-		return patternGraphics != null && patternGraphics.matcher(item.getRelPath().getName()).matches();
+		// Relaxed to case-insensitive matching for graphics due to practical reasons (interop with some Windows applications).
+		return patternGraphics != null && patternGraphics.matcher(item.getRelPath().getName().toLowerCase()).matches();
 	}
 
 	@Override
