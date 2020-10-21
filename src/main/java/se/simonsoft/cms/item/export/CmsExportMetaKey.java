@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
 public class CmsExportMetaKey {
 
 	private final String key;
-	private static final Pattern NICE = Pattern.compile("([\\-a-zA-Z0-9]+)");
+	private static final Pattern NICE = Pattern.compile("[A-Za-z0-9-]{1,100}");
 	
 	public CmsExportMetaKey(String key) {
 
