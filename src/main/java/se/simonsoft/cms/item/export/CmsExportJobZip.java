@@ -64,7 +64,9 @@ public class CmsExportJobZip extends CmsExportJob implements CmsExportJob.Single
             zipOutputStream.close();
 
         } catch (IOException e) {
-            logger.error("Could not compress to file: {}", e.getMessage());
+        	String msg = "Export to zip failed: " + e.getMessage();
+        	logger.error(msg, e);
+        	throw new IllegalArgumentException(msg, e);
         }
 
     }
