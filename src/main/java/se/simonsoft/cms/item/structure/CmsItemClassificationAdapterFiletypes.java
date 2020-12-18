@@ -39,6 +39,7 @@ public class CmsItemClassificationAdapterFiletypes extends CmsItemClassification
 			"bmp|cgm|edz|pvz|eps|ps|pdf|gif|iso|isoz|idr|idrz|jpg|jpeg|png|svg|tif|tiff" + // Arbortext default formats
 					"|ai" +  // Adding support for direct use of Illustrator files (when saved with PDF compatibility option)
 					"|psd" + // Adding support for transformation of Photoshop files. 
+					"|mp4" + // #1338 Adding support for audio / video in CMS 5.0 / Arbortext 8.1.
 					"";	// dummy line - keep.
 	
 	
