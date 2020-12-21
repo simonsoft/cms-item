@@ -31,7 +31,8 @@ import se.simonsoft.cms.item.CmsRepository;
 
 public class CmsItemIdArgTest {
 	
-	@Test(expected=IllegalArgumentException.class) // Triple slash without ^ is not allowed.
+	@Test(expected=IllegalArgumentException.class) // Triple slash without ^ is not allowed. (IGNORED, keeping triple slash)
+	@Ignore
 	public void testValidateTripleSlashWithoutCaret() {
 		new CmsItemIdArg("x-svn:///svn/demo1/vvab/graphics/0001.tif");
 	}
@@ -106,7 +107,7 @@ public class CmsItemIdArgTest {
 	public void testRepo() {
 		CmsItemIdArg p = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1");
 		assertEquals("http://demo.simonsoftcms.se/svn/demo1", p.getRepository().toString());
-		assertEquals("x-svn:/svn/demo1", p.getLogicalId());
+		assertEquals("x-svn:///svn/demo1", p.getLogicalId());
 		assertEquals("x-svn://demo.simonsoftcms.se/svn/demo1", p.getLogicalIdFull());
 		assertNull(p.getRelPath());
 	}
@@ -115,8 +116,24 @@ public class CmsItemIdArgTest {
 	public void testRepoTrailingSlash() {
 		CmsItemIdArg p = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1/");
 		assertEquals("http://demo.simonsoftcms.se/svn/demo1", p.getRepository().toString());
-		assertEquals("x-svn:/svn/demo1", p.getLogicalId());
+		assertEquals("x-svn:///svn/demo1", p.getLogicalId());
 		assertEquals("x-svn://demo.simonsoftcms.se/svn/demo1", p.getLogicalIdFull());
+		assertNull(p.getRelPath());
+	}
+	
+	@Test
+	public void testRepoShortTriple() { // Keeping triple slash as default.
+		CmsItemIdArg p = new CmsItemIdArg("x-svn:///svn/demo1");
+		assertEquals("CmsRepository:/svn/demo1", p.getRepository().toString());
+		assertEquals("x-svn:///svn/demo1", p.getLogicalId());
+		assertNull(p.getRelPath());
+	}
+	
+	@Test
+	public void testRepoShortSingle() { // Keeping triple slash as default.
+		CmsItemIdArg p = new CmsItemIdArg("x-svn:/svn/demo1");
+		assertEquals("CmsRepository:/svn/demo1", p.getRepository().toString());
+		assertEquals("x-svn:///svn/demo1", p.getLogicalId());
 		assertNull(p.getRelPath());
 	}
 	
@@ -125,7 +142,7 @@ public class CmsItemIdArgTest {
 		CmsItemIdArg p = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1/vvab/");
 		assertEquals("/vvab", p.getRelPath().toString());
 		assertEquals("http://demo.simonsoftcms.se/svn/demo1", p.getRepository().toString());
-		assertEquals("x-svn:/svn/demo1/vvab", p.getLogicalId());
+		assertEquals("x-svn:///svn/demo1/vvab", p.getLogicalId());
 		assertEquals("x-svn://demo.simonsoftcms.se/svn/demo1/vvab", p.getLogicalIdFull());
 	}
 	
@@ -153,11 +170,11 @@ public class CmsItemIdArgTest {
 	
 	@Test
 	public void testNoHostNoPeg() {
-		CmsItemIdArg p = new CmsItemIdArg("x-svn:/svn/demo1/vvab/graphics/0001.tif");
+		CmsItemIdArg p = new CmsItemIdArg("x-svn:///svn/demo1/vvab/graphics/0001.tif");
 		assertFalse(p.getRepository().isHostKnown());
 		assertFalse(p.isFullyQualifiedOriginally());
 		assertFalse(p.isPegged());
-		assertEquals("x-svn:/svn/demo1/vvab/graphics/0001.tif", p.getLogicalId());
+		assertEquals("x-svn:///svn/demo1/vvab/graphics/0001.tif", p.getLogicalId());
 		assertEquals("/vvab/graphics/0001.tif", p.getRelPath().toString());
 		assertNull(p.getPegRev());
 		try {
@@ -179,7 +196,7 @@ public class CmsItemIdArgTest {
 		p.setHostname("x.y.z");
 		assertTrue(p.getRepository().isHostKnown());
 		assertFalse(p.isFullyQualifiedOriginally());
-		assertEquals("x-svn:/svn/demo1/vvab/graphics/0001.tif", p.getLogicalId());
+		assertEquals("x-svn:///svn/demo1/vvab/graphics/0001.tif", p.getLogicalId());
 		assertEquals("x-svn://x.y.z/svn/demo1/vvab/graphics/0001.tif", p.getLogicalIdFull());
 		assertEquals("http://x.y.z/svn/demo1/vvab/graphics/0001.tif", p.getUrl());
 		assertEquals("http://x.y.z/svn/demo1", p.getRepositoryUrl());
@@ -188,7 +205,7 @@ public class CmsItemIdArgTest {
 		p.setPegRev(1234567);
 		assertTrue(p.isPegged());
 		assertEquals(1234567, p.getPegRev().longValue());
-		assertEquals("x-svn:/svn/demo1/vvab/graphics/0001.tif?p=1234567", p.getLogicalId());
+		assertEquals("x-svn:///svn/demo1/vvab/graphics/0001.tif?p=1234567", p.getLogicalId());
 		assertEquals("x-svn://x.y.z/svn/demo1/vvab/graphics/0001.tif?p=1234567", p.getLogicalIdFull());
 		assertEquals("http://x.y.z/svn/demo1/vvab/graphics/0001.tif", p.getUrl());
 		assertEquals("http://x.y.z/svn/demo1", p.getRepositoryUrl());
@@ -220,8 +237,8 @@ public class CmsItemIdArgTest {
 	
 	@Test
 	public void testEquals() {
-		CmsItemIdArg i1 = new CmsItemIdArg("x-svn:/svn/d1/vv/r/A/xml/8.xml");
-		assertTrue(i1.equals(new CmsItemIdArg("x-svn:/svn/d1/vv/r/A/xml/8.xml")));
+		CmsItemIdArg i1 = new CmsItemIdArg("x-svn:///svn/d1/vv/r/A/xml/8.xml");
+		assertTrue(i1.equals(new CmsItemIdArg("x-svn:///svn/d1/vv/r/A/xml/8.xml")));
 		i1.setHostname("x.y");
 		assertTrue("Assume same hostname when one is not set",
 				i1.equals(new CmsItemIdArg("x-svn:/svn/d1/vv/r/A/xml/8.xml")));
@@ -230,10 +247,16 @@ public class CmsItemIdArgTest {
 	}
 	
 	@Test
+	public void testEqualsTripleSingle() {
+		CmsItemIdArg i1 = new CmsItemIdArg("x-svn:///svn/d1/vv/r/A/xml/8.xml");
+		assertTrue(i1.equals(new CmsItemIdArg("x-svn:/svn/d1/vv/r/A/xml/8.xml")));
+	}
+	
+	@Test
 	public void testWithRelPath() {
 		CmsItemId i1 = new CmsItemIdArg("x-svn://x.y/svn/r1/vv/xml/8.xml?p=7");
 		CmsItemId parent = i1.withRelPath(new CmsItemPath("/vv")); // actually parent's parent
-		assertEquals("x-svn:/svn/r1/vv?p=7", parent.getLogicalId());
+		assertEquals("x-svn:///svn/r1/vv?p=7", parent.getLogicalId());
 		assertEquals("x-svn://x.y/svn/r1/vv?p=7", parent.getLogicalIdFull());
 		assertEquals("For consistency, URLs can not have traling slash", 
 				"http://x.y/svn/r1/vv", parent.getUrl());
@@ -244,12 +267,12 @@ public class CmsItemIdArgTest {
 	public void testWithRelPathToRepoRoot() {
 		CmsItemId i1 = new CmsItemIdArg("x-svn://x.y/parent/repo/a/b.xml");
 		CmsItemId repoId = i1.withRelPath(null);
-		assertEquals("x-svn:/parent/repo", repoId.getLogicalId());
+		assertEquals("x-svn:///parent/repo", repoId.getLogicalId());
 		assertEquals("For consistency, URLs can not have traling slash",
 				"http://x.y/parent/repo", repoId.getUrl());
 		CmsItemId i2 = new CmsItemIdArg("x-svn://x.y/p/r/a?p=9");
 		CmsItemId repoRootRev = i2.withRelPath(null);
-		assertEquals("x-svn:/p/r?p=9", repoRootRev.getLogicalId());
+		assertEquals("x-svn:///p/r?p=9", repoRootRev.getLogicalId());
 		// We have not path to represent root
 		//CmsItemId repoAlso = i1.withRelPath(new CmsItemPath("/"));
 		//assertEquals("x-svn://x.y/parent/repo/", repoAlso.getLogicalIdFull());
@@ -260,10 +283,10 @@ public class CmsItemIdArgTest {
 	public void testWithRelPathEncoding() {
 		CmsItemId i1 = new CmsItemIdArg("x-svn:/svn/demo1/v/a%20b/c.xml");
 		assertEquals("Should preserve logicalId encoding (from constructor)", 
-				"x-svn:/svn/demo1/v/a%20b", i1.withRelPath(new CmsItemPath("/v/a b")).getLogicalId());
+				"x-svn:///svn/demo1/v/a%20b", i1.withRelPath(new CmsItemPath("/v/a b")).getLogicalId());
 		
 		assertEquals("Should now be able to do logicalId encoding", 
-				"x-svn:/svn/demo1/v%20(copy)/a%20b", i1.withRelPath(new CmsItemPath("/v (copy)/a b")).getLogicalId());
+				"x-svn:///svn/demo1/v%20(copy)/a%20b", i1.withRelPath(new CmsItemPath("/v (copy)/a b")).getLogicalId());
 		
 		
 		// The preservation can be discussed. Should it normalize even via constructor? Will impact equals(..)?
@@ -274,11 +297,11 @@ public class CmsItemIdArgTest {
 				"x-svn:/svn/demo1/v%20%28copy%29/a%20b/fä.xml", i2.getLogicalId());
 		*/
 		assertEquals("No longer preserving logicalId encoding from constructor", 
-				"x-svn:/svn/demo1/v%20(copy)/a%20b/f%C3%A4.xml", i2.getLogicalId()); // changed in cms-item 3.0
+				"x-svn:///svn/demo1/v%20(copy)/a%20b/f%C3%A4.xml", i2.getLogicalId()); // changed in cms-item 3.0
 		
 		// Important to ensure that new paths are freshly encoded with normalizing code. (new in cms-item 2.3)
 		assertEquals("Should normalize logicalId encoding (when changing relpath)", 
-				"x-svn:/svn/demo1/v%20(copy)/a%20b/f%C3%A4.xml", i2.withRelPath(new CmsItemPath("/v (copy)/a b/fä.xml")).getLogicalId());
+				"x-svn:///svn/demo1/v%20(copy)/a%20b/f%C3%A4.xml", i2.withRelPath(new CmsItemPath("/v (copy)/a b/fä.xml")).getLogicalId());
 		
 	}
 	
@@ -404,11 +427,11 @@ public class CmsItemIdArgTest {
 	@Test
 	public void testRepositoryNameNeedsEncoding() {
 		// It is reasonable to not support this in repo part of logical IDs, but should we maybe warn or bail out?
-		CmsItemId id1 = new CmsItemIdArg("x-svn:/svn/de%20mo1/ab.xml");
-		CmsItemId id2 = new CmsItemIdArg("x-svn:/s%20vn/demo1/ab.xml");
-		CmsItemId id3a = new CmsItemIdArg("x-svn:/s%20vn/de%20mo1/a%20b.xml");
+		CmsItemId id1 = new CmsItemIdArg("x-svn:///svn/de%20mo1/ab.xml");
+		CmsItemId id2 = new CmsItemIdArg("x-svn:///s%20vn/demo1/ab.xml");
+		CmsItemId id3a = new CmsItemIdArg("x-svn:///s%20vn/de%20mo1/a%20b.xml");
 		CmsItemId id3b = new CmsItemIdArg("x-svn://host.a:987/s%20vn/de%20mo1/a%20b.xml");
-		assertEquals("x-svn:/svn/de%20mo1/ab.xml", id1.getLogicalId());
+		assertEquals("x-svn:///svn/de%20mo1/ab.xml", id1.getLogicalId());
 		assertEquals("/svn", id1.getRepository().getParentPath());
 		//assertEquals("de mo1", id1.getRepository().getName());
 		assertEquals("/svn/de%20mo1", id1.getRepository().getUrlAtHost());
@@ -420,11 +443,16 @@ public class CmsItemIdArgTest {
 	}
 	
 	
-	@Test // Tests the issue with v2 format and Java URL, no longer a problem in v3.
+	@Test // Tests the issue with v2 format and Java URL, still a problem in v3 since decision to keep triple slash.
 	public void testJavaUrl() throws MalformedURLException {
 		CmsItemIdArg p = new CmsItemIdArg("x-svn:/svn/demo1/vvab/xml/Docs/Sa%20s.xml?p=9");
+		// Unable to test with x-svn: unless registering a URL resolver Java-style.
 		URL url = new URL(p.getLogicalId().replace("x-svn:", "http:"));
+		/*
 		assertEquals(p.getLogicalId().replace("x-svn:", "http:"), url.toString());
+		*/
+		CmsItemIdArg n = new CmsItemIdArg(url.toString().replace("http:", "x-svn:"));
+		assertTrue(p.equals(n));
 	}
 
 	

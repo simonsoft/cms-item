@@ -269,7 +269,7 @@ public class CmsRepositoryTest {
 		CmsRepository repo1 = new CmsRepository("https://host/svn/repo1");
 		CmsItemId item1 = repo1.getItemId("https://host/svn/repo1/fo%20a/file.txt");
 		assertEquals(repo1, item1.getRepository());
-		assertEquals("x-svn:/svn/repo1/fo%20a/file.txt", item1.getLogicalId());
+		assertEquals("x-svn:///svn/repo1/fo%20a/file.txt", item1.getLogicalId());
 		assertEquals("x-svn://host/svn/repo1/fo%20a/file.txt", item1.getLogicalIdFull());
 	}
 	
@@ -308,26 +308,26 @@ public class CmsRepositoryTest {
 		CmsItemId id1_0 = repo1.getItemId("http://host.n/svn/d1");
 		assertEquals(repo1, id1_0.getRepository());
 		assertEquals(url1, id1_0.getRepository().getUrl());
-		assertEquals("x-svn:/svn/d1", id1_0.getLogicalId());
+		assertEquals("x-svn:///svn/d1", id1_0.getLogicalId());
 		assertEquals("x-svn://host.n/svn/d1", id1_0.getLogicalIdFull());
 		assertNull(id1_0.getRelPath());
 		
 		CmsItemId id1_1 = repo1.getItemId("http://host.n/svn/d1/vv/xml/8.xml");
 		assertEquals(repo1, id1_1.getRepository());
 		assertEquals(url1, id1_1.getRepository().getUrl());
-		assertEquals("x-svn:/svn/d1/vv/xml/8.xml", id1_1.getLogicalId());
+		assertEquals("x-svn:///svn/d1/vv/xml/8.xml", id1_1.getLogicalId());
 		assertEquals("x-svn://host.n/svn/d1/vv/xml/8.xml", id1_1.getLogicalIdFull());
 		assertEquals("/vv/xml/8.xml", id1_1.getRelPath().toString());
 		
 		CmsItemId id1_2 = repo1.getItemId("http://host.n/svn/d1/vv/xml/8.xml").withPegRev(123L);
-		assertEquals("x-svn:/svn/d1/vv/xml/8.xml?p=123", id1_2.getLogicalId());
+		assertEquals("x-svn:///svn/d1/vv/xml/8.xml?p=123", id1_2.getLogicalId());
 		assertEquals("x-svn://host.n/svn/d1/vv/xml/8.xml?p=123", id1_2.getLogicalIdFull());
 		assertEquals("/vv/xml/8.xml", id1_2.getRelPath().toString());
 		
 		CmsItemId id1_3 = repo1.getItemId("http://host.n/svn/d1/v/a%20b/c.xml");
 		assertEquals(repo1, id1_1.getRepository());
 		assertEquals(url1, id1_1.getRepository().getUrl());
-		assertEquals("x-svn:/svn/d1/v/a%20b/c.xml", id1_3.getLogicalId());
+		assertEquals("x-svn:///svn/d1/v/a%20b/c.xml", id1_3.getLogicalId());
 		assertEquals("x-svn://host.n/svn/d1/v/a%20b/c.xml", id1_3.getLogicalIdFull());
 		assertEquals("/v/a b/c.xml", id1_3.getRelPath().toString());
 		
