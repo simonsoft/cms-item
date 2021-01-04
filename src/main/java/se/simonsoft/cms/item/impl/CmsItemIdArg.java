@@ -57,6 +57,9 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	 */
 	private static final String REPO_ROOT_PATH = "/";
 	
+	@SuppressWarnings("unused")
+	@Deprecated
+	private String relpathEncoded; // Keeping this field for serialization stability (kryo).
 	private CmsItemPath relPath;
 	private Long pegRev = null;
 	private boolean orgfull;
