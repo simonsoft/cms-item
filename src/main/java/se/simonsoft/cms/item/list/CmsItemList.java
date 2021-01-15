@@ -27,12 +27,6 @@ public interface CmsItemList extends Iterable<CmsItem> {
 
 	public static final int SIZE_UNKNOWN = -1;
 	
-	/**
-	 * Unrelated to the current size of any backing collection.
-	 * @return the total number of items matching the iteration criteria
-	 * @deprecated This redefines {@link java.util.Collection#size()} and is impractical for lists backed by a collection.
-	 */
-	public int size();
 	
 	/**
 	 * Based on the query that produced the list.
