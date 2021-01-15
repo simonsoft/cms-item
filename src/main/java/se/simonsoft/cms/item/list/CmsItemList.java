@@ -34,6 +34,12 @@ public interface CmsItemList extends Iterable<CmsItem> {
 	 */	
 	public long sizeFound();
 	
+	/*
+	public long sizePage() {
+		return backingList.size(); // TODO consider adding to interface
+	}
+	*/
+	
 	/**
 	 * @return {@link CmsItemListMetaMap}
 	 */
