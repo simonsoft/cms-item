@@ -45,6 +45,8 @@ public class SvnPropertyMap implements CmsItemProperties {
 		this.map = new HashMap<String, SvnPropertyValue<?>>();
 	}
 	
+	// TODO: Add constructor based on CmsItemProperties.
+	
 	/**
 	 * Identifies property values for which json list parsing should be attempted.
 	 */
