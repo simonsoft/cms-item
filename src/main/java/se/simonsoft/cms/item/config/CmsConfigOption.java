@@ -27,7 +27,10 @@ import java.util.regex.Pattern;
  */
 public interface CmsConfigOption {
 
-	public static final Pattern SPLIT = Pattern.compile("[|\\s,]+");
+	/**
+	 * Regex pattern matching config list separators useful when splitting.
+	 */
+	public static final Pattern LIST = Pattern.compile("[|\\s,]+");
 	
 	/**
 	 * Internal really, it should be safe to consider {@link #getKey()} unique across namespaces for now.

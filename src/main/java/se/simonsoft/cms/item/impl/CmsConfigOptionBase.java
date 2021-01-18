@@ -70,7 +70,7 @@ public class CmsConfigOptionBase<T> implements CmsConfigOption {
 	
 	private static List<String> getList(String multiValue) {
 		
-		String[] split = SPLIT.split(multiValue);
+		String[] split = LIST.split(multiValue);
 		List<String> list = new LinkedList<String>();
 		for (String s : split) {
 			String t = s.trim();
