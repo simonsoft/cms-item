@@ -45,7 +45,9 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	
 	public static final String DEFAULT_PROTOCOL = "http";
 	public static final String PEG = "?p=";
-	public static final Pattern NICE = Pattern.compile(PROTO_PREFIX + "([^/]*)(.*/)([^:^]*)\\^(/|[^:?#]+[^/])/?(?:\\?p=(\\d+))?");
+	public static final Pattern NICEv2 = Pattern.compile(PROTO + "://" + "([^/]*)/([^/]*)/([^:^]*)\\^"     + "(/|[^:?#]+[^/])/?(?:\\?p=(\\d+))?");
+	public static final Pattern NICEv3_SHORT = Pattern.compile(PROTO + ":"+"(/|///)" + "([^/:]+)/([^/:]+)" + "(/|[^:?#]+[^/])?/?(?:\\?p=(\\d+))?");
+	public static final Pattern NICEv3_FULL  = Pattern.compile(PROTO + "://" + "([^/]+)/([^/:]+)/([^/:]+)" + "(/|[^:?#]+[^/])?/?(?:\\?p=(\\d+))?");
 	
 	/**
 	 * Root path is not represented in CmsItemPath so we need to define
@@ -53,10 +55,12 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	 * Single slash is consistent with how SvnLogicalId represents repo root id,
 	 * though it is inconsistent with other paths as it ends with slash.
 	 */
-	public static final String REPO_ROOT_PATH = "/";
+	private static final String REPO_ROOT_PATH = "/";
 	
-	private String relpathEncoded; // the path part of the logical ID
-	private CmsItemPath relpathDecoded;
+	@SuppressWarnings("unused")
+	@Deprecated
+	private String relpathEncoded; // Keeping this field for serialization stability (kryo).
+	private CmsItemPath relPath;
 	private Long pegRev = null;
 	private boolean orgfull;
 	private CmsRepository repository;
@@ -72,20 +76,33 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	 * @param logicalId with or without hostname and peg rev
 	 */
 	public CmsItemIdArg(String logicalId) {
-		Matcher m = NICE.matcher(logicalId);
+		Matcher m;
+		if (logicalId.contains("^")) { // Only v2 format can contain a non-encoded ^. 
+			m = NICEv2.matcher(logicalId);
+		} else if (logicalId.startsWith(PROTO + ":///")) {
+			// Must allow/default to triple slash even when using v3 format since some Editors require at least 2 slashes.
+			m = NICEv3_SHORT.matcher(logicalId);
+		} else if (logicalId.startsWith(PROTO + "://")) {
+			m = NICEv3_FULL.matcher(logicalId);
+		} else {
+			// Fallback, also covering single slash parsing (e.g. after normalization in Java URL).
+			m = NICEv3_SHORT.matcher(logicalId);
+		}
 		if (!m.matches()) {
 			throw new IllegalArgumentException("Not a valid logical id: " + logicalId);
 		}
 		String host = m.group(1);
 		String parent = m.group(2);
 		String repo = m.group(3);
-		if (host.length() == 0) {
-			this.repository = new CmsRepository(parent.substring(0, parent.length() - 1), repo);
+		if (host.length() == 0 || host.equals("/") || host.equals("///")) {
+			this.repository = new CmsRepository("/" + parent, repo);
 		} else {
-			this.repository = new CmsRepository(DEFAULT_PROTOCOL, host, parent.substring(0, parent.length() - 1), repo);
+			this.repository = new CmsRepository(DEFAULT_PROTOCOL, host, "/" + parent, repo);
 			this.orgfull = true;
 		}
-		setRelPathEncoded(m.group(4), repository); // this is obviously not a configured repository so we'll get default encoding
+		if (m.group(4) != null) {
+			setRelPathEncoded(m.group(4), repository);
+		}
 		if (m.group(5) != null) {
 			this.pegRev  = Long.parseLong(m.group(5));
 		}
@@ -111,11 +128,9 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	public CmsItemIdArg(CmsRepository repository, CmsItemPath itemPath, Long pegRev) {
 		this.repository = repository;
 		if (itemPath == null) {
-			this.relpathDecoded = null; //Root path should be represented with null value in CmsItemId
-			this.relpathEncoded = REPO_ROOT_PATH;
+			this.relPath = null; //Root path should be represented with null value in CmsItemId
 		} else {
-			this.relpathDecoded = itemPath;
-			this.relpathEncoded = repository.urlencode(relpathDecoded);
+			this.relPath = itemPath;
 		}
 		this.pegRev = pegRev;
 	}
@@ -136,13 +151,11 @@ public class CmsItemIdArg extends CmsItemIdBase {
 */
 
 	private void setRelPathEncoded(String relpathEncoded, CmsRepository repository) {
-		if (this.relpathEncoded != null) {
+		if (this.relPath != null) {
 			throw new IllegalStateException("Instance should not be mutable");
 			// does not guard against making a repository id point to an item in the repo.
 		}
-		this.relpathEncoded = relpathEncoded; // REMOVE after testing
-		this.relpathDecoded = getRelPath(relpathEncoded, repository);
-		//this.relpathEncoded = repository.urlencode(relpathDecoded);
+		this.relPath = getCmsItemPath(relpathEncoded, repository);
 	}
 	
 	public boolean isFullyQualifiedOriginally() {
@@ -215,26 +228,18 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	public CmsRepository getRepository() {
 		return repository;
 	}
-
-	/**
-	 * Used for example when separating object and revision fields in a form.
-	 * @return Location part of the id, no peg rev.
-	public String getLogicalIdPath() {
-		return PROTO_PREFIX + parent + repo + "^" + relpath;
-	}
-	 */	
 	
 	@Override
 	public String getUrl() {
-		if (REPO_ROOT_PATH.equals(relpathEncoded)) {
+		if (this.relPath == null) {
 			return getRepository().getUrl();
 		}
-		return getRepository().getUrl() + relpathEncoded;
+		return getRepository().getUrl() + getRelPathEncoded();
 	}
 	
 	@Override
 	public String getUrlAtHost() {
-		return getRepository().getUrlAtHost() + relpathEncoded;
+		return getRepository().getUrlAtHost() + getRelPathEncoded();
 	}
 
 	@Override
@@ -259,16 +264,23 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	}
 	
 	protected String getLogicalId(String anyHost) {
-		return PROTO_PREFIX
-				+ anyHost
-				+ repository.getParentPath() + "/" + repository.getName() + "^" 
-				+ relpathEncoded
-				+ getQuery(pegRev);		
+		
+		String end = repository.getParentPath() + "/" + repository.getName() 
+				+ getRelPathEncoded()
+				+ getQuery(pegRev);
+		if (anyHost != null && !anyHost.isEmpty()) {
+			return PROTO + "://"
+					+ anyHost
+					+ end;
+		} else {
+			return PROTO + "://" // Restoring triple slash since some Editors require at least 2 slashes.
+					+ end;
+		}				
 	}
 
 	@Override
 	public CmsItemPath getRelPath() {
-		return relpathDecoded;
+		return relPath;
 	}
 	
 	
@@ -279,7 +291,15 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		return "";
 	}
 	
-	private static CmsItemPath getRelPath(String relpathEncoded, CmsRepository repository) {
+	private String getRelPathEncoded() {
+		
+		if (relPath == null) {
+			return "";
+		}
+		return repository.urlencode(relPath);
+	}
+	
+	private static CmsItemPath getCmsItemPath(String relpathEncoded, CmsRepository repository) {
 		if (REPO_ROOT_PATH.equals(relpathEncoded)) {
 			return null;
 		}
@@ -287,10 +307,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		return new CmsItemPath(decoded);
 	}
 	
-	/**
-	 * As this implementation can not do encoding it only accepts new path that is ancestor of current.
-	 * Use SvnLogicalId for more complex manipulations.
-	 */
+
 	@Override
 	public CmsItemId withRelPath(CmsItemPath newRelPath) {
 		
@@ -299,7 +316,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 
 	@Override
 	public CmsItemId withPegRev(Long newPegRev) {
-		return new CmsItemIdArg(this.repository, this.relpathDecoded, newPegRev);
+		return new CmsItemIdArg(this.repository, this.relPath, newPegRev);
 	}
 
 	@Override
@@ -310,26 +327,6 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		} else {
 			return getLogicalId();
 		}
-	}
-	
-	// TODO: Remove?
-	class CmsItemIdRelpathEncoded {
-		
-		private String relpathEncoded;
-		
-		CmsItemIdRelpathEncoded(String relpathEncoded) {
-			
-			if (relpathEncoded == null) {
-				throw new IllegalArgumentException("relpath can be " + REPO_ROOT_PATH + " but not null");
-			}
-			this.relpathEncoded = relpathEncoded;
-		}
-
-		public String getRelpathEncoded() {
-			return relpathEncoded;
-		}
-			
-		
 	}
 
 }
