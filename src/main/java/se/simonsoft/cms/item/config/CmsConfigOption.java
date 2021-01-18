@@ -16,6 +16,7 @@
 package se.simonsoft.cms.item.config;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Represents a single configuration option.
@@ -26,6 +27,8 @@ import java.util.List;
  */
 public interface CmsConfigOption {
 
+	public static final Pattern SPLIT = Pattern.compile("[|\\s,]+");
+	
 	/**
 	 * Internal really, it should be safe to consider {@link #getKey()} unique across namespaces for now.
 	 * @return the namespace, probably same for all options
