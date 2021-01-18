@@ -70,12 +70,12 @@ public class CmsConfigOptionBase<T> implements CmsConfigOption {
 	
 	private static List<String> getList(String multiValue) {
 		
-		String[] split = multiValue.split("\\|");
+		String[] split = multiValue.split("[|\\s,]+");
 		List<String> list = new LinkedList<String>();
 		for (String s : split) {
 			String t = s.trim();
 			if (t.length() == 0) {
-				throw new IllegalArgumentException("Got empty value in multi-value configuration option: " + multiValue);
+				throw new IllegalArgumentException("Got an empty value in multi-value configuration option: " + multiValue);
 			}
 			list.add(t);
 		}
