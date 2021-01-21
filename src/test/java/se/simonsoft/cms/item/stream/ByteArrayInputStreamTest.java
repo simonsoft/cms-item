@@ -62,4 +62,38 @@ public class ByteArrayInputStreamTest {
 		baios.close();
 	}
 
+	@Test
+	public void testString() throws IOException {
+		
+		String source = "Thä string. ";
+		
+		ByteArrayInOutStream baios = new ByteArrayInOutStream(source);
+		
+		ByteArrayInputStream is = baios.getInputStream();
+		assertNotNull(is);
+		
+		try {
+			baios.write("Fails".getBytes());
+			fail("Should not allow more writes");
+		} catch (Exception e) {
+			assertNull("NPE", e.getMessage());
+		}
+		
+		assertEquals("The T char", 84, is.read());
+		
+		byte[] buf = new byte[200];
+		int read = is.read(buf);
+		assertEquals(12, read);
+		assertEquals("hä string. ", new String(buf, 0, read));
+		
+		// Ability to re-read the buffer.
+		ByteArrayInputStream is1 = baios.getInputStream();
+				
+		byte[] buf1 = new byte[200];
+		int read1 = is1.read(buf1);
+		assertEquals(13, read1);
+		assertEquals("Thä string. ", new String(buf1, 0, read1));
+				
+		baios.close();
+	}
 }

@@ -55,6 +55,20 @@ public class ByteArrayInOutStream extends ByteArrayOutputStream {
 	public ByteArrayInOutStream(int size) {
 		super(size);
 	}
+	
+	/**
+	 * Creates a new ByteArrayInOutStream containing the supplied String.
+	 * @param source String containing the data
+	 */
+	public ByteArrayInOutStream(String source) {
+		super(0);
+		// Bypass the OutputStream stage.
+		this.bufRead = source.getBytes();
+		this.countRead = source.getBytes().length;
+			
+		// set the buffer of the ByteArrayOutputStream to null so it can never be written.
+		this.buf = null;
+	}
 
 	/**
 	 * Creates a new ByteArrayInputStream that uses the internal byte array buffer
