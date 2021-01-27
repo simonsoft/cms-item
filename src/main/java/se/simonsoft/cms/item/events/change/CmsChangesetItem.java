@@ -106,14 +106,17 @@ public interface CmsChangesetItem extends CmsChangesetItemFlags {
 	 * 
 	 * @return Previous change for this item, including derived.
 	 */
+	/* Removed before releasing cms-item 3.0.0.
 	@Deprecated // returning a revision is less of a distraction for the indexing case, use getRevisionObsoleted
 	CmsChangesetItem getPreviousChange();
+	*/
 	
 	/**
 	 * TODO API design depends on if we handle atomic moves or not
 	 * Finds previous revision when the same path was affected by a a commit, including copies (explicit and derived) that did not affect contents or properties.
 	 * @return the revision at the same path that 
 	 * @deprecated likely no longer needed after head flag refactoring
+	 * #789 #919 still used by indexing for move operations, potentially only for copySource boolean flag (field 'copyhas').
 	 */
 	RepoRevision getRevisionObsoleted();
 	
