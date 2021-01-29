@@ -44,21 +44,6 @@ public interface CmsContentsReader {
 	
 	CmsItemProperties getProperties(RepoRevision revision, CmsItemPath path);
 	
-	/**
-	 * Produces raw diff output for an entire changeset.
-	 * 
-	 * TODO support item diff? support revision range item diff?
-	 * Can this be done with svnlook or do we need to parse the full changeset diff?
-	 * 
-	 * Maybe diff is better suited for inclusion in the Changeset API,
-	 * supporting a changeset viewer like the one in Trac.
-	 * 
-	 * Diff might be a Map&lt;CmsItemPath, Iterable&lt;? extends DiffLine&gt;&gt; with context, added, removed.
-	 * 
-	 * @deprecated never implemented
-	 */
-	void getDiff(RepoRevision revision, OutputStream out);
-	
 	
 	CmsItemProperties getRevisionProperties(RepoRevision revision);
 	
