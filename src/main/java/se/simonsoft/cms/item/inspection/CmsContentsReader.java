@@ -32,8 +32,8 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
  * In particular we must support reading of {@link CmsChangesetItem}
  * followed by the item from {@link CmsChangesetItem#getPreviousChange()}.
  * 
- * TODO: #919 Consider deprecating since CmsItemLookup can provide contents and props.
- * TODO: #919 Alternatively to avoid refactoring in repos-indexing; build CmsContentsReaderShim using CmsItemLookup and a caffeine cache of items (no content).
+ * #919 Consider deprecating since CmsItemLookup can provide contents and props.
+ * #919 Decided to keep this interface since it enables an implementation that is tuned for the indexing use case.
  * TODO: #919 Consider implementing getRevisionProperties in CmsRepositoryLookup for http.
  */
 public interface CmsContentsReader {

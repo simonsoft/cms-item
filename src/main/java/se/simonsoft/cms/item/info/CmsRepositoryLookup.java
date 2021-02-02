@@ -57,6 +57,8 @@ public interface CmsRepositoryLookup {
 	 * 
 	 * Returning CmsItemProperties even though the name is slightly misleading.
 	 * 
+	 * See CmsContentsReader.
+	 * 
 	CmsItemProperties getRevisionProperties(CmsRepository repository, RepoRevision revision) throws CmsConnectionException, CmsItemNotFoundException;
 	*/
 	
