@@ -117,7 +117,10 @@ public interface CmsChangesetItem extends CmsChangesetItemFlags {
 	 * @return the revision at the same path that 
 	 * @deprecated likely no longer needed after head flag refactoring
 	 * #789 #919 still used by indexing for move operations, potentially only for copySource boolean flag (field 'copyhas').
+	 * #919 Suppressed the 'copyhas' field for now.
 	 */
+	/* Removed before releasing cms-item 3.0.0.
 	RepoRevision getRevisionObsoleted();
+	*/
 	
 }
