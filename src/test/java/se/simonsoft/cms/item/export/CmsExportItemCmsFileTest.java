@@ -95,7 +95,8 @@ public class CmsExportItemCmsFileTest {
     }
 
 
-    private void setUpCmsItemNotTranslation() {
+    @SuppressWarnings("unused")
+	private void setUpCmsItemNotTranslation() {
 
         translation = mock(CmsItem.class);
         when(translation.getKind()).thenReturn(CmsItemKind.File);

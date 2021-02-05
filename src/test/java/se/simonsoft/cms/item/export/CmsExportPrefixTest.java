@@ -26,7 +26,8 @@ public class CmsExportPrefixTest {
 		new CmsExportPrefix("cms4");
 		new CmsExportPrefix("cms4-suffix");
 		new CmsExportPrefix("CMS4"); // Adding support for uppercase.
-		new CmsExportPrefix("01234567890123456789012345678901234567890123456789"); // 50 chars
+		CmsExportPrefix prefix = new CmsExportPrefix("01234567890123456789012345678901234567890123456789"); // 50 chars
+		assertEquals("01234567890123456789012345678901234567890123456789", prefix.toString());
 	}
 
 	@Test(expected = IllegalArgumentException.class)

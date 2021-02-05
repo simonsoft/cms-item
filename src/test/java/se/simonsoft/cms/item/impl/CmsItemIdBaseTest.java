@@ -15,13 +15,6 @@
  */
 package se.simonsoft.cms.item.impl;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
-
-import se.simonsoft.cms.item.CmsItemPath;
-import se.simonsoft.cms.item.CmsRepository;
-
 public class CmsItemIdBaseTest {
 
 	// Currently no tests here since removal of CmsItemIdUrl.

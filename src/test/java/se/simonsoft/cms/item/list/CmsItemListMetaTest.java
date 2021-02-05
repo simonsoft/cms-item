@@ -28,7 +28,7 @@ import se.simonsoft.cms.item.list.CmsItemListMetaMap.Key;
 
 public class CmsItemListMetaTest {
 
-	@SuppressWarnings("serial")
+	@SuppressWarnings({ "serial", "unlikely-arg-type" })
 	@Test
 	public void test() throws MalformedURLException {
 		Map<String, Object> data = new HashMap<String, Object>() {{

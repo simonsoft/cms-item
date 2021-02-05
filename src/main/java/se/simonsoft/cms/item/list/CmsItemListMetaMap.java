@@ -71,7 +71,7 @@ public class CmsItemListMetaMap implements Map<String, Object> {
 	 * Helper for implementing {@link CmsItemList#getMeta(CmsItemListMetaMap.Key)}.
 	 */
 	public String itemListGetMeta(Key known) {
-		Object v = get(known);
+		Object v = get(known.name());
 		if (v == null) {
 			return null;
 		}
