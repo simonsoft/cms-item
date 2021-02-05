@@ -184,9 +184,9 @@ public class CmsItemIdArgTest {
 			assertEquals("Hostname unknown for " + p.getLogicalId(), e.getMessage());
 		}
 		try {
-			p.getRepositoryUrl();
+			p.getRepository().getUrl();
 		} catch (IllegalStateException e) {
-			assertEquals("Hostname unknown for " + p.getLogicalId(), e.getMessage());
+			assertEquals("Repository identified only by parent path and name: /svn/demo1", e.getMessage());
 		}
 		try {
 			p.getUrl();
@@ -199,7 +199,7 @@ public class CmsItemIdArgTest {
 		assertEquals("x-svn:///svn/demo1/vvab/graphics/0001.tif", p.getLogicalId());
 		assertEquals("x-svn://x.y.z/svn/demo1/vvab/graphics/0001.tif", p.getLogicalIdFull());
 		assertEquals("http://x.y.z/svn/demo1/vvab/graphics/0001.tif", p.getUrl());
-		assertEquals("http://x.y.z/svn/demo1", p.getRepositoryUrl());
+		assertEquals("http://x.y.z/svn/demo1", p.getRepository().getUrl());
 		assertFalse(p.isPegged());
 		assertEquals("API spec", null, p.getPegRev());
 		p.setPegRev(1234567);
@@ -208,7 +208,7 @@ public class CmsItemIdArgTest {
 		assertEquals("x-svn:///svn/demo1/vvab/graphics/0001.tif?p=1234567", p.getLogicalId());
 		assertEquals("x-svn://x.y.z/svn/demo1/vvab/graphics/0001.tif?p=1234567", p.getLogicalIdFull());
 		assertEquals("http://x.y.z/svn/demo1/vvab/graphics/0001.tif", p.getUrl());
-		assertEquals("http://x.y.z/svn/demo1", p.getRepositoryUrl());
+		assertEquals("http://x.y.z/svn/demo1", p.getRepository().getUrl());
 		try {
 			p.setHostname("x.y.z");
 			fail("Expected exception");
