@@ -31,4 +31,11 @@ public interface WorkflowItemInput {
 	 */
 	@JsonGetter("itemid")
 	CmsItemId getItemId();
+	
+	/**
+	 * @return optional JSON serializable object defining additional action parameters 
+	 */
+	default Object getOptions() {
+		return null;
+	}
 }
