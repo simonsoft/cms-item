@@ -204,6 +204,13 @@ public class CmsRepository implements Serializable {
 	}
 	
 	/**
+	 * @return protocol "http" or "https"
+	 */
+	public String getProtocol() {
+		return this.protocol;
+	}
+	
+	/**
 	 * Analogous to isFullyQualified in SvnLogicalId.
 	 * @return true if the repository URL is known, false if only parent path and repo name
 	 */

@@ -36,19 +36,14 @@ public interface ExternalCommandBroker {
 	 * because argumentsClass type alone is not enough to identify the
 	 * {@link ExternalCommandHandler#handleExternalCommand(CmsItemId, Object)} method to call.
 	 * 
+	 * Use ExternalCommandHandler<Void> when there are no arguments.
+	 * 
 	 * @param action The action name to register
 	 * @param handler The handler that should take care of all commands for this action
 	 * @param argumentsClass The class that has fields corresponding to optional action arguments,
 	 *   null if no custom arguments should be supported
 	 */
 	<T> void registerHandler(String action, ExternalCommandHandler<T> handler, Class<T> argumentsClass);
-	
-	/**
-	 * @param action
-	 * @param handler
-	 * @deprecated Replaced with ExternalCommandHandler<Void>.
-	 */
-	void registerHandler(String action, ExternalCommandHandlerNoArgs handler);
 	
 	/**
 	 * @param action an action name

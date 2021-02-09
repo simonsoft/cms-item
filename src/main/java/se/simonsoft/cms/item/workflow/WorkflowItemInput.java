@@ -21,8 +21,14 @@ import se.simonsoft.cms.item.CmsItemId;
 
 public interface WorkflowItemInput {
 	
+	/**
+	 * @return action name as a single token
+	 */
 	String getAction();
 	
+	/**
+	 * @return item which the action operates on
+	 */
 	@JsonGetter("itemid")
 	CmsItemId getItemId();
 }

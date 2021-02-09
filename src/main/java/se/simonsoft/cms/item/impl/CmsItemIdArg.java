@@ -213,17 +213,6 @@ public class CmsItemIdArg extends CmsItemIdBase {
 		}
 	}
 	
-	/**
-	 * Used for validation in services that support only operations in
-	 * a current repository connection session.
-	 */
-	public String getRepositoryUrl() {
-		if (!repository.isHostKnown()) {
-			throw new IllegalStateException("Hostname unknown for " + getLogicalId());
-		}		
-		return getRepository().getUrl();
-	}
-	
 	@Override
 	public CmsRepository getRepository() {
 		return repository;

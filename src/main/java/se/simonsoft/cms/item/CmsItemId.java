@@ -97,12 +97,6 @@ public interface CmsItemId {
 	CmsRepository getRepository();
 	
 	/**
-	 * @return repository root URL without trailing slash, encoded
-	 * @deprecated Use {@link #getRepository()}.getUrl()
-	 */
-	String getRepositoryUrl();
-	
-	/**
 	 * Derives ID with new relative path from repository root.
 	 * @param newRelPath Any rel path, null to get repository root ID
 	 * @return Same ID but with new relative path
