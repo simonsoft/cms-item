@@ -52,7 +52,7 @@ public class CmsItemListMetaMap implements Map<String, Object> {
 		 */
 		peg,
 		/**
-		 * The resource being listed, logical ID
+		 * The resource being listed, ItemId
 		 */
 		resourceId
 	}

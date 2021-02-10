@@ -25,7 +25,7 @@ import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 
 /**
- * Concrete class for use in the common case when a valid logical id
+ * Concrete class for use in the common case when a valid item id
  * is known from metadata etc and provided as string argument to an operation.
  * 
  * Mutable: allows adding of hostname if not already set.
@@ -89,7 +89,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 			m = NICEv3_SHORT.matcher(logicalId);
 		}
 		if (!m.matches()) {
-			throw new IllegalArgumentException("Not a valid logical id: " + logicalId);
+			throw new IllegalArgumentException("Not a valid item id: " + logicalId);
 		}
 		String host = m.group(1);
 		String parent = m.group(2);
@@ -188,7 +188,7 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	/**
 	 * Makes sure hostname is set and matching a given value.
 	 * @param fullyQualifiedName hostname to set or to expect
-	 * @throws IllegalArgumentException If the hostname of the logicalId does not match the given
+	 * @throws IllegalArgumentException If the hostname of the itemId does not match the given
 	 */
 	public void setHostnameOrValidate(String fullyQualifiedName)
 			throws IllegalArgumentException {

@@ -38,15 +38,15 @@ public class CmsItemIdFragment {
 	public CmsItemIdFragment(String logicalId) {
 		
 		if (logicalId == null) {
-			throw new IllegalArgumentException("The logical id must not be null.");
+			throw new IllegalArgumentException("The item id must not be null.");
 		}
 		if (logicalId.trim().isEmpty()) {
-			throw new IllegalArgumentException("The logical id must not be empty string.");
+			throw new IllegalArgumentException("The item id must not be empty string.");
 		}
 		
 		Matcher m = NICE.matcher(logicalId);
 		if (!m.matches()) {
-			throw new IllegalArgumentException("Not a valid logical id (fragment allowed): " + logicalId);
+			throw new IllegalArgumentException("Not a valid item id (fragment allowed): " + logicalId);
 		}
 		String itemIdStr = m.group(1);
 		this.itemId = new CmsItemIdArg(itemIdStr);

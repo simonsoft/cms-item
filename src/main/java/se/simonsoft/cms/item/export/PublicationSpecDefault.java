@@ -36,7 +36,7 @@ public class PublicationSpecDefault implements PublicationSpec {
 	}
 
 	/**
-	 * @return logical id of the publication source
+	 * @return item id of the publication source
 	 */
 	public CmsItemId getId() {
 		return id;
