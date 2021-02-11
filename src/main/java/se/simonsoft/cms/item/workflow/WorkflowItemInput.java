@@ -16,6 +16,8 @@
 package se.simonsoft.cms.item.workflow;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import se.simonsoft.cms.item.CmsItemId;
 
@@ -31,4 +33,12 @@ public interface WorkflowItemInput {
 	 */
 	@JsonGetter("itemid")
 	CmsItemId getItemId();
+	
+	/**
+	 * @return optional JSON serializable object defining additional action parameters 
+	 */
+	@JsonInclude(Include.NON_NULL)
+	default Object getOptions() {
+		return null;
+	}
 }
