@@ -53,7 +53,7 @@ public class CmsExportItemInputStream implements CmsExportItem {
             throw new IllegalStateException("InputStream is already prepared for export");
         }
 
-        logger.info("Starting preparation for export of InputStream");
+        logger.trace("Starting preparation for export of InputStream");
         this.ready = true;
     }
 
