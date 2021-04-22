@@ -110,6 +110,7 @@ public class CmsItemIdArgTest {
 		assertEquals("x-svn:///svn/demo1", p.getLogicalId());
 		assertEquals("x-svn://demo.simonsoftcms.se/svn/demo1", p.getLogicalIdFull());
 		assertNull(p.getRelPath());
+		assertNull(p.getPegRev());
 	}
 	
 	@Test
@@ -119,6 +120,7 @@ public class CmsItemIdArgTest {
 		assertEquals("x-svn:///svn/demo1", p.getLogicalId());
 		assertEquals("x-svn://demo.simonsoftcms.se/svn/demo1", p.getLogicalIdFull());
 		assertNull(p.getRelPath());
+		assertNull(p.getPegRev());
 	}
 	
 	@Test
@@ -127,6 +129,7 @@ public class CmsItemIdArgTest {
 		assertEquals("CmsRepository:/svn/demo1", p.getRepository().toString());
 		assertEquals("x-svn:///svn/demo1", p.getLogicalId());
 		assertNull(p.getRelPath());
+		assertNull(p.getPegRev());
 	}
 	
 	@Test
@@ -135,6 +138,18 @@ public class CmsItemIdArgTest {
 		assertEquals("CmsRepository:/svn/demo1", p.getRepository().toString());
 		assertEquals("x-svn:///svn/demo1", p.getLogicalId());
 		assertNull(p.getRelPath());
+		assertNull(p.getPegRev());
+	}
+	
+	@Test
+	public void testRepoPeg() {
+		CmsItemIdArg p = new CmsItemIdArg("x-svn://demo.simonsoftcms.se/svn/demo1?p=123");
+		assertEquals("http://demo.simonsoftcms.se/svn/demo1", p.getRepository().toString()); // No revision on repository.
+		assertEquals("x-svn:///svn/demo1?p=123", p.getLogicalId());
+		assertEquals("x-svn://demo.simonsoftcms.se/svn/demo1?p=123", p.getLogicalIdFull());
+		assertNull(p.getRelPath());
+		assertNotNull(p.getPegRev());
+		assertEquals(new Long(123), p.getPegRev());
 	}
 	
 	@Test
@@ -152,6 +167,7 @@ public class CmsItemIdArgTest {
 		assertTrue(p.getRepository().isHostKnown());
 		assertTrue(p.isFullyQualifiedOriginally());
 		assertTrue(p.isPegged());
+		assertEquals(9L, p.getPegRev().longValue());
 		assertEquals("/vvab/xml/Docs/Sa s.xml", p.getRelPath().toString());
 		assertEquals("http://demo.simonsoftcms.se/svn/demo1", p.getRepository().toString());
 		assertEquals(p.getLogicalIdFull(), p.toString());
@@ -163,6 +179,7 @@ public class CmsItemIdArgTest {
 		assertFalse(p.getRepository().isHostKnown());
 		assertFalse(p.isFullyQualifiedOriginally());
 		assertTrue(p.isPegged());
+		assertEquals(101L, p.getPegRev().longValue());
 		p.setHostnameOrValidate("example.net");
 		assertEquals("http://example.net/svn/demo1", p.getRepository().getUrl());
 		assertEquals("http://example.net/svn/demo1/vvab/xml/sections/In%20in.xml", p.getUrl());
@@ -260,6 +277,7 @@ public class CmsItemIdArgTest {
 		assertEquals("x-svn://x.y/svn/r1/vv?p=7", parent.getLogicalIdFull());
 		assertEquals("For consistency, URLs can not have traling slash", 
 				"http://x.y/svn/r1/vv", parent.getUrl());
+		assertEquals(7L, i1.getPegRev().longValue());
 	}
 
 	

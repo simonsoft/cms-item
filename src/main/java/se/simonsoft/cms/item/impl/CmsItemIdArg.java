@@ -45,9 +45,9 @@ public class CmsItemIdArg extends CmsItemIdBase {
 	
 	public static final String DEFAULT_PROTOCOL = "http";
 	public static final String PEG = "?p=";
-	public static final Pattern NICEv2 = Pattern.compile(PROTO + "://" + "([^/]*)/([^/]*)/([^:^]*)\\^"     + "(/|[^:?#]+[^/])/?(?:\\?p=(\\d+))?");
-	public static final Pattern NICEv3_SHORT = Pattern.compile(PROTO + ":"+"(/|///)" + "([^/:]+)/([^/:]+)" + "(/|[^:?#]+[^/])?/?(?:\\?p=(\\d+))?");
-	public static final Pattern NICEv3_FULL  = Pattern.compile(PROTO + "://" + "([^/]+)/([^/:]+)/([^/:]+)" + "(/|[^:?#]+[^/])?/?(?:\\?p=(\\d+))?");
+	public static final Pattern NICEv2 = Pattern.compile(PROTO + "://" + "([^/]*)/([^/]*)/([^:^]*)\\^"       + "(/|[^:?#]+[^/])/?(?:\\?p=(\\d+))?");
+	public static final Pattern NICEv3_SHORT = Pattern.compile(PROTO + ":"+"(/|///)" + "([^/:]+)/([^/:?#]+)" + "(/|[^:?#]+[^/])?/?(?:\\?p=(\\d+))?");
+	public static final Pattern NICEv3_FULL  = Pattern.compile(PROTO + "://" + "([^/]+)/([^/:]+)/([^/:?#]+)" + "(/|[^:?#]+[^/])?/?(?:\\?p=(\\d+))?");
 	
 	/**
 	 * Root path is not represented in CmsItemPath so we need to define
