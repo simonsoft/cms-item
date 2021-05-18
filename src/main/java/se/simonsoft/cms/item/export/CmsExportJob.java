@@ -35,6 +35,10 @@ public class CmsExportJob extends CmsExportJobBase {
 	}
 
     
+	public boolean isEmpty() {
+		return exportItems.isEmpty();
+	}
+	
     /**
      * Starts the preparation of the CmsExportItem's. Is only allowed to be called on once.
      */
