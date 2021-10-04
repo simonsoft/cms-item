@@ -38,8 +38,8 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
     private static final String ITEM_ZERO = "000";
     private static int MAX_NUMBER_OF_FILES = 1000;
     private static int FILE_COUNTER_LENGTH = 3;
-    private static String CMS_CLASS_PROPERTY = "cms:class";
-    private static String CMS_SHARD_PARENT = "shardparent";
+    private static String PROPNAME_CMS_CLASS = "cms:class";
+    private static String CMS_CLASS_SHARDPARENT = "shardparent";
     private static final Logger logger = LoggerFactory.getLogger(CmsItemNamingShard1K.class);
 
 
@@ -123,9 +123,9 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
 
         boolean shardParent = false;
         CmsItemProperties properties = this.lookup.getItem(itemId).getProperties();
-        String classProperty = properties.getString(CMS_CLASS_PROPERTY);
+        String classProperty = properties.getString(PROPNAME_CMS_CLASS);
 
-        if (classProperty != null && classProperty.contains(CMS_SHARD_PARENT)) {
+        if (classProperty != null && classProperty.contains(CMS_CLASS_SHARDPARENT)) {
             shardParent = true;
         }
 
