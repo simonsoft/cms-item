@@ -15,11 +15,14 @@
  */
 package se.simonsoft.cms.item.indexing;
 
+import javax.inject.Singleton;
+
 import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
 
+@Singleton
 public class IdStrategyDefault implements IdStrategy {
 
 	/**
