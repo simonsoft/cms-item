@@ -24,17 +24,17 @@ import java.util.HashMap;
 import org.junit.Test;
 
 
-public class CmsExportMetaKeyTest {
+public class CmsExportTagKeyTest {
 
 
     @Test
     public void testEmptyKeyShouldThrow() {
 
         try {
-            new CmsExportMetaKey("");
+            new CmsExportTagKey("");
             fail("Should fail");
         } catch (IllegalArgumentException e) {
-            assertEquals("Not a valid MetaKey: ", e.getMessage());
+            assertEquals("Not a valid TagKey: ", e.getMessage());
         }
 
     }
@@ -43,10 +43,10 @@ public class CmsExportMetaKeyTest {
     public void testNullKeyShouldThrow() {
 
         try {
-            new CmsExportMetaKey(null);
+            new CmsExportTagKey(null);
             fail("Should fail");
         } catch (IllegalArgumentException e) {
-            assertEquals("MetaKey must not be null.", e.getMessage());
+            assertEquals("TagKey must not be null.", e.getMessage());
         }
 
     }
@@ -55,53 +55,53 @@ public class CmsExportMetaKeyTest {
     public void testNoSpecialCharsExceptDash() {
 
         try {
-            new CmsExportMetaKey("fail*");
+            new CmsExportTagKey("fail*");
             fail("Should fail");
         } catch (IllegalArgumentException e) {
-            assertEquals("Not a valid MetaKey: fail*", e.getMessage());
+            assertEquals("Not a valid TagKey: fail*", e.getMessage());
         }
 
         try {
-            new CmsExportMetaKey("fail&");
+            new CmsExportTagKey("fail&");
             fail("Should fail");
         } catch (IllegalArgumentException e) {
-            assertEquals("Not a valid MetaKey: fail&", e.getMessage());
+            assertEquals("Not a valid TagKey: fail&", e.getMessage());
         }
 
         try {
-            new CmsExportMetaKey("fail%");
+            new CmsExportTagKey("fail%");
             fail("Should fail");
         } catch (IllegalArgumentException e) {
-            assertEquals("Not a valid MetaKey: fail%", e.getMessage());
-        }
-        
-        try {
-            new CmsExportMetaKey("prefix:fail");
-            fail("Should fail");
-        } catch (IllegalArgumentException e) {
-            assertEquals("Not a valid MetaKey: prefix:fail", e.getMessage());
+            assertEquals("Not a valid TagKey: fail%", e.getMessage());
         }
 
     }
 
     @Test
     public void testAlphaNumericsWithDashShouldPass() {
-        CmsExportMetaKey cmsExportMetaKey = new CmsExportMetaKey("cms-pass");
-        assertEquals("cms-pass", cmsExportMetaKey.toString());
+        CmsExportTagKey cmsExportTagKey = new CmsExportTagKey("cms-pass");
+        assertEquals("cms-pass", cmsExportTagKey.toString());
 
     }
 
     @Test
-    public void testGetObjectFromMapWithMetaKey() {
+    public void testPrefixWithColonShouldPass() {
+    	CmsExportTagKey cmsExportTagKey = new CmsExportTagKey("prefix:pass");
+    	assertEquals("prefix:pass", cmsExportTagKey.toString());
+    	
+    }
 
-        HashMap<CmsExportMetaKey, String> map = new HashMap<>();
-        map.put(new CmsExportMetaKey("abc"), "123");
-        map.put(new CmsExportMetaKey("qwe"), "asd");
+    @Test
+    public void testGetObjectFromMapWithTagKey() {
+
+        HashMap<CmsExportTagKey, String> map = new HashMap<>();
+        map.put(new CmsExportTagKey("abc"), "123");
+        map.put(new CmsExportTagKey("qwe"), "asd");
 
         assertTrue(map.size() == 2);
 
-        CmsExportMetaKey abc = new CmsExportMetaKey("abc");
-        CmsExportMetaKey qwe = new CmsExportMetaKey("qwe");
+        CmsExportTagKey abc = new CmsExportTagKey("abc");
+        CmsExportTagKey qwe = new CmsExportTagKey("qwe");
 
         assertEquals("123" ,map.get(abc));
         assertEquals("asd" ,map.get(qwe));
