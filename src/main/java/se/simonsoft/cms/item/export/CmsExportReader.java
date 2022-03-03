@@ -38,8 +38,12 @@ public interface CmsExportReader {
      */
     public Map<CmsExportMetaKey, String> getMeta();
 
-    
-    // Getting contents from cms-backend: OutputStream as parameter. (applicable to Writer)
+	/**
+	 * @return map of key-value tags, null when reader does not support tagging.
+	 */
+	public Map<CmsExportTagKey, String> getTagging();
+
+	// Getting contents from cms-backend: OutputStream as parameter. (applicable to Writer)
  	// Committing with cms-backend: InputStream is suitable.
  	// Transforming with cms-xmlsource: Reader required, can use new InputStreamReader(InputStream)
  	// Transforming with cms-xmlsource using contents as parameter: Typically need a String. 
