@@ -19,56 +19,54 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * The name of a single tag.
+ * The value of a single tag.
  *
  */
-public class CmsExportTagKey {
+public class CmsExportTagValue {
 
-	private final String key;
-	private static final Pattern NICE = Pattern.compile("[A-Za-z0-9-_:]{1,100}");
-	// Added _ and : compared to MetaKey.
-	// AWS S3 and Azure Blob also allows the following that we are restricting:
-	// - Maximum 128 chars
-	// - Space
-	// - Special characters: + . / =
-	// - AWS: @
+	private final String value;
+	private static final Pattern NICE = Pattern.compile("[A-Za-z0-9-_: ]{0,256}");
+	// Azure Blob is more restricted than S3:
+	// - Maximum 256 chars (same)
+	// - letters, numbers, space (only A-Za-z on Azure)
+	// - Special characters: + - . / : = _
 
 	
 	// https://docs.aws.amazon.com/general/latest/gr/aws_tagging.html
 	// https://docs.microsoft.com/en-us/rest/api/storageservices/set-blob-tags
 	
-	public CmsExportTagKey(String key) {
+	public CmsExportTagValue(String value) {
 
-		if (key == null) {
-			throw new IllegalArgumentException("TagKey must not be null.");
+		if (value == null) {
+			throw new IllegalArgumentException("TagValue must not be null.");
 		}
 
-		Matcher matcher = NICE.matcher(key);
+		Matcher matcher = NICE.matcher(value);
 		if (!matcher.matches()) {
-			throw new IllegalArgumentException("Not a valid TagKey: "+ key);
+			throw new IllegalArgumentException("Not a valid TagValue: " + value);
 		}
 
-		this.key = key;
+		this.value = value;
 	}
 
-	public String getKey() {
+	public String getValue() {
 		
-		return this.key;
+		return this.value;
 	}
 	
 	@Override
 	public boolean equals(Object anObject) {
-		return this.key.equals(anObject.toString());
+		return this.value.equals(anObject.toString());
 	}
 	
 	@Override
 	public int hashCode() {
-		return this.key.hashCode();
+		return this.value.hashCode();
 	}
 
 	@Override
 	public String toString() {
-		return this.key.toString();
+		return this.value.toString();
 	}
 	
 }

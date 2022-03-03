@@ -28,7 +28,7 @@ public class CmsExportJob extends CmsExportJobBase {
     private List<CmsExportItem> exportItems = new ArrayList<>();
     private boolean isPrepared = false;
     private Map<CmsExportMetaKey, String> metaMap = new HashMap<>();
-    private Map<CmsExportTagKey, String> tagMap = new HashMap<>();
+    private Map<CmsExportTagKey, CmsExportTagValue> tagMap = new HashMap<>();
 
 
 	public CmsExportJob(CmsExportPrefix jobPrefix, String jobName, String jobExtension) {
@@ -145,12 +145,13 @@ public class CmsExportJob extends CmsExportJobBase {
         return this;
     }
     
-    public Map<CmsExportTagKey, String> getTagging() {
+    public Map<CmsExportTagKey, CmsExportTagValue> getTagging() {
         return Collections.unmodifiableMap(this.tagMap);
     }
 
     public CmsExportJob withTagging(String key, String value) {
         CmsExportTagKey cmsExportTagKey = new CmsExportTagKey(key);
+        CmsExportTagValue cmsExportTagValue = new CmsExportTagValue(value);
 
         if (value == null || value.isEmpty()) {
             throw new IllegalArgumentException("Can not add empty or null value as tag");
@@ -160,7 +161,7 @@ public class CmsExportJob extends CmsExportJobBase {
             throw new IllegalArgumentException("The tag already exist in map. Tag: " + key);
         }
 
-        tagMap.put(cmsExportTagKey, value);
+        tagMap.put(cmsExportTagKey, cmsExportTagValue);
         return this;
     }
 

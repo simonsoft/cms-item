@@ -90,7 +90,7 @@ public class CmsExportReaderFsSingle implements CmsExportReader {
 	}
 
 	@Override
-	public Map<CmsExportTagKey, String> getTagging() {
+	public Map<CmsExportTagKey, CmsExportTagValue> getTagging() {
 		logger.warn("Reader does not support tagging, returning null");
 		return null;
 	}

@@ -41,7 +41,7 @@ public interface CmsExportReader {
 	/**
 	 * @return map of key-value tags, null when reader does not support tagging.
 	 */
-	public Map<CmsExportTagKey, String> getTagging();
+	public Map<CmsExportTagKey, CmsExportTagValue> getTagging();
 
 	// Getting contents from cms-backend: OutputStream as parameter. (applicable to Writer)
  	// Committing with cms-backend: InputStream is suitable.
