@@ -21,4 +21,7 @@ public interface ExternalCommandHandler<T> {
 
 	String handleExternalCommand(CmsItemId item, T arguments);
 	
+	// TODO: Simplify Quarkus inject.
+	//Class<T> getArgumentsClass();
+	
 }
