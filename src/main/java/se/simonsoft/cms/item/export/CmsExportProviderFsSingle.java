@@ -44,4 +44,9 @@ public class CmsExportProviderFsSingle implements CmsExportProvider {
 		return new CmsExportWriterFsSingle(fsParent);
 	}
 
+	@Override
+	public CmsExportUrlPresigner getUrlPresigner() {
+		throw new UnsupportedOperationException("Presigner not supported");
+	}
+
 }

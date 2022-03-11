@@ -27,4 +27,6 @@ public interface CmsExportProvider {
 	
 	CmsExportWriter getWriter();
 	
+	CmsExportUrlPresigner getUrlPresigner();
+	
 }
