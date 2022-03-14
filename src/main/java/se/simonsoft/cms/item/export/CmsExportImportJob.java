@@ -21,9 +21,18 @@ package se.simonsoft.cms.item.export;
  */
 public interface CmsExportImportJob {
 
-	// The prefix and extension should likely not be in this interface since CmsExportJobBase allow them to be null;
+	// The prefix and extension should not be in this interface since CmsExportJobBase allow them to be null;
 	
+	/**
+	 * The job name which may represent a path including slashes.
+	 * The job name and job path be identical in the simplest form.
+	 * @return the job name which can include slashes but not start with slash
+	 */
 	public String getJobName();
     
+    /**
+     * The job path includes 'jobPrefix' (if used) AND is relative to any other prefixes that an export Reader/Writer pair might define (e.g. version, CloudId).
+     * @return the job path including extension (if it has one)
+     */
     public String getJobPath();
 }
