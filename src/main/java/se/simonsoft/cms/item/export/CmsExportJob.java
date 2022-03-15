@@ -153,8 +153,8 @@ public class CmsExportJob extends CmsExportJobBase {
         CmsExportTagKey cmsExportTagKey = new CmsExportTagKey(key);
         CmsExportTagValue cmsExportTagValue = new CmsExportTagValue(value);
 
-        if (value == null || value.isEmpty()) {
-            throw new IllegalArgumentException("Can not add empty or null value as tag");
+        if (value == null) {
+            throw new IllegalArgumentException("Can not add null value as tag");
         }
 
         if (tagMap.containsKey(cmsExportTagKey)) {
