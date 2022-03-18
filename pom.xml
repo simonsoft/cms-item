@@ -48,6 +48,7 @@
 		
 		<!-- Arbortext 8.1 ships 2.11.0 -->
 		<!-- SolR 8.11.1 uses 2.12.3 -->
+		<!-- cms-item often deviate from the POM definition in order to align with Arbortext -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
