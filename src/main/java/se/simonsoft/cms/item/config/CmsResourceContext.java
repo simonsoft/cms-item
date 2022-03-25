@@ -47,8 +47,11 @@ public class CmsResourceContext implements Iterable<CmsConfigOption> {
 	}
 	
 	public CmsConfigOption getConfigOption(String key) {
-		
 		return map.get(key);
+	}
+	
+	public boolean hasConfigOption(String key) {
+		return map.containsKey(key);
 	}
 	
 	public CmsItemId getIsContextFor() {
