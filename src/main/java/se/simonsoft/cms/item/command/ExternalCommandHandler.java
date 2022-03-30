@@ -17,11 +17,25 @@ package se.simonsoft.cms.item.command;
 
 import se.simonsoft.cms.item.CmsItemId;
 
+/**
+ * Interface for a command handler; the actual implementation of an action..
+ *
+ * @param <T> arguments object type
+ */
 public interface ExternalCommandHandler<T> {
 
+	/**
+	 * Executes the action on item with optional arguments object
+	 * @param item to operate on
+	 * @param arguments the arguments object or null
+	 * @return typically serialized JSON
+	 */
 	String handleExternalCommand(CmsItemId item, T arguments);
 	
-	// TODO: Simplify Quarkus inject.
-	//Class<T> getArgumentsClass();
+	// #1594 Simplify Quarkus inject.
+	/**
+	 * @return the class of the arguments object or Void.class
+	 */
+	Class<T> getArgumentsClass();
 	
 }

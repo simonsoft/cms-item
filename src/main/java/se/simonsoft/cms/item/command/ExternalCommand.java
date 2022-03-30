@@ -20,6 +20,10 @@ import org.slf4j.LoggerFactory;
 
 import se.simonsoft.cms.item.CmsItemId;
 
+/**
+ * Used within an implementation of {@link ExternalCommandBroker}.
+ *
+ */
 public class ExternalCommand {
 
 	protected CmsItemId itemId;
