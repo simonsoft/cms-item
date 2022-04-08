@@ -61,7 +61,6 @@ public class CommandRuntimeException extends RuntimeException {
 	public void setMessage(Throwable cause) {
 		
 		StringWriter sw = new StringWriter();
-		sw.write("Message: ");
 		sw.write(cause.getMessage()); //Print writer handles null, will print it as "null".
 		sw.write("\n");
 		
