@@ -38,7 +38,7 @@ public class CommandRuntimeExceptionTest {
 			assertEquals("ConcatOnNull", cre.getErrorName());
 			String message = cre.getMessage();
 			System.out.println(message);
-			assertTrue("Message contains underlying exceptions message", message.contains("Message: null"));
+			assertTrue("Message contains underlying exceptions message", message.contains("null"));
 			assertTrue("NPE should be inluded in message", message.contains("java.lang.NullPointerException"));
 			assertTrue("This class name should be included", message.contains("CommandRuntimeExceptionTest.java"));
 			//Hard to get a stacktrace that exceeds max length.
@@ -49,11 +49,11 @@ public class CommandRuntimeExceptionTest {
 	@Test
 	public void testContainsUnderlygingExceptionsMessage() throws Exception {
 		try {
-			throw new IllegalArgumentException("Underlying exceptions message");
+			throw new IllegalArgumentException("Underlying exception message");
 		} catch (IllegalArgumentException e) {
 			CommandRuntimeException cre = new CommandRuntimeException("IAE", e);
 			String message = cre.getMessage();
-			assertTrue("Contains underlying exceptions message", message.contains("Message: Underlying exceptions message"));
+			assertTrue("Contains underlying exceptions message", message.contains("Underlying exception message"));
 		}
 		
 	}
@@ -69,7 +69,7 @@ public class CommandRuntimeExceptionTest {
 			
 			CommandRuntimeException cre = new CommandRuntimeException("IAE", iae);
 			String message = cre.getMessage();
-			assertTrue("Contains underlying exceptions message", message.contains("Message: null"));
+			assertTrue("Contains underlying exceptions message", message.contains("null"));
 		}
 		
 	}
