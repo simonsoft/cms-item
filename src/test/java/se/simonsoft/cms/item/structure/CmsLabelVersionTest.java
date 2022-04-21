@@ -20,6 +20,12 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 public class CmsLabelVersionTest {
+	
+	@Test
+	public void testEqualsObject() {
+		assertTrue(new CmsLabelVersion("X").equals(new CmsLabelVersion("X")));
+		assertFalse(new CmsLabelVersion("X").equals(new CmsLabelVersion("x")));
+	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testNull() {

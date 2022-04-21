@@ -78,6 +78,11 @@ public class CmsLabelVersion implements CmsLabel, Comparable<CmsLabelVersion> {
 	}
 	
 	@Override
+	public boolean equals(Object obj) {
+		return obj != null && getLabel().equals(obj.toString());
+	}
+	
+	@Override
 	public int hashCode() {
 		return getLabel().hashCode();
 	}
