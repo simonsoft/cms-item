@@ -77,6 +77,11 @@ public class CmsLabelVersion implements CmsLabel, Comparable<CmsLabelVersion> {
 		return this.getLabel();
 	}
 	
+	@Override
+	public int hashCode() {
+		return getLabel().hashCode();
+	}
+	
 	
 	private static String getSortable(String s) {
 		if (s.length() > PAD.length()) {
