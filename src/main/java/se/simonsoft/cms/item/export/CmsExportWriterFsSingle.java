@@ -26,9 +26,6 @@ import java.nio.file.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import se.simonsoft.cms.item.export.CmsExportJob;
-import se.simonsoft.cms.item.export.CmsExportWriter;
-
 public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter.LocalFileSystem {
 
     private Path fsParent;
