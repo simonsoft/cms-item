@@ -18,12 +18,17 @@ package se.simonsoft.cms.item.structure;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class CmsLabelVersion implements CmsLabel, Comparable<CmsLabelVersion> {
 
 	private List<String> segments;
+	private List<String> prerelease;
 	
 	private static final String PAD = "0000000000";
+	private static final String RELEASE_SUFFIX = "-";
+	private static final String PRERELEASE_PREFIX = "+";
 	
 	
 	public CmsLabelVersion(String label) {
@@ -46,31 +51,66 @@ public class CmsLabelVersion implements CmsLabel, Comparable<CmsLabelVersion> {
 			throw new IllegalArgumentException("label can not contain consecutive '.'");
 		}
 		
-		// Creates an immutable list.
-		this.segments = List.of(label.split("\\."));
+		if (label.contains("-")) {
+			String release = label.substring(0, label.lastIndexOf("-"));
+			String pre = label.substring(label.lastIndexOf("-")+1);
+			this.segments = List.of(release.split("\\."));
+			this.prerelease = List.of(pre.split("\\."));
+		
+		} else {
+			// Creates an immutable list.
+			this.segments = List.of(label.split("\\."));
+			this.prerelease = null;
+		}
+		
 	}
 	
 	@Override
 	public String getLabel() {
-		return String.join(".", segments);
+		return String.join(".", segments) + (prerelease == null ? "" : "-" + String.join(".", prerelease)); 
 	}
 
 	public String getLabelSort() {
-		return String.join(".", getSegmentsSort());
+		// Always add the VERSION_SUFFIX to ensure sorting a release after a prerelease.
+		return String.join(".", getVersionSegmentsSort()) + (prerelease == null ? RELEASE_SUFFIX : PRERELEASE_PREFIX + String.join(".", getPrereleaseSegmentsSort())); 
 	}
 	
 	public List<String> getSegments() {
+		if (prerelease == null) {
+			return segments;
+		} else {
+			return Stream.concat(segments.stream(), prerelease.stream()).collect(Collectors.toList());
+		}
+	}
+
+	public List<String> getSegmentsSort() {
+		if (prerelease == null) {
+			return getSortable(segments, true);
+		} else {
+			return Stream.concat(getSortable(segments, true).stream(), getSortable(prerelease, false).stream()).collect(Collectors.toList());
+		}
+	}
+
+	
+	public List<String> getVersionSegments() {
 		// Already immutable.
 		return this.segments;
 	}
-	
-	public List<String> getSegmentsSort() {
-		ArrayList<String> l = new ArrayList<String>(this.segments.size());
-		for (String s: this.segments) {
-			l.add(getSortable(s));
-		}
-		return Collections.unmodifiableList(l);
+
+	public List<String> getVersionSegmentsSort() {
+		return getSortable(this.segments, true);
 	}
+	
+	
+	public List<String> getPrereleaseSegments() {
+		// Already immutable.
+		return this.prerelease;
+	}
+
+	public List<String> getPrereleaseSegmentsSort() {
+		return getSortable(this.prerelease, false);
+	}
+	
 	
 	@Override
 	public String toString() {
@@ -87,6 +127,21 @@ public class CmsLabelVersion implements CmsLabel, Comparable<CmsLabelVersion> {
 		return getLabel().hashCode();
 	}
 	
+	
+	private static List<String> getSortable(List<String> segments, boolean padAll) {
+		ArrayList<String> l = new ArrayList<String>(segments.size());
+		for (String s: segments) {
+			if (padAll) {
+				l.add(getSortable(s));
+			} else if (s.matches("^[0-9]+$")) {
+				// prerelease identifiers should only be padded if numerical
+				l.add(getSortable(s));
+			} else {
+				l.add(s);
+			}
+		}
+		return Collections.unmodifiableList(l);
+	}
 	
 	private static String getSortable(String s) {
 		if (s.length() > PAD.length()) {
