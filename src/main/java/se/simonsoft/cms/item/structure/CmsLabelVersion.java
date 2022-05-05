@@ -46,6 +46,8 @@ public class CmsLabelVersion implements CmsLabel, Comparable<CmsLabelVersion> {
 	private List<String> segments;
 	private List<String> prerelease;
 	
+	private static final List<String> EMPTY = Collections.unmodifiableList(new ArrayList<String>());
+	
 	private static final String PAD_NUM = "//////////"; // Slash precedes 0 in ASCII.
 	private static final String PAD_AUP = "@@@@@@@@@@"; // at precedes A in ASCII.
 	private static final String PAD_ALO = "``````````"; // accent precedes a in ASCII.
@@ -82,19 +84,19 @@ public class CmsLabelVersion implements CmsLabel, Comparable<CmsLabelVersion> {
 		} else {
 			// Creates an immutable list.
 			this.segments = List.of(label.split("\\."));
-			this.prerelease = null;
+			this.prerelease = EMPTY;
 		}
 		
 	}
 	
 	@Override
 	public String getLabel() {
-		return String.join(".", segments) + (prerelease == null ? "" : "-" + String.join(".", prerelease)); 
+		return String.join(".", segments) + (prerelease.isEmpty() ? "" : "-" + String.join(".", prerelease)); 
 	}
 
 	public String getLabelSort() {
 		// Always add the VERSION_SUFFIX to ensure sorting a release after a prerelease.
-		return String.join(".", getVersionSegmentsSort()) + (prerelease == null ? RELEASE_SUFFIX : PRERELEASE_PREFIX + String.join(".", getPrereleaseSegmentsSort())); 
+		return String.join(".", getVersionSegmentsSort()) + (prerelease.isEmpty() ? RELEASE_SUFFIX : PRERELEASE_PREFIX + String.join(".", getPrereleaseSegmentsSort())); 
 	}
 	
 	public List<String> getSegments() {
