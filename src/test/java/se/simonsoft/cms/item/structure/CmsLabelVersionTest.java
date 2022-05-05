@@ -73,45 +73,84 @@ public class CmsLabelVersionTest {
 	public void testSimple1() {
 		CmsLabelVersion l = new CmsLabelVersion("A");
 		assertEquals("A", l.getLabel());
-		assertEquals("000000000A-", l.getLabelSort());
+		assertEquals("@@@@@@@@@A-", l.getLabelSort());
 		assertEquals(1, l.getSegments().size());
 		assertEquals("A", l.getSegments().get(0));
-		assertEquals("000000000A", l.getSegmentsSort().get(0));
+		assertEquals("@@@@@@@@@A", l.getSegmentsSort().get(0));
 		
 		assertEquals("A", l.toString());
+	}
+	
+	@Test
+	public void testSimpleSort1() { // Semver 2.0.0 introduced prerelease strings.
+		TreeSet<CmsLabelVersion> set = new TreeSet<CmsLabelVersion>();
+		set.add(new CmsLabelVersion("10"));
+		set.add(new CmsLabelVersion("2"));
+		set.add(new CmsLabelVersion("20"));
+		set.add(new CmsLabelVersion("a"));
+		set.add(new CmsLabelVersion("b"));
+		set.add(new CmsLabelVersion("aa"));
+		set.add(new CmsLabelVersion("ba"));
+		set.add(new CmsLabelVersion("A"));
+		set.add(new CmsLabelVersion("B"));
+		set.add(new CmsLabelVersion("AA"));
+		set.add(new CmsLabelVersion("BA"));
+		set.add(new CmsLabelVersion("9"));
+		set.add(new CmsLabelVersion("99"));
+		set.add(new CmsLabelVersion("999"));
+		
+		//assertEquals("AAAAAAAAAB-", new CmsLabelVersion("B").getLabelSort());
+		//assertEquals("aaaaaaaaab-", new CmsLabelVersion("b").getLabelSort());
+		
+		assertEquals(14, set.size());
+		Iterator<CmsLabelVersion> it = set.iterator();
+		assertEquals("2", it.next().getLabel());
+		assertEquals("9", it.next().getLabel());
+		assertEquals("10", it.next().getLabel());
+		assertEquals("20", it.next().getLabel());
+		assertEquals("99", it.next().getLabel());
+		assertEquals("999", it.next().getLabel());
+		assertEquals("A", it.next().getLabel());
+		assertEquals("B", it.next().getLabel());
+		assertEquals("AA", it.next().getLabel());
+		assertEquals("BA", it.next().getLabel());
+		assertEquals("a", it.next().getLabel());
+		assertEquals("b", it.next().getLabel());
+		assertEquals("aa", it.next().getLabel());
+		assertEquals("ba", it.next().getLabel());
 	}
 
 	@Test
 	public void testSimple2() {
 		CmsLabelVersion l = new CmsLabelVersion("A.2");
 		assertEquals("A.2", l.getLabel());
-		assertEquals("000000000A.0000000002-", l.getLabelSort());
+		assertEquals("@@@@@@@@@A./////////2-", l.getLabelSort());
 		assertEquals(2, l.getSegments().size());
 		assertEquals("A", l.getSegments().get(0));
 		assertEquals("2", l.getSegments().get(1));
-		assertEquals("000000000A", l.getSegmentsSort().get(0));
-		assertEquals("0000000002", l.getSegmentsSort().get(1));
+		assertEquals("@@@@@@@@@A", l.getSegmentsSort().get(0));
+		assertEquals("/////////2", l.getSegmentsSort().get(1));
 	}
 	
 	@Test
 	public void testSimple3() {
 		CmsLabelVersion l = new CmsLabelVersion("A.2.1234");
 		assertEquals("A.2.1234", l.getLabel());
-		assertEquals("000000000A.0000000002.0000001234-", l.getLabelSort());
+		assertEquals("@@@@@@@@@A./////////2.//////1234-", l.getLabelSort());
 		assertEquals(3, l.getSegments().size());
 		assertEquals("A", l.getSegments().get(0));
 		assertEquals("2", l.getSegments().get(1));
 		assertEquals("1234", l.getSegments().get(2));
-		assertEquals("000000000A", l.getSegmentsSort().get(0));
-		assertEquals("0000000002", l.getSegmentsSort().get(1));
-		assertEquals("0000001234", l.getSegmentsSort().get(2));
+		assertEquals("@@@@@@@@@A", l.getSegmentsSort().get(0));
+		assertEquals("/////////2", l.getSegmentsSort().get(1));
+		assertEquals("//////1234", l.getSegmentsSort().get(2));
 	}
 	
 	@Test
 	public void testSimple5() {
 		CmsLabelVersion l = new CmsLabelVersion("A.2.1234.b-876.arm");
 		assertEquals("A.2.1234.b-876.arm", l.getLabel());
-		assertEquals("000000000A.0000000002.0000001234.000000000b+0000000876.arm", l.getLabelSort());
+		assertEquals("@@@@@@@@@A./////////2.//////1234.`````````b+///////876.arm", l.getLabelSort());
 		assertEquals(6, l.getSegments().size());
 		assertEquals("A", l.getSegments().get(0));
 		assertEquals("2", l.getSegments().get(1));
@@ -119,11 +158,11 @@ public class CmsLabelVersionTest {
 		assertEquals("b", l.getSegments().get(3));
 		assertEquals("876", l.getSegments().get(4));
 		assertEquals("arm", l.getSegments().get(5));
-		assertEquals("000000000A", l.getSegmentsSort().get(0));
-		assertEquals("0000000002", l.getSegmentsSort().get(1));
-		assertEquals("0000001234", l.getSegmentsSort().get(2));
-		assertEquals("000000000b", l.getSegmentsSort().get(3));
-		assertEquals("0000000876", l.getSegmentsSort().get(4));
+		assertEquals("@@@@@@@@@A", l.getSegmentsSort().get(0));
+		assertEquals("/////////2", l.getSegmentsSort().get(1));
+		assertEquals("//////1234", l.getSegmentsSort().get(2));
+		assertEquals("`````````b", l.getSegmentsSort().get(3));
+		assertEquals("///////876", l.getSegmentsSort().get(4));
 		assertEquals("arm", l.getSegmentsSort().get(5));
 		
 		assertEquals(4, l.getVersionSegments().size());
@@ -131,15 +170,15 @@ public class CmsLabelVersionTest {
 		assertEquals("2", l.getVersionSegments().get(1));
 		assertEquals("1234", l.getVersionSegments().get(2));
 		assertEquals("b", l.getVersionSegments().get(3));
-		assertEquals("000000000A", l.getVersionSegmentsSort().get(0));
-		assertEquals("0000000002", l.getVersionSegmentsSort().get(1));
-		assertEquals("0000001234", l.getVersionSegmentsSort().get(2));
-		assertEquals("000000000b", l.getVersionSegmentsSort().get(3));
+		assertEquals("@@@@@@@@@A", l.getVersionSegmentsSort().get(0));
+		assertEquals("/////////2", l.getVersionSegmentsSort().get(1));
+		assertEquals("//////1234", l.getVersionSegmentsSort().get(2));
+		assertEquals("`````````b", l.getVersionSegmentsSort().get(3));
 		
 		assertEquals(2, l.getPrereleaseSegments().size());
 		assertEquals("876", l.getPrereleaseSegments().get(0));
 		assertEquals("arm", l.getPrereleaseSegments().get(1));
-		assertEquals("0000000876", l.getPrereleaseSegmentsSort().get(0));
+		assertEquals("///////876", l.getPrereleaseSegmentsSort().get(0));
 		assertEquals("arm", l.getPrereleaseSegmentsSort().get(1));
 	}
 	
@@ -147,14 +186,14 @@ public class CmsLabelVersionTest {
 	public void testLongSegment() { // Long segments simply not padded.
 		CmsLabelVersion l = new CmsLabelVersion("A.abcdeXfghijk.1234");
 		assertEquals("A.abcdeXfghijk.1234", l.getLabel());
-		assertEquals("000000000A.abcdeXfghijk.0000001234-", l.getLabelSort());
+		assertEquals("@@@@@@@@@A.abcdeXfghijk.//////1234-", l.getLabelSort());
 		assertEquals(3, l.getSegments().size());
 		assertEquals("A", l.getSegments().get(0));
 		assertEquals("abcdeXfghijk", l.getSegments().get(1));
 		assertEquals("1234", l.getSegments().get(2));
-		assertEquals("000000000A", l.getSegmentsSort().get(0));
+		assertEquals("@@@@@@@@@A", l.getSegmentsSort().get(0));
 		assertEquals("abcdeXfghijk", l.getSegmentsSort().get(1));
-		assertEquals("0000001234", l.getSegmentsSort().get(2));
+		assertEquals("//////1234", l.getSegmentsSort().get(2));
 	}
 	
 	@Test
@@ -171,33 +210,33 @@ public class CmsLabelVersionTest {
 	public void testSemverPre1() { // Semver 2.0.0 introduced prerelease strings.
 		CmsLabelVersion l = new CmsLabelVersion("A.3.10-beta.11");
 		assertEquals("A.3.10-beta.11", l.getLabel());
-		assertEquals("000000000A.0000000003.0000000010+beta.0000000011", l.getLabelSort());
+		assertEquals("@@@@@@@@@A./////////3.////////10+beta.////////11", l.getLabelSort());
 		assertEquals(5, l.getSegments().size());
 		assertEquals("A", l.getSegments().get(0));
 		assertEquals("3", l.getSegments().get(1));
 		assertEquals("10", l.getSegments().get(2));
 		assertEquals("beta", l.getSegments().get(3));
 		assertEquals("11", l.getSegments().get(4));
-		assertEquals("000000000A", l.getSegmentsSort().get(0));
-		assertEquals("0000000003", l.getSegmentsSort().get(1));
-		assertEquals("0000000010", l.getSegmentsSort().get(2));
+		assertEquals("@@@@@@@@@A", l.getSegmentsSort().get(0));
+		assertEquals("/////////3", l.getSegmentsSort().get(1));
+		assertEquals("////////10", l.getSegmentsSort().get(2));
 		assertEquals("beta", l.getSegmentsSort().get(3));
-		assertEquals("0000000011", l.getSegmentsSort().get(4));
+		assertEquals("////////11", l.getSegmentsSort().get(4));
 		
 		assertEquals(3, l.getVersionSegments().size());
 		assertEquals("A", l.getVersionSegments().get(0));
 		assertEquals("3", l.getVersionSegments().get(1));
 		assertEquals("10", l.getVersionSegments().get(2));
-		assertEquals("000000000A", l.getVersionSegmentsSort().get(0));
-		assertEquals("0000000003", l.getVersionSegmentsSort().get(1));
-		assertEquals("0000000010", l.getVersionSegmentsSort().get(2));
+		assertEquals("@@@@@@@@@A", l.getVersionSegmentsSort().get(0));
+		assertEquals("/////////3", l.getVersionSegmentsSort().get(1));
+		assertEquals("////////10", l.getVersionSegmentsSort().get(2));
 		
 		
 		assertEquals(2, l.getPrereleaseSegments().size());
 		assertEquals("beta", l.getPrereleaseSegments().get(0));
 		assertEquals("11", l.getPrereleaseSegments().get(1));
 		assertEquals("beta", l.getPrereleaseSegmentsSort().get(0));
-		assertEquals("0000000011", l.getPrereleaseSegmentsSort().get(1));
+		assertEquals("////////11", l.getPrereleaseSegmentsSort().get(1));
 		
 		// Release of the same Beta
 		CmsLabelVersion lR = new CmsLabelVersion("A.3.10");
@@ -252,7 +291,7 @@ public class CmsLabelVersionTest {
 	public void testSemverTrail1() { // Trailing hyphen preserved.
 		CmsLabelVersion l = new CmsLabelVersion("A.3.10-");
 		assertEquals("A.3.10-", l.getLabel());
-		assertEquals("000000000A.0000000003.0000000010+", l.getLabelSort());
+		assertEquals("@@@@@@@@@A./////////3.////////10+", l.getLabelSort());
 		
 		assertEquals(4, l.getSegments().size());
 		assertEquals(3, l.getVersionSegments().size());
@@ -261,9 +300,9 @@ public class CmsLabelVersionTest {
 		assertEquals("3", l.getSegments().get(1));
 		assertEquals("10", l.getSegments().get(2));
 		assertEquals("", l.getSegments().get(3));
-		assertEquals("000000000A", l.getSegmentsSort().get(0));
-		assertEquals("0000000003", l.getSegmentsSort().get(1));
-		assertEquals("0000000010", l.getSegmentsSort().get(2));
+		assertEquals("@@@@@@@@@A", l.getSegmentsSort().get(0));
+		assertEquals("/////////3", l.getSegmentsSort().get(1));
+		assertEquals("////////10", l.getSegmentsSort().get(2));
 		assertEquals("", l.getSegmentsSort().get(3));
 	}
 	
@@ -271,7 +310,7 @@ public class CmsLabelVersionTest {
 	public void testSemverTrailPre1() { // Trailing hyphen considered empty prerelease, makes no sense.
 		CmsLabelVersion l = new CmsLabelVersion("A.3.10-beta-");
 		assertEquals("A.3.10-beta-", l.getLabel());
-		assertEquals("000000000A.0000000003.00010-beta+", l.getLabelSort());
+		assertEquals("@@@@@@@@@A./////////3.```10-beta+", l.getLabelSort());
 		assertEquals(4, l.getSegments().size());
 		assertEquals(3, l.getVersionSegments().size());
 		assertEquals(1, l.getPrereleaseSegments().size());

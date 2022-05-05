@@ -21,12 +21,34 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Identifies a version / release attempting to support both simple series and Semantic Versioning (SemVer).
+ *  - Supports sort ordering both simple series and Semantic Versioning, where multiple identifiers are separated by '.'.
+ *  - Characters are expected to stay within: a-z, A-Z, 0-9, full stop, hyphen and underscore.
+ *  - The label must not exceed 20 characters in length.
+ *  - Each version identifier (separated by '.') is sorted individually. 
+ *  - Both alpha and numeric identifiers are sorted as a series, e.g.: 2 < 10 < A < B < AA < BA < a < b < aa < ba
+ * 
+ * Prerelease identifiers are handled very similar to the SemVer 2.0.0 specification.
+ *  - Identifiers following the last hyphen are considered pre-release identifiers.
+ *  - Pre-release identifiers consisting of only digits are sorted numerically.
+ *  - Pre-release identifiers with letters are sorted lexically (different than release identifiers).
+ *  
+ *  Additional release identifiers vs prerelease identifier should be used to indicate their respective meaning.
+ *  - An additional release identifier indicates a more mature release.
+ *  - A prerelease identifier indicated a less mature version than the upcoming release.
+ *  - E.g. A.3 < A.4-beta < A.4 < A.4.0 < A.4.1 
+ *
+ * https://semver.org/spec/v2.0.0.html
+ */
 public class CmsLabelVersion implements CmsLabel, Comparable<CmsLabelVersion> {
 
 	private List<String> segments;
 	private List<String> prerelease;
 	
-	private static final String PAD = "0000000000";
+	private static final String PAD_NUM = "//////////"; // Slash precedes 0 in ASCII.
+	private static final String PAD_AUP = "@@@@@@@@@@"; // at precedes A in ASCII.
+	private static final String PAD_ALO = "``````````"; // accent precedes a in ASCII.
 	private static final String RELEASE_SUFFIX = "-";
 	private static final String PRERELEASE_PREFIX = "+";
 	
@@ -85,30 +107,35 @@ public class CmsLabelVersion implements CmsLabel, Comparable<CmsLabelVersion> {
 
 	public List<String> getSegmentsSort() {
 		if (prerelease == null) {
-			return getSortable(segments, true);
+			return getSortable(segments, false);
 		} else {
-			return Stream.concat(getSortable(segments, true).stream(), getSortable(prerelease, false).stream()).collect(Collectors.toList());
+			return Stream.concat(getSortable(segments, false).stream(), getSortable(prerelease, true).stream()).collect(Collectors.toList());
 		}
 	}
 
 	
+	/**
+	 * @return list of Release version identifiers (excl prerelease)
+	 */
 	public List<String> getVersionSegments() {
 		// Already immutable.
 		return this.segments;
 	}
 
 	public List<String> getVersionSegmentsSort() {
-		return getSortable(this.segments, true);
+		return getSortable(this.segments, false);
 	}
 	
-	
+	/**
+	 * @return list of Pre-Release version identifiers (excl identifiers preceeding the last hyphen)
+	 */
 	public List<String> getPrereleaseSegments() {
 		// Already immutable.
 		return this.prerelease;
 	}
 
 	public List<String> getPrereleaseSegmentsSort() {
-		return getSortable(this.prerelease, false);
+		return getSortable(this.prerelease, true);
 	}
 	
 	
@@ -128,10 +155,10 @@ public class CmsLabelVersion implements CmsLabel, Comparable<CmsLabelVersion> {
 	}
 	
 	
-	private static List<String> getSortable(List<String> segments, boolean padAll) {
+	private static List<String> getSortable(List<String> segments, boolean prerelease) {
 		ArrayList<String> l = new ArrayList<String>(segments.size());
 		for (String s: segments) {
-			if (padAll) {
+			if (!prerelease) {
 				l.add(getSortable(s));
 			} else if (s.matches("^[0-9]+$")) {
 				// prerelease identifiers should only be padded if numerical
@@ -144,6 +171,8 @@ public class CmsLabelVersion implements CmsLabel, Comparable<CmsLabelVersion> {
 	}
 	
 	private static String getSortable(String s) {
+		// Pad with the first character in each subgroup.
+		String PAD = (s.matches("^[0-9]+$") ? PAD_NUM : (s.matches("^[0-9A-Z_]+$") ? PAD_AUP : PAD_ALO));
 		if (s.length() > PAD.length()) {
 			return s;
 		} else {
