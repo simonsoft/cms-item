@@ -55,4 +55,6 @@ public interface CmsExportReader {
     
     public void getContents(OutputStream receiver) throws IOException;
     
+    public Long getContentLength();
+    
 }

@@ -60,6 +60,8 @@ public class CmsExportReaderFsSingleTest {
 		CmsExportReaderFsSingle fsReaderSingle = new CmsExportReaderFsSingle(tempDir.toFile());
 		fsReaderSingle.prepare(importJob);
 		
+		assertEquals("content / file size from reader", Long.valueOf(175), fsReaderSingle.getContentLength());
+		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		fsReaderSingle.getContents(baos);
 		

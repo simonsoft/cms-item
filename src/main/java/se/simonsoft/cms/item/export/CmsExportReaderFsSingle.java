@@ -32,6 +32,7 @@ public class CmsExportReaderFsSingle implements CmsExportReader {
 	private final Path fsParent;
 	
 	private CmsImportJob importJob;
+	private Long contentLength = null;
 	private boolean ready = false;
 	
 	private static final Logger logger = LoggerFactory.getLogger(CmsExportReaderFsSingle.class);
@@ -77,10 +78,24 @@ public class CmsExportReaderFsSingle implements CmsExportReader {
 			throw new IllegalStateException("Import path does exist but is not readable: " + completePath);
 		}
 		
+		try {
+			this.contentLength = Files.size(completePath);
+		} catch (IOException e) {
+			throw new IllegalStateException("Import path does exist but failed to determine file size: " + completePath);
+		}
+		
 		this.ready = true;
 		
 		logger.debug("Reader is prepared.");
 		
+	}
+	
+	@Override
+	public Long getContentLength() {
+		if (!isReady()) {
+			throw new IllegalStateException("CmsExportFsReaderSingle has to be prepared before getting content length.");
+		}
+		return contentLength;
 	}
 
 	@Override
