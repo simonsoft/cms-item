@@ -153,15 +153,16 @@ public class CmsExportJob extends CmsExportJobBase {
         CmsExportTagKey cmsExportTagKey = new CmsExportTagKey(key);
         CmsExportTagValue cmsExportTagValue = new CmsExportTagValue(value);
 
-        if (value == null) {
-            throw new IllegalArgumentException("Can not add null value as tag");
-        }
+        return withTagging(cmsExportTagKey, cmsExportTagValue);
+    }
+    
+    public CmsExportJob withTagging(CmsExportTagKey key, CmsExportTagValue value) {
 
-        if (tagMap.containsKey(cmsExportTagKey)) {
+        if (tagMap.containsKey(key)) {
             throw new IllegalArgumentException("The tag already exist in map. Tag: " + key);
         }
 
-        tagMap.put(cmsExportTagKey, cmsExportTagValue);
+        tagMap.put(key, value);
         return this;
     }
 
