@@ -132,18 +132,23 @@ public class CmsExportJob extends CmsExportJobBase {
 
     public CmsExportJob withMeta(String key, String value) {
         CmsExportMetaKey cmsExportMetaKey = new CmsExportMetaKey(key);
+        return withMeta(cmsExportMetaKey, value);
+    }
+    
+    public CmsExportJob withMeta(CmsExportMetaKey key, String value) {
 
         if (value == null || value.isEmpty()) {
             throw new IllegalArgumentException("Can not add empty or null value as meta");
         }
 
-        if (metaMap.containsKey(cmsExportMetaKey)) {
+        if (metaMap.containsKey(key)) {
             throw new IllegalArgumentException("The meta key already exist in map. Key: " + key);
         }
 
-        metaMap.put(cmsExportMetaKey, value);
+        metaMap.put(key, value);
         return this;
     }
+    
     
     public Map<CmsExportTagKey, CmsExportTagValue> getTagging() {
         return Collections.unmodifiableMap(this.tagMap);
@@ -166,6 +171,7 @@ public class CmsExportJob extends CmsExportJobBase {
         return this;
     }
 
+    
     public interface SingleItem {
 
         void getResultStream(OutputStream out);
