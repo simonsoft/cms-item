@@ -96,7 +96,7 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
             Set<CmsItemId> immediateFiles = lookup.getImmediateFiles(folder);
 
             if (!isFolderFullOrEmpty(immediateFiles)) {
-                logger.info("Folder is not full and there is previous files, returning file based on previous file name with counter incremented by 1");
+                logger.info("Folder is not full and there are previous files, returning file based on previous filename with counter incremented by 1");
 
                 CmsItemId itemIdWithHighestNumber = getItemIdWithHighestNumber(immediateFiles);
                 if (itemIdWithHighestNumber == null) {
