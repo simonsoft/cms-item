@@ -23,4 +23,5 @@ public interface CmsCurrentUser {
 	
 	public String getUsername();
 
+	public String getUserRoles();
 }
