@@ -28,4 +28,10 @@ public interface WorkflowItemInputUserId extends WorkflowItemInput {
 
 	@JsonSetter("userid")
 	void setUserId(String userId);
+	
+	@JsonGetter("userroles")
+	String getUserRoles();
+
+	@JsonSetter("userroles")
+	void setUserRoles(String userRoles);
 }
