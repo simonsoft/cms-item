@@ -66,9 +66,12 @@ public class CmsItemURLEncoderTest {
 	public void testEncodeSvnkitMultibyteCharacters() {
 
 		StringBuilder sb = new StringBuilder(64);
-		sb.append("αβγ");			// 2-bytes characters
-		sb.append("൦൪൬൮");			// 3-bytes characters
-		sb.append("😀😲🙂😕😠");	// 4-bytes characters
+		// 2-bytes characters
+		sb.append("αβγ");
+		// 3-bytes characters
+		sb.append("൦൪൬൮");
+		// 4-bytes characters
+		sb.append("😀😲🙂😕😠");
 		String str = sb.toString();
 
 		// Svnkit encoding as of Svnkit 1.8.4.
