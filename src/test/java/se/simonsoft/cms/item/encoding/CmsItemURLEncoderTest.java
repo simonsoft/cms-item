@@ -32,7 +32,7 @@ public class CmsItemURLEncoderTest {
 
 		StringBuilder sb = new StringBuilder(300);
 
-		for (int i = 1; i <= 300; i++) {
+		for (int i = 1; i <= 256; i++) {
 			char[] ch = Character.toChars(i);
 			if (!invalidChars.contains(new String(ch))) {
 				sb.append(ch);
@@ -53,9 +53,7 @@ public class CmsItemURLEncoderTest {
 			"%C3%90%C3%91%C3%92%C3%93%C3%94%C3%95%C3%96%C3%97%C3%98%C3%99%C3%9A%C3%9B%C3%9C%C3%9D%C3%9E%C3%9F",
 			"%C3%A0%C3%A1%C3%A2%C3%A3%C3%A4%C3%A5%C3%A6%C3%A7%C3%A8%C3%A9%C3%AA%C3%AB%C3%AC%C3%AD%C3%AE%C3%AF",
 			"%C3%B0%C3%B1%C3%B2%C3%B3%C3%B4%C3%B5%C3%B6%C3%B7%C3%B8%C3%B9%C3%BA%C3%BB%C3%BC%C3%BD%C3%BE%C3%BF",
-			"%C4%80%C4%81%C4%82%C4%83%C4%84%C4%85%C4%86%C4%87%C4%88%C4%89%C4%8A%C4%8B%C4%8C%C4%8D%C4%8E%C4%8F",
-			"%C4%90%C4%91%C4%92%C4%93%C4%94%C4%95%C4%96%C4%97%C4%98%C4%99%C4%9A%C4%9B%C4%9C%C4%9D%C4%9E%C4%9F",
-			"%C4%A0%C4%A1%C4%A2%C4%A3%C4%A4%C4%A5%C4%A6%C4%A7%C4%A8%C4%A9%C4%AA%C4%AB%C4%AC"
+			"%C4%80"
 		);
 		
 		CmsItemURLEncoder encoder = new CmsItemURLEncoder();
