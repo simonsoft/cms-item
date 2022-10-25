@@ -62,4 +62,25 @@ public class CmsItemURLEncoderTest {
 
 	}
 
+	@Test
+	public void testEncodeSvnkitMultibyteCharacters() {
+
+		StringBuilder sb = new StringBuilder(64);
+		sb.append("αβγ");			// 2-bytes characters
+		sb.append("൦൪൬൮");			// 3-bytes characters
+		sb.append("😀😲🙂😕😠");	// 4-bytes characters
+		String str = sb.toString();
+
+		// Svnkit encoding as of Svnkit 1.8.4.
+		String svnKitExpected = String.join("",
+			"%CE%B1%CE%B2%CE%B3",
+			"%E0%B5%A6%E0%B5%AA%E0%B5%AC%E0%B5%AE",
+			"%F0%9F%98%80%F0%9F%98%B2%F0%9F%99%82%F0%9F%98%95%F0%9F%98%A0"
+		);
+
+		CmsItemURLEncoder encoder = new CmsItemURLEncoder();
+
+		assertEquals("ensure encoding is same as Svnkit", svnKitExpected, encoder.encode(str));
+
+	}
 }
