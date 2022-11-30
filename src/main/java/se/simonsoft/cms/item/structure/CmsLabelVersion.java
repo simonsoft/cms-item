@@ -128,6 +128,10 @@ public class CmsLabelVersion implements CmsLabel, Comparable<CmsLabelVersion> {
 		return getSortable(this.segments, false);
 	}
 	
+	public List<Long> getVersionSegmentsNumeric() {
+		return getNumeric(this.segments);
+	}
+	
 	/**
 	 * @return list of Pre-Release version identifiers (excl identifiers preceeding the last hyphen)
 	 */
@@ -182,6 +186,35 @@ public class CmsLabelVersion implements CmsLabel, Comparable<CmsLabelVersion> {
 		}
 	}
 
+	private static List<Long> getNumeric(List<String> segments) {
+		ArrayList<Long> l = new ArrayList<>(segments.size());
+		for (String s: segments) {
+			l.add(getNumeric(s));
+		}
+		return l;
+	}
+	
+	private static Long getNumeric(String s) {
+		if (s.matches("^[0-9]+$")) {
+			return Long.valueOf(s);
+		} else if (s.matches("^[a-zA-Z]+$")) {
+			if (s.length() > 1) {
+				// TODO: Investigate if we can support 10 chars with 36 as multiplier.
+				throw new NumberFormatException("The version identifier must not exceed 1 character: " + s);
+			}
+			
+			Long r = 0L;
+			for (int i = 0; i < s.length(); i++) {
+				int v = Character.getNumericValue(s.charAt(i));
+				// TODO: Decide multiplier (100 / 36 / 40 / 50 / 64).
+				r = 100*r + v;
+			}
+			return r;
+		} else {
+			throw new NumberFormatException("For version identifier: " + s);		
+		}
+	}
+	
 	@Override
 	public int compareTo(CmsLabelVersion o) {
 		return this.getLabelSort().compareTo(o.getLabelSort());
