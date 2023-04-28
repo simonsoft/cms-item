@@ -21,7 +21,13 @@ package se.simonsoft.cms.item.info;
  */
 public interface CmsCurrentUser {
 	
+	/**
+	 * @return the username
+	 */
 	public String getUsername();
 
+	/**
+	 * @return a comma-separated list of roles assigned to the user
+	 */
 	public String getUserRoles();
 }
