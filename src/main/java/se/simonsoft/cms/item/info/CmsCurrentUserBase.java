@@ -15,27 +15,27 @@
  */
 package se.simonsoft.cms.item.info;
 
+import java.util.HashSet;
 import java.util.Set;
 
-/**
- * Abstraction providing information about the current user for the current request.
- *
- */
-public interface CmsCurrentUser {
-	
-	/**
-	 * @return the username
-	 */
-	public String getUsername();
+public abstract class CmsCurrentUserBase implements CmsCurrentUser {
+    Set<String> roles;
 
-	/**
-	 * @return a comma-separated list of roles assigned to the user
-	 */
-	public String getUserRoles();
+    public CmsCurrentUserBase(Set<String> roles) {
+        this.roles = roles;
+    }
 
-	/**
-	 * @param expectedRoles a set of roles to query
-	 * @return true if any of the expected roles have been assigned to the user
-	 */
-	public boolean hasRole(Set<String> expectedRoles);
+    @Override
+    public String getUserRoles() {
+        return String.join(",", this.roles);
+    }
+
+    @Override
+    public boolean hasRole(Set<String> expectedRoles) {
+        if (expectedRoles.size() == 1 && expectedRoles.contains("*")) return true;
+        for (String role : expectedRoles) {
+            if (this.roles.contains(role)) return true;
+        }
+        return false;
+    }
 }
