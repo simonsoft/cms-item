@@ -16,25 +16,16 @@
 package se.simonsoft.cms.item.info;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public abstract class CmsCurrentUserBase implements CmsCurrentUser {
-    Set<String> roles;
-
-    public CmsCurrentUserBase(Set<String> roles) {
-        this.roles = roles;
-    }
-
-    @Override
-    public String getUserRoles() {
-        return String.join(",", this.roles);
-    }
-
     @Override
     public boolean hasRole(Set<String> expectedRoles) {
+        Set<String> roles = new HashSet<>(List.of(this.getUserRoles().split(",")));
         if (expectedRoles.size() == 1 && expectedRoles.contains("*")) return true;
         for (String role : expectedRoles) {
-            if (this.roles.contains(role)) return true;
+            if (roles.contains(role)) return true;
         }
         return false;
     }

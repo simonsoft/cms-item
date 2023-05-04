@@ -25,22 +25,27 @@ import static org.junit.Assert.*;
 public class CmsCurrentUserBaseTest {
 
 	class CmsCurrentUserBaseMock extends CmsCurrentUserBase {
-		public CmsCurrentUserBaseMock(Set<String> roles) {
-			super(roles);
+		@Override
+		public String getUsername() {
+			return null;
 		}
 
 		@Override
-		public String getUsername() {
+		public String getUserRoles() {
 			return null;
 		}
 	}
 
 	@Test
 	public void testSingleRole() {
-		Set<String> assignedRoles = new HashSet<>();
-
-		assignedRoles.add("CmsAdmin");
-		CmsCurrentUserBaseMock cmsCurrentUserBaseMock = new CmsCurrentUserBaseMock(assignedRoles);
+		CmsCurrentUserBaseMock cmsCurrentUserBaseMock = new CmsCurrentUserBaseMock() {
+			@Override
+			public String getUserRoles() {
+				Set<String> assignedRoles = new HashSet<>();
+				assignedRoles.add("CmsAdmin");
+				return String.join(",", assignedRoles);
+			}
+		};
 
 		Set<String> expectedRoles = new HashSet<>();
 		assertFalse(cmsCurrentUserBaseMock.hasRole(expectedRoles));
@@ -57,12 +62,16 @@ public class CmsCurrentUserBaseTest {
 
 	@Test
 	public void testMultipleRoles() {
-		Set<String> assignedRoles = new HashSet<>();
-
-		assignedRoles.add("CmsAdmin");
-		assignedRoles.add("CmsUserSuper");
-		assignedRoles.add("CmsUser");
-		CmsCurrentUserBaseMock cmsCurrentUserBaseMock = new CmsCurrentUserBaseMock(assignedRoles);
+		CmsCurrentUserBaseMock cmsCurrentUserBaseMock = new CmsCurrentUserBaseMock() {
+			@Override
+			public String getUserRoles() {
+				Set<String> assignedRoles = new HashSet<>();
+				assignedRoles.add("CmsAdmin");
+				assignedRoles.add("CmsUserSuper");
+				assignedRoles.add("CmsUser");
+				return String.join(",", assignedRoles);
+			}
+		};
 
 		Set<String> expectedRoles = new HashSet<>();
 		assertFalse(cmsCurrentUserBaseMock.hasRole(expectedRoles));
@@ -86,17 +95,29 @@ public class CmsCurrentUserBaseTest {
 
 	@Test
 	public void testWildcard() {
-		Set<String> assignedRoles = new HashSet<>();
-		CmsCurrentUserBaseMock cmsCurrentUserBaseMock = new CmsCurrentUserBaseMock(assignedRoles);
+		CmsCurrentUserBaseMock cmsCurrentUserBaseMock = new CmsCurrentUserBaseMock() {
+			@Override
+			public String getUserRoles() {
+				Set<String> assignedRoles = new HashSet<>();
+				return String.join(",", assignedRoles);
+			}
+		};
 
 		Set<String> expectedRoles = new HashSet<>();
 		expectedRoles.add("*");
 		assertTrue(cmsCurrentUserBaseMock.hasRole(expectedRoles));
 
-		assignedRoles.add("CmsAdmin");
-		assignedRoles.add("CmsUserSuper");
-		assignedRoles.add("CmsUser");
-		cmsCurrentUserBaseMock = new CmsCurrentUserBaseMock(assignedRoles);
+		cmsCurrentUserBaseMock = new CmsCurrentUserBaseMock() {
+			@Override
+			public String getUserRoles() {
+				Set<String> assignedRoles = new HashSet<>();
+				assignedRoles.add("CmsAdmin");
+				assignedRoles.add("CmsUserSuper");
+				assignedRoles.add("CmsUser");
+				return String.join(",", assignedRoles);
+			}
+		};
+
 		assertTrue(cmsCurrentUserBaseMock.hasRole(expectedRoles));
 
 		expectedRoles.add("CmsUserFoo");
