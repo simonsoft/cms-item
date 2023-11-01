@@ -32,8 +32,9 @@ public interface CmsItemLock {
 	Date getDateExpiration();
 	
 	/**
-	 * @return the lock token
+	 * @return the lock token (may contain a prefix in addition to UUID)
 	 */
+	// TODO: Consider adding getTokenUUID returning only the UUID part without "opaquelocktoken:".
 	String getToken();
 	
 
