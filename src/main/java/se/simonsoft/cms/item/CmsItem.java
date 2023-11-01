@@ -67,6 +67,8 @@ public interface CmsItem {
 	 */
 	String getStatus();	
 	
+	// TODO: Add isCmsClass(String class) performing tokenization of cms:class attribute.
+	
 	/**
 	 * @return contents checksum
 	 */
