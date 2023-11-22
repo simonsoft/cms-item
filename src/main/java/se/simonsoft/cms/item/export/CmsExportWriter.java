@@ -37,4 +37,12 @@ public interface CmsExportWriter {
     	 */
     	String getExportUrl();
     }
+    
+    public interface ResultSingle extends CmsExportWriter {
+        
+    	/**
+    	 * @return the job name and path to the exported file, relative to writer prefixes (version, CloudId etc).
+    	 */
+    	CmsImportJob getImportJob();
+    }
 }
