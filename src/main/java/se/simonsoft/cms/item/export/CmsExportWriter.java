@@ -30,6 +30,7 @@ public interface CmsExportWriter {
     	Path getExportPath();
     }
     
+    // TODO: Deprecate. The server-relative requirement was related to DAV.
     public interface ResultUrl extends CmsExportWriter {
         
     	/**
