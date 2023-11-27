@@ -47,6 +47,8 @@ public class CmsCurrentUserBaseTest {
 			}
 		};
 
+		assertFalse(cmsCurrentUserBaseMock.hasRole(null));
+		
 		Set<String> expectedRoles = new HashSet<>();
 		assertFalse(cmsCurrentUserBaseMock.hasRole(expectedRoles));
 

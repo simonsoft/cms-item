@@ -23,6 +23,7 @@ public abstract class CmsCurrentUserBase implements CmsCurrentUser {
     @Override
     public boolean hasRole(Set<String> expectedRoles) {
         Set<String> roles = (this.getUserRoles() == null) ? new HashSet<>() : new HashSet<>(List.of(this.getUserRoles().split(",")));
+        if (expectedRoles == null) return false;
         if (expectedRoles.size() == 1 && expectedRoles.contains("*")) return true;
         for (String role : expectedRoles) {
             if (roles.contains(role)) return true;
