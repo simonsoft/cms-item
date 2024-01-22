@@ -17,6 +17,8 @@ package se.simonsoft.cms.item;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
@@ -100,6 +102,9 @@ public class CmsItemLockCollectionTest {
 		assertTrue(locks.containsPath(new CmsItemPath("/3")));
 		assertFalse(locks.containsPath(new CmsItemPath("/11")));
 		assertFalse(locks.containsPath(null));
+		assertNotNull(locks.getLocked(new CmsItemPath("/1")));
+		assertNull(locks.getLocked(new CmsItemPath("/11")));
+		assertNull(locks.getLocked((CmsItemPath) null));
 	}
 
 	@Test

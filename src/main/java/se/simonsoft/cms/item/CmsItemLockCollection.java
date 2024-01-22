@@ -76,6 +76,7 @@ public abstract class CmsItemLockCollection implements Serializable, Iterable<Cm
 	
 	/** Searches the lock collection for a lock on the object. 
 	 * A revision on the item id is disregarded, i.e. returns locks even for historical objects.
+	 * Validates that the item repository matches the lock collection.
 	 * @param itemId
 	 * @return The lock or null if no lock is known.
 	 */
@@ -88,6 +89,14 @@ public abstract class CmsItemLockCollection implements Serializable, Iterable<Cm
 		return map.get(itemId.getRelPath());
 	}
 	
+	
+	/** Searches the lock collection for a lock on the object. 
+	 * @param item path
+	 * @return The lock or null if no lock is known.
+	 */
+	public CmsItemLock getLocked(CmsItemPath path) {
+		return map.get(path);
+	}
 	
 	
 	/**
