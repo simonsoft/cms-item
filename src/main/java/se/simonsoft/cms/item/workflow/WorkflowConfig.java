@@ -25,6 +25,7 @@ public class WorkflowConfig {
 
 	protected String label;
 	protected String description;
+	//protected String pathsegment0; // TODO: Consider filter for project-folder when defining config in Parameter store (due to secrets in config).
 
 	// TODO: Consider a structure that could suggest / define values for other UI input, e.g. each control can get 'value' and/or 'disabled'. 
 
