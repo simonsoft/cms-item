@@ -61,6 +61,11 @@ public class CmsItemIdArgTestv2 {
 		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/grap&ics/0001.tif");
 	}
 	
+	@Test(expected=IllegalArgumentException.class)
+	public void testValidateSpaceInPath() {
+		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/grap ics/0001.tif");
+	}
+	
 	@Test(expected=IllegalArgumentException.class) // Fragment id should be parsed with CmsItemIdFragment
 	public void testValidateFragment() {
 		new CmsItemIdArg("x-svn:///svn/demo1^/vvab/xml/topic.dita#topic1/para1");
