@@ -405,9 +405,15 @@ public class CmsItemIdArgTest {
 		assertEquals("/parent/demo2/v/a%20b/c.xml", new CmsItemIdArg("x-svn:/parent/demo2/v/a%20b/c.xml").getUrlAtHost());
 		assertEquals("/svn/r2/v/a%20b/c.xml", new CmsItemIdArg("x-svn://host.x/svn/r2/v/a%20b/c.xml").getUrlAtHost());
 		assertEquals("/s/r2/v/a%20b/c.xml", new CmsItemIdArg("x-svn://host.x/s/r2/v/a%20b/c.xml?p=123").getUrlAtHost());
-		assertEquals("not expecting parent path or repo name to be encoded, should not be allowed",
-				"/svn/not allowed/v/a%20b/c.xml", new CmsItemIdArg("x-svn:/svn/not allowed/v/a%20b/c.xml").getUrlAtHost());
 		
+		try {
+			assertEquals("not expecting parent path or repo name to be encoded, should not be allowed",
+					"/svn/not allowed/v/a%20b/c.xml", new CmsItemIdArg("x-svn:/svn/not allowed/v/a%20b/c.xml").getUrlAtHost());
+			fail("should fail");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+			
 		assertEquals("/svn/repo1/demo/Documents/Presentation%20-%20(B).xml", 
 				new CmsItemIdArg("x-svn://localtesthost/svn/repo1/demo/Documents/Presentation%20-%20(B).xml").getUrlAtHost());
 	}
