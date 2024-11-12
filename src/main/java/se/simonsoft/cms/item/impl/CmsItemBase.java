@@ -15,11 +15,13 @@
  */
 package se.simonsoft.cms.item.impl;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import se.simonsoft.cms.item.Checksum;
 import se.simonsoft.cms.item.CmsItem;
 import se.simonsoft.cms.item.CmsItemId;
+import se.simonsoft.cms.item.properties.CmsItemProperties;
 
 /**
  * Optional base class for {@link CmsItem}, throwing {@link UnsupportedOperationException} in all methods.
@@ -49,8 +51,22 @@ public abstract class CmsItemBase implements CmsItem {
 		throw new UnsupportedOperationException("getMeta not implemented");
 	}
 	
-	// #1133
-	// TODO: Implement standardized way of checking if item has a class. 
-	// Not sure about naming convention when boolean method has parameter: isCmsClass(String class) or hasCmsClass(String class)
+	// #1133 Standardized way of checking if item has a class. 
+	@Override
+	public boolean isCmsClass(String cmsClass) {
+		CmsItemProperties properties = getProperties();
+
+		if (properties == null) {
+			return false;
+		}
+
+		String classes = properties.getString("cms:class");
+		if (classes == null || classes.isEmpty()) {
+			return false;
+		}
+
+		String[] a = classes.toLowerCase().split(" ");
+		return Arrays.asList(a).contains(cmsClass.toLowerCase());
+	}
 
 }
