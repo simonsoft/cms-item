@@ -54,7 +54,7 @@ public interface CmsConfigOption {
 	public Boolean getValueBoolean();
 	
 	/**
-	 * @return the value of the config option as List. A String value will be split on the pipe character and each element trimmed. 
+	 * @return the value of the config option as List. A String value will be split on comma, space or pipe characters and each element trimmed. 
 	 */
 	public List<String> getValueList();	
 
