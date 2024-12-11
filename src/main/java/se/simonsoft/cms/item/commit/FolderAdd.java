@@ -16,13 +16,20 @@
 package se.simonsoft.cms.item.commit;
 
 import se.simonsoft.cms.item.CmsItemPath;
+import se.simonsoft.cms.item.properties.CmsItemProperties;
 
-public final class FolderAdd implements CmsPatchItem.TargetIsFolder {
+public final class FolderAdd implements CmsPatchItem.TargetIsFolder, CmsPatchItem.SupportsProp {
 
 	private CmsItemPath path;
+	private CmsItemProperties properties;
 	
 	public FolderAdd(CmsItemPath path) {
+		this(path, null);
+	}
+
+	public FolderAdd(CmsItemPath path, CmsItemProperties properties) {
 		this.path = path;
+		this.properties = properties;
 	}
 	
 	@Override
@@ -32,8 +39,14 @@ public final class FolderAdd implements CmsPatchItem.TargetIsFolder {
 
 	@Override
 	public String toString() {
-		// add, no prop support yet, no copy support yet, folder
-		return "A___" + getPath().getPath() + "/";
+		// add, no copy support yet, folder
+		char propMod = (getPropertyChange() == null) ? '_' : 'M';
+		return "A" + propMod +"__" + getPath().getPath() + "/";
+	}
+
+	@Override
+	public CmsItemProperties getPropertyChange() {
+		return this.properties;
 	}
 
 }
