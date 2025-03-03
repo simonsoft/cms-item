@@ -30,6 +30,7 @@ public class CommandRuntimeException extends RuntimeException {
 	
 	public CommandRuntimeException(String errorName) {
 		this.errorName = errorName;
+		this.message = errorName;
 	}
 	
 	public CommandRuntimeException(String errorName, String message) {
