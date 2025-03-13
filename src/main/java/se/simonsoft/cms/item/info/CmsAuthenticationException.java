@@ -25,6 +25,11 @@ public class CmsAuthenticationException extends RuntimeException {
 	
 	// TODO: Would it make sense with a flag indicating if issue is authn or authz?
 	
+	// TODO: Implement subclass CmsAuthorizationException with itemId/relPath similar to CmsItemNotFoundException.
+	// Use sane error message per default, e.g.: User not allowed to ...: path
+	// Consider introducing an ENUM with operations: read, add, modify, delete, ...
+	// Will likely need to instantiate a new exception on middle layer in order to add the enum value, default to "access".
+	
 	private static final long serialVersionUID = 1L;
 
 	public CmsAuthenticationException(String message) {
