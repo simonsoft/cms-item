@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>se.simonsoft</groupId>
 		<artifactId>cms-maven-parent</artifactId>
-		<version>11.0.2</version>
+		<version>11.0.3</version>
 		<relativePath/>
 	</parent>
 
@@ -48,21 +48,24 @@
 		
 		<!-- Arbortext 8.1 ships 2.11.0 -->
 		<!-- Arbortext 8.2.2.0 ships 2.15.2 -->
+		<!-- Arbortext 8.3.0.0 ships 2.18.0 -->
 		<!-- SolR 8.11.1 uses 2.12.3 -->
+		<!-- SolR 8.11.4 uses 2.15.2 -->
 		<!-- cms-item often deviate from the POM definition in order to align with Arbortext -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-			<version>2.15.2</version>
+			<version>2.18.0</version>
 		</dependency>
 		
 		<!-- Arbortext 8.2.2.0 ships 2.13.0 -->
+		<!-- Arbortext 8.3.0.0 ships 2.17.0 -->
 		<!-- SolR 8.11.1 uses 2.8.0 -->
 		<!-- SolR 8.11.4 uses 2.11.0 -->
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.13.0</version>
+			<version>2.17.0</version>
 			<scope>test</scope>
 		</dependency>	
 	</dependencies>
