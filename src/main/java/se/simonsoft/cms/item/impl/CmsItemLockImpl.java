@@ -17,6 +17,7 @@ package se.simonsoft.cms.item.impl;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.UUID;
 
 import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemLock;
@@ -77,6 +78,27 @@ public class CmsItemLockImpl implements CmsItemLock, Serializable {
 	public String getToken() {
 
 		return token;
+	}
+	
+	public UUID getTokenUUID() {
+		// The token is typically in the format "opaquelocktoken:UUID"
+		if (token == null || token.isBlank()) {
+			throw new IllegalStateException("Token cannot be null or empty");
+		} else if (token.contains(":")) {
+			try {
+				// Extract the UUID part after the prefix
+				return UUID.fromString(token.split(":")[1]);
+			} catch (IllegalArgumentException e) {
+				throw new IllegalStateException("Invalid lock token format: " + token, e);
+			}
+		} else {
+			try {
+				// If no prefix, assume it's just the UUID
+				return UUID.fromString(token);
+			} catch (IllegalArgumentException e) {
+				throw new IllegalStateException("Invalid lock token format: " + token, e);
+			}
+		}
 	}
 
 	@Override
