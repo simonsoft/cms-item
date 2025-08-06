@@ -59,5 +59,24 @@ public class CmsItemLockImplTest {
 		
 		assertEquals("[/1|username|token1]", lock1a.toString());
 	}
+	
+	@Test
+	public void testGetTokenUUID() {
+		CmsRepository repo = mock(CmsRepository.class);
+		Date now = new Date();
+		CmsItemLock lock1a = new CmsItemLockImpl(new CmsItemIdArg(repo, new CmsItemPath("/1")), "opaquelocktoken:b2b292b3-c84d-40ae-8bba-4dc47f739355", "username", "comment", now, null);
+		
+		assertEquals("b2b292b3-c84d-40ae-8bba-4dc47f739355", lock1a.getTokenUUID().toString());
+		
+		CmsItemLock lock2 = new CmsItemLockImpl(new CmsItemIdArg(repo, new CmsItemPath("/1")), "token1", "username", "comment", now, null);
+		try {
+			lock2.getTokenUUID();
+			fail("Expected IllegalStateException for lock without UUID in token");
+		} catch (IllegalStateException e) {
+			// expected
+			assertEquals("Invalid lock token format: token1", e.getMessage());
+		}
+		
+	}
 
 }

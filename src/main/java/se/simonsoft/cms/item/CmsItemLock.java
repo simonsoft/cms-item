@@ -16,6 +16,7 @@
 package se.simonsoft.cms.item;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * API mimics svn_lock_t struct but does not have a path because to us the relation is from item/path to lock.
@@ -34,9 +35,12 @@ public interface CmsItemLock {
 	/**
 	 * @return the lock token (may contain a prefix in addition to UUID)
 	 */
-	// TODO: Consider adding getTokenUUID returning only the UUID part without "opaquelocktoken:".
 	String getToken();
 	
+	/**
+	 * @return the UUID part of the token
+	 */
+	UUID getTokenUUID();
 
 	/**
 	 * @return username
