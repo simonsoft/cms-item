@@ -55,7 +55,11 @@ public abstract class CmsItemBase implements CmsItem {
 	@Override
 	public boolean isCmsClass(String cmsClass) {
 		CmsItemProperties properties = getProperties();
-
+		return isCmsClass(properties, cmsClass);
+	}
+	
+	// #1133 Allow implementing classes to call static method, if they don't extend CmsItemBase.
+	public static boolean isCmsClass(CmsItemProperties properties, String cmsClass) {
 		if (properties == null) {
 			return false;
 		}
