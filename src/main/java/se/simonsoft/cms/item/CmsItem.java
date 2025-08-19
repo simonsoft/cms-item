@@ -102,4 +102,13 @@ public interface CmsItem {
 	 */
 	void getContents(OutputStream receiver) throws UnsupportedOperationException;
 	
+	
+	/**
+	 * Marker interface for items that have been retrieved including the core CMS metadata fields.
+	 * 
+	 * See ticket #1510 for discussion.
+	 */
+	interface MetaCms extends CmsItem {
+		
+	}
 }
