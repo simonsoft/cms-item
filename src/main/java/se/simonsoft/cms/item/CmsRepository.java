@@ -92,7 +92,7 @@ public class CmsRepository implements Serializable {
 	}
 	
 	/**
-	 * @param protocol
+	 * @param protocol without colon, can be null but not empty
 	 * @param parentPath with leading but not trailing slash,
 	 *  can not be urlencoded or require urlencoding because encoding behaviour is undefined
 	 * @param name repository name, no slashes,
