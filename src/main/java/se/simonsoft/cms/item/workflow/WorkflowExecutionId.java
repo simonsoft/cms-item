@@ -53,7 +53,33 @@ public class WorkflowExecutionId {
 		return executionId;
 	}
 	
+	@Override
+	public int hashCode() {
+		if (executionUuid != null) {
+			return executionUuid.hashCode();
+		} else {
+			return executionId.hashCode();
+		}
+	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		WorkflowExecutionId other = (WorkflowExecutionId) obj;
+		if (executionUuid != null && other.executionUuid != null) {
+			return executionUuid.equals(other.executionUuid);
+		} else {
+			return executionId.equals(other.executionId);
+		}
+	}
 	
 	private static String parseUuid(String executionId) {
 		
