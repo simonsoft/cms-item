@@ -40,14 +40,25 @@ public interface CmsCommit {
 	//public Set<Class<CmsPatchItem>> getCapabilities();
 	
 	/**
-	 * Locks an item.
+	 * Locks one or more items.
 	 * Lock expiry date is not supported in the general svn case.
-	 * Multiple items not supported because in svn they would have different tokens even if locked in the same operations.
+	 * Multiple items supported and returns different tokens even if locked in the same operations.
 	 * @param message Lock comment
 	 * @param base The base revision, i.e. lock only if the items have not been touched since then
-	 * @param item Item to lock
-	 * @return identical Lock for all items (TODO is this the same token?)
+	 * @param force If true, break/update existing locks
+	 * @param item Items to lock
+	 * @return a collection of locks, one per item
 	 * @throws CmsItemLockedException If a path is already locked
+	 */
+	public CmsItemLockCollection lock(String message, RepoRevision base, boolean force, CmsItemPath... item) throws CmsItemLockedException;
+	
+	/**
+	 * Locks one or more items. See {@link #lock(String, RepoRevision, boolean, CmsItemPath...)}
+	 * @param message
+	 * @param base
+	 * @param item
+	 * @return
+	 * @throws CmsItemLockedException
 	 */
 	public CmsItemLockCollection lock(String message, RepoRevision base, CmsItemPath... item) throws CmsItemLockedException;
 	
