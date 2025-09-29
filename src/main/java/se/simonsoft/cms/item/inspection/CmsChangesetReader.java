@@ -15,6 +15,7 @@
  */
 package se.simonsoft.cms.item.inspection;
 
+import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.RepoRevision;
 import se.simonsoft.cms.item.events.change.CmsChangeset;
 import se.simonsoft.cms.item.events.change.CmsChangesetItem;
@@ -39,5 +40,13 @@ public interface CmsChangesetReader {
 	 * @return changeset at the revision, with isOverwritten set to true if referenceRevision contains a newer version of same item
 	 */
 	CmsChangeset read(RepoRevision revision, RepoRevision referenceRevision);
+
+	/**
+	 * 
+	 * @param path a path to look at
+	 * @param revision the peg revision to start looking at
+	 * @return revision lower than or equal to peg revision, where the item was last touched (moved, edited), null if path does not exist at revision
+	 */
+	RepoRevision getChangedRevision(CmsItemPath path, long revision);
 	
 }
