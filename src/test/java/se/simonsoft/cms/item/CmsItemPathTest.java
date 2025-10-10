@@ -34,6 +34,36 @@ import org.junit.Test;
 public class CmsItemPathTest {
 
 	@Test
+	public void testOfRootNullString() {
+		assertNull("Interpret null string as repo root", CmsItemPath.of(null));
+	}
+	
+	@Test
+	public void testOfRootEmptyString() {
+		assertNull("Interpret empty string as repo root", CmsItemPath.of(""));
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testOfSpace() {
+		String blank = " ";
+		assertTrue(blank.isBlank());
+		CmsItemPath.of(blank);
+		fail("Only empty or null string should be interpreted as root");
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testOfSingleSlash() {
+		CmsItemPath.of("/");
+		fail("Single slash without path segment should not be allowed");
+	}
+	
+	@Test
+	public void testOfValid() {
+		assertEquals("Valid path", "/a/f.txt", CmsItemPath.of("/a/f.txt").getPath()); 
+	}
+	
+	
+	@Test
 	public void testConstructorValidChars() {
 		new CmsItemPath("/azAZ09_-.,()%"); //add more
 	}
