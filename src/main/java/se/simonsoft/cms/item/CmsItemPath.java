@@ -78,6 +78,8 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 	}
 
 	/**
+	 * See also {@link #of(String)}.
+	 * 
 	 * @param path
 	 *            with leading slash, trailing slash will be trimmed
 	 * @throws IllegalArgumentException
@@ -91,6 +93,23 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 			throw new IllegalArgumentException("Invalid path: '" + path + "'");
 		}
 		this.path = path;
+	}
+	
+	/**
+	 * Returns a CmsItemPath by converting a String. 
+	 * Similar to constructor but returns null (denoting repository root) for null or empty input String.
+	 * 
+	 * @param path with leading slash, trailing slash will be trimmed
+	 * @return the resulting CmsItemPath or null if input is null or empty
+	 * @throws IllegalArgumentException
+	 *             for invalid path such as containing double slashes, backslash or not starting with slash
+	 */
+	public static CmsItemPath of(String path) {
+		// Path with only whitespace is invalid (intentionally using isEmpty())
+		if (path == null || path.isEmpty()) {
+			return null;
+		}
+		return new CmsItemPath(path);
 	}
 
 	public String getPath() {
