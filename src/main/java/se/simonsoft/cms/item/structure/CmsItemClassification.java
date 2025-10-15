@@ -33,7 +33,8 @@ public interface CmsItemClassification {
 	boolean isXml(CmsItemId item);
 	
 	/**
-	 * @return true if the item is a publishable document, see ticket:343, TODO.
+	 * @return true if the item is a publishable document, see ticket:343
+	 * @deprecated
 	 */
 	boolean isPublishable(CmsItemId item);
 	
