@@ -47,7 +47,7 @@ public class CmsExportItemInputStream implements CmsExportItem {
 
 
     @Override
-    public void prepare() {
+    public Long prepare() {
 
         if (isReady()) {
             throw new IllegalStateException("InputStream is already prepared for export");
@@ -55,6 +55,7 @@ public class CmsExportItemInputStream implements CmsExportItem {
 
         logger.trace("Starting preparation for export of InputStream");
         this.ready = true;
+        return null; // Size is unknown
     }
 
     @Override

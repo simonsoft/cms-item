@@ -17,6 +17,7 @@ package se.simonsoft.cms.item.export;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -51,7 +52,8 @@ public class CmsExportWriterFsSingleTest {
 		CmsExportItemInputStream exportItem = new CmsExportItemInputStream(resourceAsStream, cmsExportPath);
 		
 		j.addExportItem(exportItem);
-		j.prepare();
+		Long contentLength = j.prepare();
+		assertNull(contentLength); // CmsExportItemInputStream does not support content length.
 		
 		writer.prepare(j);
 		writer.write();
@@ -65,6 +67,7 @@ public class CmsExportWriterFsSingleTest {
 		assertTrue(Files.exists(unzipPackagePath));
 		assertEquals(testExportFileSize, Files.size(unzipPackagePath));
 	}
+	
 	
 	public void unzipPackage(String exportPath) throws IOException {
 
