@@ -67,7 +67,99 @@ public class CmsExportWriterFsSingleTest {
 		assertTrue(Files.exists(unzipPackagePath));
 		assertEquals(testExportFileSize, Files.size(unzipPackagePath));
 	}
+
+	@Test
+	public void testExportSingleFileString() throws Exception {
+		
+		Path tempDir = Files.createTempDirectory(tmpDir);
+		
+		CmsExportWriterFsSingle writer = new CmsExportWriterFsSingle(tempDir.toFile());
+		CmsExportJobZip j = new CmsExportJobZip(new CmsExportPrefix("jandersson"), "export-test", "zip");
+		
+		// Multi-byte chars in string to test charset / size handling.
+		CmsExportItemString exportItemString = new CmsExportItemString("Göteborg", new CmsExportPath("/test/string.txt"));
+		
+		j.addExportItem(exportItemString);
+		Long contentLength = j.prepare();
+		assertEquals("All items support length", Long.valueOf(9), contentLength); 
+		
+		writer.prepare(j);
+		writer.write();
+		
+		File resultFile = new File(tempDir.toAbsolutePath().toString().concat("/" + j.getJobPath()));
+		assertTrue(resultFile.exists());
+		
+		unzipPackage(resultFile.getAbsolutePath());
+		
+		Path unzipPackagePathString = Paths.get(resultFile.getParent().concat(exportItemString.getResultPath().getPath()));
+		assertTrue(Files.exists(unzipPackagePathString));
+		assertEquals(9, Files.size(unzipPackagePathString));
+		String content = new String(Files.readAllBytes(unzipPackagePathString), "UTF-8");
+		assertEquals("Göteborg", content);
+		unzipPackagePathString = null;
+	}
 	
+	@Test
+	public void testExportTwoFiles() throws Exception {
+		
+		Path tempDir = Files.createTempDirectory(tmpDir);
+		InputStream resourceAsStream = this.getClass().getClassLoader().getResourceAsStream(testExportFilePath.toString());
+		
+		CmsExportWriterFsSingle writer = new CmsExportWriterFsSingle(tempDir.toFile());
+		CmsExportJobZip j = new CmsExportJobZip(new CmsExportPrefix("jandersson"), "export-test", "zip");
+		
+		CmsExportPath cmsExportPath = new CmsExportPath("/test/export-test.txt");
+		CmsExportItemInputStream exportItemStream = new CmsExportItemInputStream(resourceAsStream, cmsExportPath);
+		
+		// Multi-byte chars in string to test charset / size handling.
+		CmsExportItemString exportItemString = new CmsExportItemString("Göteborg", new CmsExportPath("/test/string.txt"));
+		
+		j.addExportItem(exportItemStream);
+		j.addExportItem(exportItemString);
+		Long contentLength = j.prepare();
+		assertNull(contentLength); // CmsExportItemInputStream does not support content length, any item with unknown length makes total length unknown.
+		
+		writer.prepare(j);
+		writer.write();
+		
+		File resultFile = new File(tempDir.toAbsolutePath().toString().concat("/" + j.getJobPath()));
+		assertTrue(resultFile.exists());
+		
+		unzipPackage(resultFile.getAbsolutePath());
+		
+		Path unzipPackagePathStream = Paths.get(resultFile.getParent().concat(cmsExportPath.getPath()));
+		assertTrue(Files.exists(unzipPackagePathStream));
+		assertEquals(testExportFileSize, Files.size(unzipPackagePathStream));
+		unzipPackagePathStream = null;
+		
+		Path unzipPackagePathString = Paths.get(resultFile.getParent().concat(exportItemString.getResultPath().getPath()));
+		assertTrue(Files.exists(unzipPackagePathString));
+		assertEquals(9, Files.size(unzipPackagePathString));
+		unzipPackagePathString = null;
+	}
+	
+	@Test
+	public void testExportTwoFilesString() throws Exception {
+		
+		Path tempDir = Files.createTempDirectory(tmpDir);
+		
+		CmsExportWriterFsSingle writer = new CmsExportWriterFsSingle(tempDir.toFile());
+		CmsExportJobZip j = new CmsExportJobZip(new CmsExportPrefix("jandersson"), "export-test", "zip");
+		
+		
+		// Multi-byte chars in string to test charset / size handling.
+		CmsExportItemString exportItemString = new CmsExportItemString("Göteborg", new CmsExportPath("/test/string.txt"));
+		
+		j.addExportItem(new CmsExportItemString("Ängelholm", new CmsExportPath("/test/string2.txt")));
+		j.addExportItem(exportItemString);
+		Long contentLength = j.prepare();
+		// NOTE: This is unlikely to be used as exact measure since there is currently no multi-item writer (must zip).
+		// However, it could be useful for indicating total size for writer to select a suitable type of upload for the size class.
+		assertEquals("All items support length", Long.valueOf(9 + 10), contentLength); // Test sum of two known lengths.
+		
+		writer.prepare(j);
+		writer.write();
+	}
 	
 	public void unzipPackage(String exportPath) throws IOException {
 
