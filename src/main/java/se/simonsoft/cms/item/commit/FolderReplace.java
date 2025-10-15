@@ -20,8 +20,6 @@ import se.simonsoft.cms.item.CmsItemPath;
 /**
  * Wraps an actual change with an instruction that there should be
  * an existing folder at the target path, which should be replaced.
- * 
- * Should we REALLY do SupportsIndividualBase here? Use case?
  */
 public final class FolderReplace implements CmsPatchItem.TargetIsFolder {
 

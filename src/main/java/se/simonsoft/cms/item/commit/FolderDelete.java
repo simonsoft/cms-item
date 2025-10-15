@@ -42,5 +42,11 @@ public final class FolderDelete implements CmsPatchItem.TargetIsFolder, CmsPatch
 	public RepoRevision getBaseRevision() {
 		return base;
 	}
+	
+	@Override
+	public String toString() {
+		// modified props
+		return "D___" + getPath().getPath();
+	}
 
 }

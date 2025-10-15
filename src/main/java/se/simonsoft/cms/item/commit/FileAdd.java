@@ -92,7 +92,7 @@ public final class FileAdd implements CmsPatchItem, CmsPatchItem.SupportsProp, C
 	
 	@Override
 	public String toString() {
-		// add, no prop support yet, no copy support yet
+		// add, copy support is in FileCopy.
 		return "A" + (getPropertyChange() == null ? '_' : 'M') + "__" + getPath().getPath();
 	}
 

@@ -41,6 +41,13 @@ public final class FolderExist implements CmsPatchItem.TargetIsFolder, CmsPatchI
 	}
 
 	@Override
+	public String toString() {
+		// exists, extending the svn stat syntax
+		char propMod = (getPropertyChange() == null) ? '_' : 'M';
+		return "E" + propMod +"__" + getPath().getPath() + "/";
+	}
+	
+	@Override
 	public CmsItemProperties getPropertyChange() {
 		return properties;
 	}

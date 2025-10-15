@@ -78,8 +78,8 @@ public final class FileModification implements CmsPatchItem, CmsPatchItem.Suppor
 	
 	@Override
 	public String toString() {
-		// modified, no prop support yet, no copy support yet
-		return "M___" + getPath().getPath();
+		// modified
+		return "M" + (getPropertyChange() == null ? '_' : 'M') + "__" + getPath().getPath();
 	}
 	
 	/**
