@@ -16,31 +16,24 @@
 package se.simonsoft.cms.item.commit;
 
 import se.simonsoft.cms.item.CmsItemPath;
-import se.simonsoft.cms.item.RepoRevision;
 
-public final class FolderDelete implements CmsPatchItem.TargetIsFolder, CmsPatchItem.SupportsIndividualBase {
+public final class FolderDelete implements CmsPatchItem.TargetIsFolder {
 
 	private CmsItemPath path;
-	private RepoRevision base;
 
 	public FolderDelete(CmsItemPath path) {
-		this(path, null);
-	}
-	
-	@Deprecated // use patchset base revision
-	public FolderDelete(CmsItemPath path, RepoRevision base) {
 		this.path = path;
-		this.base = base;
 	}
 	
 	@Override
 	public CmsItemPath getPath() {
 		return path;
 	}
-
+	
 	@Override
-	public RepoRevision getBaseRevision() {
-		return base;
+	public String toString() {
+		// modified props
+		return "D___" + getPath().getPath();
 	}
 
 }

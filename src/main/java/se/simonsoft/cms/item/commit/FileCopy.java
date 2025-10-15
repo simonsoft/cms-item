@@ -86,7 +86,6 @@ public final class FileCopy implements CmsPatchItem, CmsPatchItem.SupportsProp {
 
 	@Override
 	public String toString() {
-		// add, no prop support yet, no copy support yet
 		return "A" + (getPropertyChange() == null ? '_' : 'M') + "+_" + getPath().getPath();
 	}	
 	

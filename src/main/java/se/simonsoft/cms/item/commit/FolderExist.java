@@ -21,12 +21,18 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
 /**
  * Create folder and parent folders only if they didn't exist already.
  */
-public final class FolderExist implements CmsPatchItem.TargetIsFolder {
+public final class FolderExist implements CmsPatchItem.TargetIsFolder, CmsPatchItem.SupportsProp {
 
 	private CmsItemPath path;
+	private CmsItemProperties properties;
 
 	public FolderExist(CmsItemPath path) {
+		this(path, null);
+	}
+	
+	public FolderExist(CmsItemPath path, CmsItemProperties properties) {
 		this.path = path;
+		this.properties = properties;
 	}
 	
 	@Override
@@ -34,13 +40,16 @@ public final class FolderExist implements CmsPatchItem.TargetIsFolder {
 		return path;
 	}
 
-	/**
-	 * Could be an interface method unless we want the specific class for chaining.
-	 * @param properties property change to do on items that are created, but not existing items
-	 * @return this instance for chaining
-	 */
-	public CmsPatchItem setPropertyChange(CmsItemProperties properties) {
-		throw new UnsupportedOperationException("not implemented"); // should we have an onCreate callback, and what sync issues would that introduce?
+	@Override
+	public String toString() {
+		// exists, extending the svn stat syntax
+		char propMod = (getPropertyChange() == null) ? '_' : 'M';
+		return "E" + propMod +"__" + getPath().getPath() + "/";
+	}
+	
+	@Override
+	public CmsItemProperties getPropertyChange() {
+		return properties;
 	}
 	
 }
