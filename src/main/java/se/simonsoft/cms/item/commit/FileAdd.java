@@ -93,6 +93,7 @@ public final class FileAdd implements CmsPatchItem, CmsPatchItem.SupportsProp, C
 	@Override
 	public String toString() {
 		// add, copy support is in FileCopy.
+		// NOTE: svn stat does not indicate property changes on folder add, but we follow the format seen in the commit message editor.
 		return "A" + (getPropertyChange() == null ? '_' : 'M') + "__" + getPath().getPath();
 	}
 

@@ -40,6 +40,7 @@ public final class FolderAdd implements CmsPatchItem.TargetIsFolder, CmsPatchIte
 	@Override
 	public String toString() {
 		// add, no copy support yet, folder
+		// NOTE: svn stat does not indicate property changes on folder add, but we follow the format seen in the commit message editor.
 		char propMod = (getPropertyChange() == null) ? '_' : 'M';
 		return "A" + propMod +"__" + getPath().getPath() + "/";
 	}
