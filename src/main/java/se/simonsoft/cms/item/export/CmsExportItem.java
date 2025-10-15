@@ -25,10 +25,14 @@ import java.io.OutputStream;
  */
 public interface CmsExportItem {
 
-    void prepare();
+	/**
+	 * Give the item a chance to prepare itself for export.
+	 * @return optionally provide the size of the result in bytes, or null if unknown.
+	 */
+	Long prepare();
 
     Boolean isReady();
-
+    
     void getResultStream(OutputStream stream);
 
     CmsExportPath getResultPath();

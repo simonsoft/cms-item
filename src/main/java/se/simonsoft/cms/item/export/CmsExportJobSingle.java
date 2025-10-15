@@ -22,7 +22,9 @@ public class CmsExportJobSingle extends CmsExportJob implements CmsExportJob.Sin
 	public CmsExportJobSingle(CmsExportPrefix jobPrefix, String jobName, String jobExtension) {
 		super(jobPrefix, jobName, jobExtension);
 	}
-
+	
+	// Writers can support single PutObject requests if the single item can report its size (simpler and faster than multipart).
+	
     @Override
     public void getResultStream(OutputStream out) {
         getExportItems().get(0).getResultStream(out);

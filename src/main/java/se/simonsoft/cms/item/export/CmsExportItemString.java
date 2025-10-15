@@ -16,32 +16,34 @@
 package se.simonsoft.cms.item.export;
 
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 
-public class CmsExportItemInputStream implements CmsExportItem {
+public class CmsExportItemString implements CmsExportItem {
 
-    private final InputStream inputStream;
+    private final ByteArrayInputStream content; // IOUtils uses ByteArrayInputStream internally
     private final CmsExportPath exportPath;
 
     private Boolean ready = false;
-    private Logger logger = LoggerFactory.getLogger(CmsExportItemInputStream.class);
+    private Logger logger = LoggerFactory.getLogger(CmsExportItemString.class);
 
     
-    public CmsExportItemInputStream(InputStream inputStream) {
-    	this(inputStream, null);
+    public CmsExportItemString(String content) {
+    	this(content, null);
     }
     
-    public CmsExportItemInputStream(InputStream inputStream, CmsExportPath exportPath) {
+    public CmsExportItemString(String content, CmsExportPath exportPath) {
 
-        if (inputStream == null) {
-            throw new IllegalArgumentException("The export InputStream must not be null");
+        if (content == null) {
+            throw new IllegalArgumentException("The export content string must not be null");
         }
 
-        this.inputStream = inputStream;
+        this.content = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
         this.exportPath = exportPath;
     }
 
@@ -55,7 +57,7 @@ public class CmsExportItemInputStream implements CmsExportItem {
 
         logger.trace("Starting preparation for export of InputStream");
         this.ready = true;
-        return null; // Size is unknown
+        return content.available() + 0L; // ensure Long
     }
 
     @Override
@@ -65,23 +67,12 @@ public class CmsExportItemInputStream implements CmsExportItem {
 
     @Override
     public void getResultStream(OutputStream stream) {
-
-        byte[] buffer = new byte[1024 * 32];
-        int length;
-        final InputStream content = this.inputStream;
+    	
         try {
-            while ((length = content.read(buffer)) != -1) {
-                stream.write(buffer, 0, length);
-            }
+        	stream.write(content.readAllBytes());
         } catch (IOException e) {
-            throw new RuntimeException("Could not read InputStream", e);
-        } finally {
-        	try {
-        		this.inputStream.close();
-        	} catch (Exception e) {
-				logger.warn("Failed to close inputstream: {}", this.inputStream);
-			}
-		}
+            throw new RuntimeException("Failed to write to export OutputStream: ", e);
+        } 
     }
 
     @Override

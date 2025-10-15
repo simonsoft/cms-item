@@ -47,7 +47,7 @@ public class CmsExportItemCmsFile implements CmsExportItem {
 
     
     @Override
-    public void prepare() {
+    public Long prepare() {
 
         if (ready) {
             throw new IllegalStateException("Item: " + item.getId().getLogicalId() + " is already prepared for export");
@@ -59,6 +59,7 @@ public class CmsExportItemCmsFile implements CmsExportItem {
 
         logger.info("Prepared export of item: {}", this.item.getId().getLogicalId());
         this.ready = true;
+        return item.getFilesize();
     }
 
     @Override

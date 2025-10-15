@@ -41,9 +41,11 @@ public class CmsExportJob extends CmsExportJobBase {
 	}
 	
     /**
-     * Starts the preparation of the CmsExportItem's. Is only allowed to be called on once.
+     * Starts the preparation of the CmsExportItem(s). Is only allowed to be called once.
+     * @return Long with the total size of all items, null if one or more items have unknown size. 
+     * Note that the size is without compression or archiving into a single stream.
      */
-    public void prepare() {
+    public Long prepare() {
 
         if (isPrepared) {
             throw new IllegalStateException("The export job is prepared or in it's prepare phase.");
@@ -54,12 +56,19 @@ public class CmsExportJob extends CmsExportJobBase {
         if (getExportItems().isEmpty()) {
             throw new IllegalArgumentException("There are no items in the export job.");
         }
-
+        
+        Long totalSize = 0L;
         for (CmsExportItem item : getExportItems()) {
-            item.prepare();
+            Long size = item.prepare();
+            if (size != null && totalSize != null) {
+				totalSize += size;
+			} else {
+				totalSize = null; // If one item is unknown size, the total size is unknown.
+			}
         }
         
         isPrepared = true;
+        return totalSize;
     }
 
     /**
