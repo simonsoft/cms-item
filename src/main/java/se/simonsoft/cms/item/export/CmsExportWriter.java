@@ -19,6 +19,7 @@ import java.nio.file.Path;
 
 public interface CmsExportWriter {
 
+	// TODO: CMS 6.0 Consider specifying that the Writer should call job.prepare() unless already job.isReady().
     void prepare(CmsExportJob job);
 
     boolean isReady();
