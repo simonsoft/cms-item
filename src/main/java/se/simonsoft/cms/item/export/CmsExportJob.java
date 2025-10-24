@@ -74,7 +74,7 @@ public class CmsExportJob extends CmsExportJobBase {
 
     /**
      * Will traverse through List<CmsExportItem> and ask if they are ready to be exported.
-     * @return Boolean set to true if al items is ready.
+     * @return true if job is prepared and all items report isReady.
      */
     public Boolean isReady() {
 
@@ -82,19 +82,18 @@ public class CmsExportJob extends CmsExportJobBase {
             throw new IllegalArgumentException("There are no items in the export job.");
         }
 
-        if (isPrepared) {
-            return isPrepared;
+        // The job prepare() must have been called.
+        if (!isPrepared) {
+            return false;
         }
 
-        //TODO: We should remember if an ExportItem is ready, so we don't have to check again do it again.
+        // Also verify that all items report isReady(). 
+        // Currently no known reason why a prepared item would return false.
         for (CmsExportItem item: getExportItems()) {
-            isPrepared = item.isReady();
-            if (!isPrepared) {
-                break;
-            }
+            if (!item.isReady()) return false;
         }
 
-        return isPrepared;
+        return true;
     }
 
     /**
