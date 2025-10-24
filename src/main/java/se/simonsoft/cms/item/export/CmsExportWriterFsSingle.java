@@ -31,6 +31,7 @@ public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter
     private Path fsParent;
     private CmsExportJob exportJob;
     private boolean ready = false;
+    private Long contentLength = null;
     
     private static final Logger logger = LoggerFactory.getLogger(CmsExportWriterFsSingle.class);
 
@@ -60,6 +61,14 @@ public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter
             throw new IllegalArgumentException("Single writers expects CmsExportJobs that implements SingleItem");
         }
 
+        if (!job.isReady()) {
+        	this.contentLength = job.prepare();
+        	logger.debug("Writer prepared job, contentLength: {}", this.contentLength);
+        } else {
+        	logger.warn("Writer given an already prepared CmsExportJob: {}", job.getJobPath());
+        }
+        
+        // Verify that job isReady after being prepared.
         if (!job.isReady()) {
             throw new IllegalStateException("The export job is not prepared to be written");
         }

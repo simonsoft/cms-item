@@ -45,7 +45,7 @@ public class CmsExportJobZip extends CmsExportJob implements CmsExportJob.Single
         }
 
         if (out == null) {
-            throw new IllegalArgumentException("OutputStream");
+            throw new IllegalArgumentException("OutputStream must not be null");
         }
 
         try {

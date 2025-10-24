@@ -41,6 +41,7 @@ public class CmsExportJob extends CmsExportJobBase {
 	}
 	
     /**
+     * NOTE: Intended to be called by the CmsExportWriter (no longer called directly).
      * Starts the preparation of the CmsExportItem(s). Is only allowed to be called once.
      * @return Long with the total size of all items, null if one or more items have unknown size. 
      * Note that the size is without compression or archiving into a single stream.
@@ -48,7 +49,7 @@ public class CmsExportJob extends CmsExportJobBase {
     public Long prepare() {
 
         if (isPrepared) {
-            throw new IllegalStateException("The export job is prepared or in it's prepare phase.");
+            throw new IllegalStateException("The export job is already prepared.");
         }
 
         logger.info("Preparing: {} CmsExportItems for export.", getExportItems().size());

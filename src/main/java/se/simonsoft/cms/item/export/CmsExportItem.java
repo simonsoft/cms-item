@@ -27,6 +27,7 @@ public interface CmsExportItem {
 
 	/**
 	 * Give the item a chance to prepare itself for export.
+	 * NOTE: Intended to be called by the CmsExportJob.
 	 * @return optionally provide the size of the result in bytes, or null if unknown.
 	 */
 	Long prepare();
