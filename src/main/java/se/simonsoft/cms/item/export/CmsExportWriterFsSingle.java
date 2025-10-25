@@ -65,7 +65,10 @@ public class CmsExportWriterFsSingle implements CmsExportWriter, CmsExportWriter
         	this.contentLength = job.prepare();
         	logger.debug("Writer prepared job, contentLength: {}", this.contentLength);
         } else {
-        	logger.warn("Writer given an already prepared CmsExportJob: {}", job.getJobPath());
+        	String msg = "Writer given an already prepared CmsExportJob: " + job.getJobPath();
+        	logger.warn(msg);
+        	// TODO: CMS 6.0 - Require that the job is prepared by the writer.
+        	//throw new IllegalStateException(msg);
         }
         
         // Verify that job isReady after being prepared.
