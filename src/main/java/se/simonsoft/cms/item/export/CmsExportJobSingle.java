@@ -27,6 +27,14 @@ public class CmsExportJobSingle extends CmsExportJob implements CmsExportJob.Sin
 	
     @Override
     public void getResultStream(OutputStream out) {
+    	if (!isReady()) {
+            throw new IllegalStateException("The Job is not prepared to be written.");
+        }
+
+        if (out == null) {
+            throw new IllegalArgumentException("OutputStream must not be null");
+        }
+    	
         getExportItems().get(0).getResultStream(out);
     }
 

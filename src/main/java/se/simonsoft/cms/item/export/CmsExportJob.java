@@ -41,6 +41,7 @@ public class CmsExportJob extends CmsExportJobBase {
 	}
 	
     /**
+     * NOTE: Intended to be called by the CmsExportWriter (no longer called directly).
      * Starts the preparation of the CmsExportItem(s). Is only allowed to be called once.
      * @return Long with the total size of all items, null if one or more items have unknown size. 
      * Note that the size is without compression or archiving into a single stream.
@@ -48,7 +49,7 @@ public class CmsExportJob extends CmsExportJobBase {
     public Long prepare() {
 
         if (isPrepared) {
-            throw new IllegalStateException("The export job is prepared or in it's prepare phase.");
+            throw new IllegalStateException("The export job is already prepared.");
         }
 
         logger.info("Preparing: {} CmsExportItems for export.", getExportItems().size());
@@ -73,7 +74,7 @@ public class CmsExportJob extends CmsExportJobBase {
 
     /**
      * Will traverse through List<CmsExportItem> and ask if they are ready to be exported.
-     * @return Boolean set to true if al items is ready.
+     * @return true if job is prepared and all items report isReady.
      */
     public Boolean isReady() {
 
@@ -81,19 +82,18 @@ public class CmsExportJob extends CmsExportJobBase {
             throw new IllegalArgumentException("There are no items in the export job.");
         }
 
-        if (isPrepared) {
-            return isPrepared;
+        // The job prepare() must have been called.
+        if (!isPrepared) {
+            return false;
         }
 
-        //TODO: We should remember if an ExportItem is ready, so we don't have to check again do it again.
+        // Also verify that all items report isReady(). 
+        // Currently no known reason why a prepared item would return false.
         for (CmsExportItem item: getExportItems()) {
-            isPrepared = item.isReady();
-            if (!isPrepared) {
-                break;
-            }
+            if (!item.isReady()) return false;
         }
 
-        return isPrepared;
+        return true;
     }
 
     /**
