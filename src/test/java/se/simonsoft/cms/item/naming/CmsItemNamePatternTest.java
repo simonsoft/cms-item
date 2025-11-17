@@ -49,6 +49,14 @@ public class CmsItemNamePatternTest {
             assertEquals("The name pattern can't be null or empty", e.getMessage());
         }
     }
+    
+    @Test
+    public void testEquals() {
+    	CmsItemNamePattern name1 = new CmsItemNamePattern("name####");
+    	CmsItemNamePattern name2 = new CmsItemNamePattern("name####");
+    	assertEquals(name1, name2);
+    	assertEquals(name1.hashCode(), name2.hashCode());
+	}
 
     @Test
     public void testStringAlphanumeric() {
@@ -105,7 +113,7 @@ public class CmsItemNamePatternTest {
     }
 
     @Test
-    public void nameDoseNotContainAnyHashes() {
+    public void nameDoesNotContainAnyHashes() {
 
         try {
             CmsItemNamePattern pattern = new CmsItemNamePattern("SEC00");

@@ -125,5 +125,17 @@ public class CmsItemNamePattern {
 
         return matches;
     }
+    
+    public boolean equals(Object obj) {
+		if (obj instanceof CmsItemNamePattern) {
+			CmsItemNamePattern other = (CmsItemNamePattern) obj;
+			return this.prefix.equals(other.prefix) && this.counter.equals(other.counter);
+		}
+		return false;
+	}
+    
+    public int hashCode() {	
+		return (prefix + counter).hashCode();
+    }
 
 }
