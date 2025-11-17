@@ -79,9 +79,8 @@ public class CmsItemNamingShard1KTest {
             naming.getItemPath(path, pattern, "jpeg");
             fail("Should fail can't increment none existing counter");
         } catch (IllegalStateException e) {
-            assertEquals("Counter is missing, namePattern: SEC000 needs hashes that represents counters", e.getMessage());
+            assertEquals("Folder counter is empty in folder: /se/simonsoft/cms/item/SEC000", e.getMessage());
         }
-
     }
     
     @Test
