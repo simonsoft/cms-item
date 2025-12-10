@@ -33,7 +33,6 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
 
     private CmsRepository repository;
     private CmsItemLookup lookup;
-    private CmsItemNamePattern namePattern;
     private String extension;
     private static final String ITEM_ZERO = "000";
     private static int MAX_NUMBER_OF_FILES = 1000;
@@ -73,15 +72,14 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
             throw new IllegalArgumentException("The configured naming requires a minimum 3 '#' in the naming pattern.");
         }
 
-
         this.extension = extension;
 
-        logger.info("Trying to create new name based on path: {}, with pattern: {} and extension: {}", parentFolder.getPath(), namePattern.getPrefix(), extension);
-        this.namePattern = namePattern;
+        logger.info("Request to create new item name based on path: {}, with pattern: {} and extension: {}", parentFolder.getPath(), namePattern.getPrefix(), extension);
 
         String newName;
         CmsItemId itemId = repository.getItemId(parentFolder, null);
 
+        // TODO: Remove the CmsItemNamePattern parameter since we are checking the class property anyway.
         if (!isShardParent(itemId)) {
             throw new IllegalArgumentException("The parent folder is not intended for the configured automated naming.");
         }
@@ -90,15 +88,15 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
 
 
         CmsItemPath folderPath;
-        CmsItemId folder = getItemIdWithHighestNumber(immediateFolders);
+        CmsItemId folder = getItemIdWithHighestNumber(immediateFolders, namePattern);
         if (folder != null) {
             folderPath = folder.getRelPath();
             Set<CmsItemId> immediateFiles = lookup.getImmediateFiles(folder);
 
-            if (!isFolderFullOrEmpty(immediateFiles)) {
+            if (!isFolderFullOrEmpty(immediateFiles, namePattern)) {
                 logger.info("Folder is not full and there are previous files, returning file based on previous filename with counter incremented by 1");
 
-                CmsItemId itemIdWithHighestNumber = getItemIdWithHighestNumber(immediateFiles);
+                CmsItemId itemIdWithHighestNumber = getItemIdWithHighestNumber(immediateFiles, namePattern);
                 if (itemIdWithHighestNumber == null) {
                     newName = folderPath.getName();
                 } else {
@@ -106,7 +104,7 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
                     newName = createNewFileName(prevFileName);
                 }
             } else {
-                folderPath = immediateFiles.isEmpty() ? folderPath : createNewFolderPath(folder);
+                folderPath = immediateFiles.isEmpty() ? folderPath : createNewFolderPath(folder, namePattern);
                 newName = folderPath.getName();
                 logger.info("Folder: {}, new file name: {}", folderPath, newName);
             }
@@ -132,13 +130,13 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
         return shardParent;
     }
 
-    private boolean isFolderFullOrEmpty(Set<CmsItemId> immediateFiles) {
+    private boolean isFolderFullOrEmpty(Set<CmsItemId> immediateFiles, CmsItemNamePattern namePattern) {
 
         boolean fullOrEmpty = (immediateFiles.size() == MAX_NUMBER_OF_FILES && immediateFiles.isEmpty()) ? true : false;
 
         boolean not999 = false;
         if (!fullOrEmpty) {
-            CmsItemId itemIdWithHighestNumber = getItemIdWithHighestNumber(immediateFiles);
+            CmsItemId itemIdWithHighestNumber = getItemIdWithHighestNumber(immediateFiles, namePattern);
             not999 = (itemIdWithHighestNumber != null) ? itemIdWithHighestNumber.getRelPath().getName().endsWith("999.".concat(extension)) : false;
         }
 
@@ -148,36 +146,47 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
     private String createNewFileName(String name) {
 
         String nameWithoutExtension = name.substring(0, name.lastIndexOf("."));
-        String number = incrementNumberWithOne(getFileNameCounter(nameWithoutExtension));
-
-        return nameWithoutExtension.substring(0, nameWithoutExtension.length() - FILE_COUNTER_LENGTH).concat(number);
+        try {
+        	String number = incrementNumberWithOne(getFileNameCounter(nameWithoutExtension));
+        	return nameWithoutExtension.substring(0, nameWithoutExtension.length() - FILE_COUNTER_LENGTH).concat(number);
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException("Illegal counter ('" + name + "')", e);
+        }
     }
 
     private String getFileNameCounter(String nameWithoutExtension) {
         return nameWithoutExtension.substring(nameWithoutExtension.length() - FILE_COUNTER_LENGTH);
     }
 
-    private CmsItemPath createNewFolderPath(CmsItemId fileFolder) {
+    private CmsItemPath createNewFolderPath(CmsItemId fileFolder, CmsItemNamePattern namePattern) {
 
-        String number = getFolderCounter(fileFolder);
+        String number = getFolderCounter(fileFolder, namePattern);
 
-        String name = namePattern.getPrefix().concat(incrementNumberWithOne(number));
-        return fileFolder.getRelPath().getParent().append(name.concat(ITEM_ZERO));
+        try {
+        	String name = namePattern.getPrefix().concat(incrementNumberWithOne(number));
+        	return fileFolder.getRelPath().getParent().append(name.concat(ITEM_ZERO));
+        } catch (NumberFormatException e) {
+            throw new IllegalStateException("Illegal counter ('" + number + "') in folder: " + fileFolder.getRelPath(), e);
+        }
     }
 
-    private String getFolderCounter(CmsItemId folder) {
+    private String getFolderCounter(CmsItemId folder, CmsItemNamePattern namePattern) {
 
         String folderAndFileCounter = folder.getRelPath().getName().replace(namePattern.getPrefix(), "");
-        return folderAndFileCounter.substring(0, folderAndFileCounter.length() - FILE_COUNTER_LENGTH);
+        String folderCounter = folderAndFileCounter.substring(0, folderAndFileCounter.length() - FILE_COUNTER_LENGTH);
+        if (folderCounter.isEmpty()) {
+			throw new IllegalStateException("Folder counter is empty in folder: " + folder.getRelPath());
+		}
+        return folderCounter;
     }
 
-    private CmsItemId getItemIdWithHighestNumber(Set<CmsItemId> immediateFolders) {
+    private CmsItemId getItemIdWithHighestNumber(Set<CmsItemId> immediateFolders, CmsItemNamePattern namePattern) {
 
         ArrayList<CmsItemId> cmsItemIds = new ArrayList<CmsItemId>();
         cmsItemIds.addAll(immediateFolders);
 
         Iterator<CmsItemId> iterator = cmsItemIds.iterator();
-        removeNoneShards(iterator);
+        removeNoneShards(iterator, namePattern);
 
         Collections.sort(cmsItemIds, new CmsItemIdNameComparator());
         Collections.reverse(cmsItemIds);
@@ -191,7 +200,7 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
         return highestNumber;
     }
 
-    private void removeNoneShards(Iterator<CmsItemId> iterator) {
+    private void removeNoneShards(Iterator<CmsItemId> iterator, CmsItemNamePattern namePattern) {
 
         while (iterator.hasNext()) {
             String name = iterator.next().getRelPath().getName();
@@ -199,21 +208,17 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
             if (i != -1) {
                 name = name.substring(0, i);
             }
-            if (!this.namePattern.isNameMatchingPattern(name)) {
+            if (!namePattern.isNameMatchingPattern(name)) {
                 iterator.remove();
             }
         }
     }
 
-    private String incrementNumberWithOne(String number) throws IllegalStateException {
+    private String incrementNumberWithOne(String number) throws IllegalStateException, NumberFormatException {
 
         int maxLength = number.length();
         int parseInt;
-        try {
-            parseInt = Integer.parseInt(number);
-        }catch (NumberFormatException e) {
-            throw new IllegalStateException("Counter is missing, namePattern: " + namePattern.getFullNameWithCountZero() + " needs hashes that represents counters");
-        }
+        parseInt = Integer.parseInt(number);
 
         parseInt++;
 
