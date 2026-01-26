@@ -163,13 +163,13 @@ public class RepoRevision implements Comparable<RepoRevision> {
 			if (getDate() == null) {
 				throw new IllegalArgumentException("Can not compare revisions " + this + " and " + than + " because one lacks timestamp and the other is only a timestamp");
 			}
-			return getDate().after(than.getDate());
+			return getDate().after(than.getDate()) || getDate().equals(than.getDate());
 		}
 		if (isNumberTimestamp()) {
 			if (than.getDate() == null) {
 				throw new IllegalArgumentException("Can not compare revisions " + than + " and " + this + " because one lacks timestamp and the other is only a timestamp");
 			}
-			return getDate().after(than.getDate());
+			return getDate().after(than.getDate()) || getDate().equals(than.getDate());
 		}
 		return number >= than.getNumber();
 	}

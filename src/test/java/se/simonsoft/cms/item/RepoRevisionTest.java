@@ -107,6 +107,46 @@ public class RepoRevisionTest {
 	}
 	
 	@Test
+	public void testIsNewerOrEqual() {
+		assertTrue(new RepoRevision(2L, new Date(2)).isNewerOrEqual(new RepoRevision(1L, new Date(1))));
+		assertTrue(new RepoRevision(2L, new Date(2)).isNewerOrEqual(new RepoRevision(2L, new Date(2))));
+		assertFalse(new RepoRevision(2L, new Date(2)).isNewerOrEqual(new RepoRevision(3L, new Date(3))));
+		
+		assertTrue(new RepoRevision(2L, null).isNewerOrEqual(new RepoRevision(1L, null)));
+		assertTrue(new RepoRevision(2L, null).isNewerOrEqual(new RepoRevision(2L, null)));
+		assertFalse(new RepoRevision(2L, null).isNewerOrEqual(new RepoRevision(3L, null)));
+		
+		Date now = new Date();
+		Date old = new Date(now.getTime() - 9);
+		assertTrue(new RepoRevision(now).isNewerOrEqual(new RepoRevision(old)));
+		assertTrue(new RepoRevision(now).isNewerOrEqual(new RepoRevision(now)));
+		assertFalse(new RepoRevision(old).isNewerOrEqual(new RepoRevision(now)));
+		
+		assertTrue("Revision number should have precedence because revision timestamp is, in svn, only a revprop and might be out of sync in for example merged repositories",
+				new RepoRevision(2L, new Date(2L)).isNewerOrEqual(new RepoRevision(1L, new Date(3))));
+		assertFalse(new RepoRevision(1L, new Date(3)).isNewerOrEqual(new RepoRevision(2L, new Date(2))));
+		
+		assertTrue(new RepoRevision(2L, now).isNewerOrEqual(new RepoRevision(old)));
+		assertTrue(new RepoRevision(2L, now).isNewerOrEqual(new RepoRevision(now)));
+		assertFalse(new RepoRevision(old).isNewerOrEqual(new RepoRevision(2L, now)));
+		assertTrue(new RepoRevision(now).isNewerOrEqual(new RepoRevision(2L, old)));
+		
+		try {
+			new RepoRevision(1, null).isNewerOrEqual(new RepoRevision(now));
+			fail("can't be comparable");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+		
+		try {
+			new RepoRevision(now).isNewerOrEqual(new RepoRevision(1, null));
+			fail("can't be comparable");
+		} catch (IllegalArgumentException e) {
+			// expected
+		}
+	}
+	
+	@Test
 	public void testParseISO() {
 		RepoRevision.parseDate("2012-10-03T03:53:54.616837Z");
 		assertEquals(1000L, RepoRevision.parseDate("1970-01-01T00:00:01Z").getTime());
