@@ -33,9 +33,7 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
 
     private CmsRepository repository;
     private CmsItemLookup lookup;
-    private String extension;
     private static final String ITEM_ZERO = "000";
-    private static int MAX_NUMBER_OF_FILES = 1000;
     private static int FILE_COUNTER_LENGTH = 3;
     private static String PROPNAME_CMS_CLASS = "cms:class";
     private static String CMS_CLASS_SHARDPARENT = "shardparent";
@@ -71,8 +69,6 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
         if (namePattern.getCounter().length() < 3) {
             throw new IllegalArgumentException("The configured naming requires a minimum 3 '#' in the naming pattern.");
         }
-
-        this.extension = extension;
 
         logger.info("Request to create new item name based on path: {}, with pattern: {} and extension: {}", parentFolder.getPath(), namePattern.getPrefix(), extension);
 
