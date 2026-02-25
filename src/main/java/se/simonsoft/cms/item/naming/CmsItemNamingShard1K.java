@@ -33,9 +33,7 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
 
     private CmsRepository repository;
     private CmsItemLookup lookup;
-    private String extension;
     private static final String ITEM_ZERO = "000";
-    private static int MAX_NUMBER_OF_FILES = 1000;
     private static int FILE_COUNTER_LENGTH = 3;
     private static String PROPNAME_CMS_CLASS = "cms:class";
     private static String CMS_CLASS_SHARDPARENT = "shardparent";
@@ -72,8 +70,6 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
             throw new IllegalArgumentException("The configured naming requires a minimum 3 '#' in the naming pattern.");
         }
 
-        this.extension = extension;
-
         logger.info("Request to create new item name based on path: {}, with pattern: {} and extension: {}", parentFolder.getPath(), namePattern.getPrefix(), extension);
 
         String newName;
@@ -90,23 +86,26 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
         CmsItemPath folderPath;
         CmsItemId folder = getItemIdWithHighestNumber(immediateFolders, namePattern);
         if (folder != null) {
-            folderPath = folder.getRelPath();
             Set<CmsItemId> immediateFiles = lookup.getImmediateFiles(folder);
+            folderPath = folder.getRelPath();
 
-            if (!isFolderFullOrEmpty(immediateFiles, namePattern)) {
+            if (immediateFiles.isEmpty()) {
+                newName = folderPath.getName();
+                logger.info("Shard folder exist but empty: {}, new file name: {}", folderPath, newName);
+            } else if (isFolderFull(immediateFiles, namePattern)) {
+            	folderPath = createNewFolderPath(folder, namePattern);
+                newName = folderPath.getName();
+                logger.info("Shard folder: {}, new file name: {}", folderPath, newName);
+            } else {
                 logger.info("Folder is not full and there are previous files, returning file based on previous filename with counter incremented by 1");
-
                 CmsItemId itemIdWithHighestNumber = getItemIdWithHighestNumber(immediateFiles, namePattern);
                 if (itemIdWithHighestNumber == null) {
+                	// There are files but none match the pattern.
                     newName = folderPath.getName();
                 } else {
-                    String prevFileName =itemIdWithHighestNumber.getRelPath().getName();
+                    String prevFileName = itemIdWithHighestNumber.getRelPath().getName();
                     newName = createNewFileName(prevFileName);
                 }
-            } else {
-                folderPath = immediateFiles.isEmpty() ? folderPath : createNewFolderPath(folder, namePattern);
-                newName = folderPath.getName();
-                logger.info("Folder: {}, new file name: {}", folderPath, newName);
             }
         } else {
             logger.info("No folders in path: {}, creating folder with count 0", parentFolder.getPath());
@@ -130,18 +129,19 @@ public class CmsItemNamingShard1K implements CmsItemNaming {
         return shardParent;
     }
 
-    private boolean isFolderFullOrEmpty(Set<CmsItemId> immediateFiles, CmsItemNamePattern namePattern) {
+    private boolean isFolderFull(Set<CmsItemId> immediateFiles, CmsItemNamePattern namePattern) {
 
-        boolean fullOrEmpty = (immediateFiles.size() == MAX_NUMBER_OF_FILES && immediateFiles.isEmpty()) ? true : false;
-
-        boolean not999 = false;
-        if (!fullOrEmpty) {
-            CmsItemId itemIdWithHighestNumber = getItemIdWithHighestNumber(immediateFiles, namePattern);
-            not999 = (itemIdWithHighestNumber != null) ? itemIdWithHighestNumber.getRelPath().getName().endsWith("999.".concat(extension)) : false;
-        }
-
-        return fullOrEmpty ? fullOrEmpty : not999;
+        
+        CmsItemId itemIdWithHighestNumber = getItemIdWithHighestNumber(immediateFiles, namePattern);
+        if (itemIdWithHighestNumber == null) {
+			return false;
+		} else if (itemIdWithHighestNumber.getRelPath().getNameBase().endsWith("999")) {
+			return true;
+		} else {
+			return false;
+		}
     }
+    
 
     private String createNewFileName(String name) {
 
