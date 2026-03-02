@@ -17,7 +17,9 @@ package se.simonsoft.cms.item.naming;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -45,6 +47,10 @@ public class CmsItemNameFactory {
 	
 	private static final String CMS_CLASS_SHARDPARENT = "shardparent";
 	private static final String PROPNAME_CONFIG_ITEMNAMEPATTERN = "cmsconfig:ItemNamePattern";
+	private static final String PROPNAME_CONFIG_ITEMNAMEEXTENSION = "cmsconfig:ItemNameExtension"; 
+	
+	public static final String EXTENSION_VALID_PATTERN = "[a-z0-9]{3,8}";
+	public static final Pattern EXTENSION_VALID = Pattern.compile(EXTENSION_VALID_PATTERN);
 	
 	private static final Logger logger = LoggerFactory.getLogger(CmsItemNameFactory.class);
 	
@@ -56,11 +62,20 @@ public class CmsItemNameFactory {
 	}
 	
 	
+	// TODO: Consider how to handle combination of extension parameter and configured extension property.
+	// Both hard from consumer and Optional as fallback? Perhaps list in config and must match one of them.
+	
 	public synchronized CmsItemPath getItemPath(CmsItem folder, String extension) {
 		if (!folder.isCmsClass(CMS_CLASS_SHARDPARENT)) {
-        	throw new IllegalArgumentException(MessageFormatter.format("Not a shard parent folder: {}", folder).getMessage());
+        	throw new IllegalArgumentException(MessageFormatter.format("Location is not a shard parent folder: {}", folder).getMessage());
 		}
-		CmsItemNamePattern pattern = getItemNamePattern(folder);
+		CmsItemNamePattern pattern = getItemNamePattern(folder); // Throws exception if not defined or invalid.
+		// Currently only validates extension against regex.
+		// TODO: Consider validating against configured extension(s) if defined.
+		if (!EXTENSION_VALID.matcher(extension).matches()) {
+ 			String msg = MessageFormatter.format("Invalid file extension: {} ({})", extension, EXTENSION_VALID_PATTERN).getMessage();
+ 			throw new IllegalArgumentException(msg);
+ 		}
 		
 		CmsItemLookup itemLookup = new CmsItemLookupNamingShim(lookup.get(folder.getId().getRepository()), itemPathConsumed.get(folder.getId()));
 		CmsItemNaming itemNaming = new CmsItemNamingShard1K(folder.getId().getRepository(), itemLookup);
@@ -84,6 +99,7 @@ public class CmsItemNameFactory {
         return true;
     }
     
+    
     public static CmsItemNamePattern getItemNamePattern(CmsItem folder) {
 
     	if (!folder.getProperties().containsProperty(PROPNAME_CONFIG_ITEMNAMEPATTERN)) {
@@ -92,6 +108,23 @@ public class CmsItemNameFactory {
 
         // Test the configured pattern, throws exception if invalid
         return new CmsItemNamePattern(folder.getProperties().getString(PROPNAME_CONFIG_ITEMNAMEPATTERN));
+    }
+    
+    
+    public static Optional<String> getItemNameExtension(CmsItem folder) {
+
+    	if (!folder.getProperties().containsProperty(PROPNAME_CONFIG_ITEMNAMEEXTENSION)) {
+        	return Optional.empty();
+        }
+
+        // Test the configured extension, throw exception if invalid
+        String extension = folder.getProperties().getString(PROPNAME_CONFIG_ITEMNAMEEXTENSION);
+        if (!EXTENSION_VALID.matcher(extension).matches()) {
+ 			String msg = MessageFormatter.format("Location defines an invalid file extension: {} ({})", extension, folder.getId()).getMessage();
+ 			logger.error(msg);
+ 			throw new IllegalArgumentException(msg);
+ 		}
+        return Optional.of(extension);
     }
     
     
