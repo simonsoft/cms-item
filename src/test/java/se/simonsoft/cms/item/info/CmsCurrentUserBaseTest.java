@@ -106,6 +106,10 @@ public class CmsCurrentUserBaseTest {
 		};
 
 		Set<String> expectedRoles = new HashSet<>();
+		expectedRoles.add("+");
+		assertTrue(cmsCurrentUserBaseMock.hasRole(expectedRoles));
+		expectedRoles.clear();
+
 		expectedRoles.add("*");
 		assertTrue(cmsCurrentUserBaseMock.hasRole(expectedRoles));
 
