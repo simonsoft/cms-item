@@ -15,6 +15,8 @@
  */
 package se.simonsoft.cms.item.commit;
 
+import java.util.Map;
+
 import se.simonsoft.cms.item.CmsItemLock;
 import se.simonsoft.cms.item.CmsItemLockCollection;
 import se.simonsoft.cms.item.CmsItemPath;
@@ -70,4 +72,25 @@ public interface CmsCommit {
 	 */
 	public void unlock(CmsItemLock... lock);
 	
+	
+	// Better in CmsItemProperties?
+	// validateProperty
+	// validateRevisionProperties
+	// Reserved names in revprops.
+	// Require prefix.
+	// Limit length, parameter and default definitions?
+	public static void validateProperties(Map<String, String> properties) {
+		if (properties == null) {
+			throw new IllegalArgumentException("Properties must not be null");
+		}
+		if (properties.containsKey("cms:revision")) {
+			throw new IllegalArgumentException("Property 'cms:revision' is reserved and must not be set");
+		}
+		if (properties.containsKey("cms:commit")) {
+			throw new IllegalArgumentException("Property 'cms:commit' is reserved and must not be set");
+		}
+		if (properties.containsKey("cms:author")) {
+			throw new IllegalArgumentException("Property 'cms:author' is reserved and must not be set");
+		}
+	}
 }
