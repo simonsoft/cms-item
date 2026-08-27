@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.TreeSet;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -501,10 +502,41 @@ public class CmsItemPathTest {
 		assertEquals("Path sorting should be case insensitive", "/aa/a", "" + p.get(1));
 		assertEquals("/ab", "" + p.get(2));
 		// Folders should be sorted together we should be smarter than this
-		//also upper case would preferrable come before lower case
-		assertEquals("/ab/e", "" + p.get(3));
-		assertEquals("/aB/e", "" + p.get(4));
+		// Case-insensitive compare is now tie-broken with natural (case-sensitive)
+		// ordering, so upper case sorts before lower case for otherwise-equal paths,
+		// and compareTo()==0 only when equals() is also true (CMS-1998).
+		assertEquals("/aB/e", "" + p.get(3));
+		assertEquals("/ab/e", "" + p.get(4));
 		assertEquals("/ab/f", "" + p.get(5));
+	}
+
+	@Test
+	public void testCompareEqualsConsistency() {
+		CmsItemPath lower = new CmsItemPath("/a/b");
+		CmsItemPath upper = new CmsItemPath("/a/B");
+
+		assertFalse("case-differing paths should not be equal", lower.equals(upper));
+		assertTrue("compareTo must not be 0 when equals() is false", lower.compareTo(upper) != 0);
+		assertTrue("compareTo must not be 0 when equals() is false", upper.compareTo(lower) != 0);
+
+		CmsItemPath lowerAgain = new CmsItemPath("/a/b");
+		assertTrue(lower.equals(lowerAgain));
+		assertEquals(0, lower.compareTo(lowerAgain));
+
+		assertTrue(upper.compareTo(lower) < 0);
+		assertTrue(lower.compareTo(upper) > 0);
+	}
+
+	@Test
+	public void testCompareTreeSetRetainsCaseVariants() {
+		TreeSet<CmsItemPath> set = new TreeSet<CmsItemPath>();
+		set.add(new CmsItemPath("/a/b"));
+		set.add(new CmsItemPath("/a/B"));
+		set.add(new CmsItemPath("/a/b")); // duplicate, should not increase size
+
+		assertEquals("TreeSet must not collapse case-differing paths as duplicates", 2, set.size());
+		assertTrue(set.contains(new CmsItemPath("/a/b")));
+		assertTrue(set.contains(new CmsItemPath("/a/B")));
 	}
 
 	
