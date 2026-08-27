@@ -479,7 +479,14 @@ public class CmsItemPath implements Comparable<CmsItemPath>, Serializable {
 		if (path == null) {
 			return toString().compareTo(null);
 		}
-		return toString().toLowerCase().compareTo(path.toString().toLowerCase());
+		int c = toString().compareToIgnoreCase(path.toString());
+		if (c != 0) {
+			return c;
+		}
+		// Tie-break with natural (case-sensitive) ordering so that
+		// compareTo() == 0 iff equals() == true, per the Comparable contract,
+		// while preserving case-insensitive ordering as the primary sort key.
+		return toString().compareTo(path.toString());
 	}
 
 }
