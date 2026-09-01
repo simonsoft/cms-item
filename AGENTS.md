@@ -46,8 +46,9 @@ See `docs/architecture.md` for the dependency graph and repository roles.
   ...
 ```
 
-Each repo may have a **generated** `AGENTS.md` (repo stub + this file). See
-`docs/local-development.md` for setup on Cloud Agents and local machines.
+Each repo may have a **composite** `AGENTS.md` (repo stub + this file), committed
+in git for local dev and refreshed on Cloud Agent install. See
+`docs/local-development.md` for layout and editing workflow.
 
 ## Active migration (read before making changes)
 
@@ -97,7 +98,7 @@ bug fixes and small UI tweaks in React repos are allowed until then.
 | cms-codebuild | Build scripts | Shared CodeBuild bundle/version scripts |
 | simonsoft-agents | Agent environment | This file, docs/, and install scripts |
 
-Repo-specific stubs: `docs/repo-stubs/<repo-name>.md`
+Repo-specific notes: `<repo>/AGENTS.repo.md` (merged into `AGENTS.md` by `link-agents.sh`)
 
 ## Build & test
 
