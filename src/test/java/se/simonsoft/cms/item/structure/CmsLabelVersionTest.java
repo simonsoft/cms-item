@@ -77,6 +77,7 @@ public class CmsLabelVersionTest {
 		assertEquals(1, l.getSegments().size());
 		assertEquals("A", l.getSegments().get(0));
 		assertEquals("@@@@@@@@@A", l.getSegmentsSort().get(0));
+		assertEquals(Long.valueOf(10), l.getVersionSegmentsNumeric().get(0));
 		
 		assertEquals("A", l.toString());
 	}
@@ -130,6 +131,8 @@ public class CmsLabelVersionTest {
 		assertEquals("2", l.getSegments().get(1));
 		assertEquals("@@@@@@@@@A", l.getSegmentsSort().get(0));
 		assertEquals("/////////2", l.getSegmentsSort().get(1));
+		assertEquals(Long.valueOf(10), l.getVersionSegmentsNumeric().get(0));
+		assertEquals(Long.valueOf(2), l.getVersionSegmentsNumeric().get(1));
 	}
 	
 	@Test
@@ -144,6 +147,9 @@ public class CmsLabelVersionTest {
 		assertEquals("@@@@@@@@@A", l.getSegmentsSort().get(0));
 		assertEquals("/////////2", l.getSegmentsSort().get(1));
 		assertEquals("//////1234", l.getSegmentsSort().get(2));
+		assertEquals(Long.valueOf(10), l.getVersionSegmentsNumeric().get(0));
+		assertEquals(Long.valueOf(2), l.getVersionSegmentsNumeric().get(1));
+		assertEquals(Long.valueOf(1234), l.getVersionSegmentsNumeric().get(2));
 	}
 	
 	@Test
@@ -194,6 +200,12 @@ public class CmsLabelVersionTest {
 		assertEquals("@@@@@@@@@A", l.getSegmentsSort().get(0));
 		assertEquals("abcdeXfghijk", l.getSegmentsSort().get(1));
 		assertEquals("//////1234", l.getSegmentsSort().get(2));
+		
+		try {
+			l.getVersionSegmentsNumeric();
+			fail("should fail, string too long");
+		} catch (NumberFormatException e) {
+		}
 	}
 	
 	@Test
