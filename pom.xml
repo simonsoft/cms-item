@@ -50,6 +50,10 @@
 	<dependencies>
 		<!-- This package should be core interfaces only and have no dependencies in runtime scope -->
 		<dependency>
+			<groupId>jakarta.inject</groupId>
+			<artifactId>jakarta.inject-api</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
 			<version>${logback-version}</version>

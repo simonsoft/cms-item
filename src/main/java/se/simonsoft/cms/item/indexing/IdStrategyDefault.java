@@ -15,7 +15,7 @@
  */
 package se.simonsoft.cms.item.indexing;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
