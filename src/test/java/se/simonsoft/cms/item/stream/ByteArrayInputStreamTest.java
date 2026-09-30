@@ -37,12 +37,8 @@ public class ByteArrayInputStreamTest {
 		
 		ByteArrayInputStream is = baios.getInputStream();
 		
-		try {
-			baios.write("Fails".getBytes());
-			fail("Should not allow more writes");
-		} catch (Exception e) {
-			assertNull("NPE", e.getMessage());
-		}
+		assertThrows("Should not allow more writes", NullPointerException.class,
+				() -> baios.write("Fails".getBytes()));
 		
 		assertEquals("The S char", 83, is.read());
 		
@@ -72,12 +68,8 @@ public class ByteArrayInputStreamTest {
 		ByteArrayInputStream is = baios.getInputStream();
 		assertNotNull(is);
 		
-		try {
-			baios.write("Fails".getBytes());
-			fail("Should not allow more writes");
-		} catch (Exception e) {
-			assertNull("NPE", e.getMessage());
-		}
+		assertThrows("Should not allow more writes", NullPointerException.class,
+				() -> baios.write("Fails".getBytes()));
 		
 		assertEquals("The T char", 84, is.read());
 		

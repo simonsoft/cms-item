@@ -29,7 +29,7 @@ import se.simonsoft.cms.item.CmsItemId;
 import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 
-public class CmsItemIdArgTestv2 {
+public class CmsItemIdArgV2Test {
 	
 	@Test(expected=IllegalArgumentException.class) // No longer supported since v3.
 	public void testValidateNoParentPath() {

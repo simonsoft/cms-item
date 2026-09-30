@@ -6,4 +6,7 @@
 
 .settings
 
+# Local IDE and macOS files
+/.idea/
 *.iml
+.DS_Store
