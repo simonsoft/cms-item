@@ -22,6 +22,16 @@ import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.RepoRevision;
 
+/**
+ * Builds index identifiers for items, repositories and commits. An item's full ID
+ * includes its revision; its head ID identifies the path independently of revision.
+ *
+ * <p>This Jakarta singleton supplies {@link IdStrategy} directly to CDI consumers.
+ * Consumers of the migrated cms-item must not also register a producer that creates
+ * this same implementation. The old producer bridge was needed with javax annotations;
+ * remove it only when the consumer actually resolves the Jakarta version of cms-item.
+ * The Jakarta migration changes bean registration, not the persisted ID format.
+ */
 @Singleton
 public class IdStrategyDefault implements IdStrategy {
 

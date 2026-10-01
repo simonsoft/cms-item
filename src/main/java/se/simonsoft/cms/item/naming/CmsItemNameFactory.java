@@ -38,7 +38,22 @@ import se.simonsoft.cms.item.info.CmsItemLookup;
 import se.simonsoft.cms.item.info.CmsItemNotFoundException;
 
 /**
- * Experimental
+ * Experimental factory for automatic item paths in shard-parent folders.
+ * Uses the folder's naming pattern and existing repository contents to select a path.
+ *
+ * <p>The consuming application must supply a real repository-to-lookup map for
+ * every repository used for naming. CDI does not assemble this map automatically.
+ * When this Jakarta bean is discovered, Quarkus validates its injected dependencies
+ * during the build; a missing map can prevent startup before any naming method is called.
+ * Applications that do not use naming, such as indexing and isolated SVN test apps,
+ * should exclude exactly this class through {@code quarkus.arc.exclude-types} in
+ * their own configuration. A library's test configuration does not configure its
+ * consumers. The webapp uses this factory and must supply the map instead of excluding it.
+ *
+ * <p>The singleton remembers the last allocated path per folder, including paths
+ * not yet committed to the repository. Keep this state shared across requests in
+ * the same application instance; making the factory request-scoped would lose it.
+ * This in-memory state is not a reservation shared between application instances.
  */
 @Singleton
 public class CmsItemNameFactory {
