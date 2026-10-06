@@ -34,6 +34,19 @@ import se.simonsoft.cms.item.properties.CmsItemProperties;
 public class CmsPatchsetTest {
 
 	@Test
+	public void testRootPropertyChange() {
+		CmsPatchset changes = new CmsPatchset(mock(CmsRepository.class), new RepoRevision(0, null));
+		CmsItemProperties properties = mock(CmsItemProperties.class);
+		FolderPropertyChange root = new FolderPropertyChange(null, properties);
+		changes.add(root);
+		assertNull(root.getPath());
+		assertSame(properties, root.getPropertyChange());
+		assertEquals("[_M__/]", changes.toString());
+		assertThrows(IllegalStateException.class,
+				() -> changes.add(new FolderPropertyChange(null, properties)));
+	}
+
+	@Test
 	public void testAddDuplicate() {
 		RepoRevision r = new RepoRevision(1, new Date(1));
 		CmsPatchset c = new CmsPatchset(mock(CmsRepository.class), r);
