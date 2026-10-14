@@ -73,7 +73,7 @@ public class CmsItemNameFactory {
 		CmsItemNamePattern pattern = getItemNamePattern(folder); // Throws exception if not defined or invalid.
 		// Currently only validates extension against regex.
 		// TODO: Consider validating against configured extension(s) if defined.
-		if (extension == null) {
+		if (extension == null || extension.isEmpty()) {
 			String msg = MessageFormatter.format("No file extension: folder {} does not configure {} and the caller did not supply a fallback", folder.getId(), PROPNAME_CONFIG_ITEMNAMEEXTENSION).getMessage();
 			throw new IllegalArgumentException(msg);
 		}

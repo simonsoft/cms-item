@@ -61,6 +61,27 @@ public class CmsItemNameFactoryTest {
 	}
 
 	@Test
+	public void testExtensionEmptyGivesSameClearErrorAsMissing() {
+		CmsRepository repo = new CmsRepository("http://myhost/svn/repo1");
+		CmsItemId folderId = new CmsItemIdArg(repo, new CmsItemPath("/dita/xml/notes"));
+
+		CmsItem folder = mock(CmsItem.class);
+		when(folder.getId()).thenReturn(folderId);
+		when(folder.isCmsClass("shardparent")).thenReturn(true);
+		when(folder.getProperties()).thenReturn(new CmsItemPropertiesMap("cmsconfig:ItemNamePattern", "SEC###"));
+
+		Map<CmsRepository, CmsItemLookup> lookup = new HashMap<>();
+		CmsItemNameFactory factory = new CmsItemNameFactory(lookup);
+
+		try {
+			factory.getItemPath(folder, "");
+			fail("should treat an empty-string extension the same as missing, not fall through to the generic regex error");
+		} catch (IllegalArgumentException e) {
+			assertEquals("No file extension: folder " + folderId + " does not configure cmsconfig:ItemNameExtension and the caller did not supply a fallback", e.getMessage());
+		}
+	}
+
+	@Test
 	public void testSecondAllocationInSameFolderReusesUncommittedShard() {
 		// Two items migrated in the same folder-level transform call, both landing in the same shard-parent
 		// folder - TransformServiceXsl commits the whole batch as one patchset at the end, so the shard folder
