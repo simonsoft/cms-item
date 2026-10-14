@@ -21,6 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.junit.Test;
@@ -31,6 +32,7 @@ import se.simonsoft.cms.item.CmsItemPath;
 import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.impl.CmsItemIdArg;
 import se.simonsoft.cms.item.info.CmsItemLookup;
+import se.simonsoft.cms.item.info.CmsItemNotFoundException;
 import se.simonsoft.cms.item.properties.CmsItemPropertiesMap;
 
 public class CmsItemNameFactoryTest {
@@ -56,6 +58,42 @@ public class CmsItemNameFactoryTest {
 		} catch (IllegalArgumentException e) {
 			assertEquals("No file extension: folder " + folderId + " does not configure cmsconfig:ItemNameExtension and the caller did not supply a fallback", e.getMessage());
 		}
+	}
+
+	@Test
+	public void testSecondAllocationInSameFolderReusesUncommittedShard() {
+		// Two items migrated in the same folder-level transform call, both landing in the same shard-parent
+		// folder - TransformServiceXsl commits the whole batch as one patchset at the end, so the shard folder
+		// allocated for the first item is not yet known to the real backend when the second item is allocated.
+		CmsRepository repo = new CmsRepository("http://myhost/svn/repo1");
+		CmsItemPath parentPath = new CmsItemPath("/dita/xml/notes");
+		CmsItemId folderId = new CmsItemIdArg(repo, parentPath);
+
+		CmsItem folder = mock(CmsItem.class);
+		when(folder.getId()).thenReturn(folderId);
+		when(folder.isCmsClass("shardparent")).thenReturn(true);
+		when(folder.getProperties()).thenReturn(new CmsItemPropertiesMap("cms:class", "shardparent").and("cmsconfig:ItemNamePattern", "NOTE_00#####"));
+
+		CmsItemPath shardFolderPath = parentPath.append("NOTE_0000000");
+		CmsItemId shardFolderId = new CmsItemIdArg(repo, shardFolderPath);
+
+		CmsItemLookup realLookup = mock(CmsItemLookup.class);
+		when(realLookup.getItem(folderId)).thenReturn(folder);
+		when(realLookup.getImmediateFolders(folderId)).thenReturn(new HashSet<>());
+		// Not committed yet - the first allocation below only exists in CmsItemNameFactory's own bookkeeping.
+		when(realLookup.getImmediateFiles(shardFolderId)).thenThrow(new CmsItemNotFoundException(shardFolderId));
+
+		Map<CmsRepository, CmsItemLookup> lookupMap = new HashMap<>();
+		lookupMap.put(repo, realLookup);
+		CmsItemNameFactory factory = new CmsItemNameFactory(lookupMap);
+
+		CmsItemPath first = factory.getItemPath(folder, "dita");
+		assertEquals(new CmsItemPath("/dita/xml/notes/NOTE_0000000/NOTE_0000000.dita"), first);
+
+		// Must not throw CmsItemNotFoundException, even though the shard folder from the first allocation has
+		// not actually been committed to SVN yet.
+		CmsItemPath second = factory.getItemPath(folder, "dita");
+		assertEquals(new CmsItemPath("/dita/xml/notes/NOTE_0000000/NOTE_0000001.dita"), second);
 	}
 
 }
