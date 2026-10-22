@@ -16,6 +16,7 @@
 package se.simonsoft.cms.item.naming;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -87,6 +88,10 @@ public class CmsItemNameFactory {
 		CmsItemNamePattern pattern = getItemNamePattern(folder); // Throws exception if not defined or invalid.
 		// Currently only validates extension against regex.
 		// TODO: Consider validating against configured extension(s) if defined.
+		if (extension == null || extension.isEmpty()) {
+			String msg = MessageFormatter.format("No file extension: folder {} does not configure {} and the caller did not supply a fallback", folder.getId(), PROPNAME_CONFIG_ITEMNAMEEXTENSION).getMessage();
+			throw new IllegalArgumentException(msg);
+		}
 		if (!EXTENSION_VALID.matcher(extension).matches()) {
  			String msg = MessageFormatter.format("Invalid file extension: {} ({})", extension, EXTENSION_VALID_PATTERN).getMessage();
  			throw new IllegalArgumentException(msg);
@@ -169,8 +174,20 @@ public class CmsItemNameFactory {
 
 		@Override
 		public Set<CmsItemId> getImmediateFiles(CmsItemId parent) throws CmsConnectionException, CmsItemNotFoundException {
-			Set<CmsItemId> result = itemLookup.getImmediateFiles(parent);
-			if (previous != null && previous.getParent() != null && previous.getParent().equals(parent.getRelPath())) {
+			boolean parentIsPreviousShard = previous != null && previous.getParent() != null && previous.getParent().equals(parent.getRelPath());
+			Set<CmsItemId> result;
+			try {
+				result = itemLookup.getImmediateFiles(parent);
+			} catch (CmsItemNotFoundException e) {
+				// The shard folder itself was only allocated earlier in this same transform run (see
+				// itemPathConsumed/'previous' above) and is not yet committed, so the real backend has no
+				// knowledge of it - not an actual error, same as if it existed and were empty.
+				if (!parentIsPreviousShard) {
+					throw e;
+				}
+				result = new HashSet<>();
+			}
+			if (parentIsPreviousShard) {
 				result.add(parent.getRepository().getItemId(previous, null));
 			}
 			return result;
