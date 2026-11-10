@@ -17,8 +17,8 @@ package se.simonsoft.cms.item.structure;
 
 import java.util.regex.Pattern;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 import se.simonsoft.cms.item.CmsItemId;
 

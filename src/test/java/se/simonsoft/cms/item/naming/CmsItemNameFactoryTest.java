@@ -16,6 +16,7 @@
 package se.simonsoft.cms.item.naming;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -115,6 +116,34 @@ public class CmsItemNameFactoryTest {
 		// not actually been committed to SVN yet.
 		CmsItemPath second = factory.getItemPath(folder, "dita");
 		assertEquals(new CmsItemPath("/dita/xml/notes/NOTE_0000000/NOTE_0000001.dita"), second);
+	}
+
+	@Test
+	public void testMissingShardNotAllocatedByFactoryStillFails() {
+		CmsRepository repo = new CmsRepository("http://myhost/svn/repo1");
+		CmsItemId folderId = new CmsItemIdArg(repo, new CmsItemPath("/dita/xml/notes"));
+		CmsItemId shardId = new CmsItemIdArg(repo, new CmsItemPath("/dita/xml/notes/NOTE_0000000"));
+		CmsItem folder = mock(CmsItem.class);
+		when(folder.getId()).thenReturn(folderId);
+		when(folder.isCmsClass("shardparent")).thenReturn(true);
+		when(folder.getProperties()).thenReturn(new CmsItemPropertiesMap("cms:class", "shardparent")
+				.and("cmsconfig:ItemNamePattern", "NOTE_00#####"));
+
+		CmsItemLookup lookup = mock(CmsItemLookup.class);
+		when(lookup.getItem(folderId)).thenReturn(folder);
+		HashSet<CmsItemId> shards = new HashSet<>();
+		shards.add(shardId);
+		when(lookup.getImmediateFolders(folderId)).thenReturn(shards);
+		CmsItemNotFoundException missing = new CmsItemNotFoundException(shardId);
+		when(lookup.getImmediateFiles(shardId)).thenThrow(missing);
+		CmsItemNameFactory factory = new CmsItemNameFactory(Map.of(repo, lookup));
+
+		try {
+			factory.getItemPath(folder, "dita");
+			fail("must not hide a missing shard that the factory has not allocated");
+		} catch (CmsItemNotFoundException e) {
+			assertSame(missing, e);
+		}
 	}
 
 }

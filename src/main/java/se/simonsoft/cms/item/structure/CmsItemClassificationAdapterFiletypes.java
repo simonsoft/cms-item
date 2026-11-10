@@ -15,8 +15,8 @@
  */
 package se.simonsoft.cms.item.structure;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 /**
  * Uses filename extensions to classify item, 

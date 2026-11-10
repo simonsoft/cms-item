@@ -17,7 +17,7 @@ package se.simonsoft.cms.item.commit;
 
 import java.io.InputStream;
 
-import javax.inject.Provider;
+import jakarta.inject.Provider;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

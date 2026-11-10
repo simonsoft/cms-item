@@ -23,7 +23,7 @@ import se.simonsoft.cms.item.CmsRepository;
 import se.simonsoft.cms.item.info.CmsItemLookup;
 import se.simonsoft.cms.item.properties.CmsItemProperties;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.util.*;
 
 /**

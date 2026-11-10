@@ -29,7 +29,7 @@ public final class FolderPropertyChange implements CmsPatchItem, CmsPatchItem.Su
 	private CmsItemProperties properties;
 
 	/**
-	 * @param path
+	 * @param path folder path, or null for the repository root
 	 * @param properties property changes as returned by {@link CmsItemProperties#getKeySet()} to be executed on the item, while other properties are left unchanged,
 	 *  null value means delete the property, empty value means set or keep it but make it empty
 	 */
@@ -57,7 +57,7 @@ public final class FolderPropertyChange implements CmsPatchItem, CmsPatchItem.Su
 	@Override
 	public String toString() {
 		// modified props
-		return "_M__" + getPath().getPath();
+		return "_M__" + (getPath() == null ? "/" : getPath().getPath());
 	}
 	
 }

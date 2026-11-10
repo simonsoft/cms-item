@@ -17,8 +17,8 @@ package se.simonsoft.cms.item.export;
 
 import java.io.File;
 
-import javax.inject.Inject;
-import javax.inject.Named;
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 
 public class CmsExportProviderFsSingle implements CmsExportProvider {
 	
