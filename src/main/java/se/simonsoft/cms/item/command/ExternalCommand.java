@@ -29,6 +29,7 @@ public class ExternalCommand {
 	protected CmsItemId itemId;
 	protected String action;
 	protected Object args = null;
+	protected ExternalCommandContext context = null;
 	
 	
 	private static final Logger logger = LoggerFactory.getLogger(ExternalCommand.class);
@@ -45,6 +46,13 @@ public class ExternalCommand {
 		this.args = args;
 	}
 	
+	public ExternalCommand(CmsItemId itemId, String action, Object args, ExternalCommandContext context) {
+		this.itemId = itemId;
+		this.action = action;
+		this.args = args;
+		this.context = context;
+	}
+	
 	
 	public String getAction() {
 		return action;
@@ -52,6 +60,13 @@ public class ExternalCommand {
 	
 	public CmsItemId getItemId() {
 		return itemId;
+	}
+	
+	/**
+	 * @return the execution context or null
+	 */
+	public ExternalCommandContext getContext() {
+		return context;
 	}
 
 	

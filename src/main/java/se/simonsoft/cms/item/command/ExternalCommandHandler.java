@@ -32,6 +32,17 @@ public interface ExternalCommandHandler<T> {
 	 */
 	String handleExternalCommand(CmsItemId item, T arguments);
 	
+	/**
+	 * Executes the action with the execution context, override when the context is needed.
+	 * @param item to operate on
+	 * @param arguments the arguments object or null
+	 * @param context the execution context or null
+	 * @return typically serialized JSON
+	 */
+	default String handleExternalCommand(CmsItemId item, T arguments, ExternalCommandContext context) {
+		return handleExternalCommand(item, arguments);
+	}
+	
 	// #1594 Simplify Quarkus inject.
 	/**
 	 * @return the class of the arguments object or Void.class
